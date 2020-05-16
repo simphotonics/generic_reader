@@ -63,8 +63,10 @@ The following shows how to register decoder functions for the types `Age`, `Name
 ```Dart
 ...
 
+// ConstantReader representing an object of type [User].
 final userCR = ConstantReader(userFieldElement.computeConstantValue());
-/// The reader instance. (It is a singleton).
+
+// The reader instance. (It is a singleton).
 final reader = GenericReader();
 
 // Adding decoders.
