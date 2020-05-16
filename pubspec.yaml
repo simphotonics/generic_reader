@@ -1,0 +1,19 @@
+name: generic_reader
+
+description:
+  Customizable class aimed at reading static Dart analyzer object representations and
+  converting them into runtime object instances.
+
+version: 0.0.1
+
+homepage: https://github.com/simphotonics/generic_reader
+
+environment:
+  sdk: '>=2.8.2 <3.0.0'
+
+dependencies:
+  source_gen: ^0.9.5
+  
+dev_dependencies:
+  test: ^1.14.3
+  source_gen_test: ^0.1.1
