@@ -219,13 +219,21 @@ For further information on how to generate a topological sorting of vertices see
 Please file feature requests and bugs at the [issue tracker].
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
 [example]: example
+
 [analyzer]: https://pub.dev/packages/analyzer
-[DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
+
 [computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
-[GenericReader]: https://pub.dev/packages/generic_reader
+
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
 
-[source_gen]: https://pub.dev/packages/source_gen
-[source_gen_test]: https://pub.dev/packages/source_gen_test
+[DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
+
 [Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
+
 [GeneratorForAnnotation]: https://pub.dev/documentation/source_gen/latest/source_gen/GeneratorForAnnotation-class.html
+
+[GenericReader]: https://pub.dev/packages/generic_reader
+
+[source_gen]: https://pub.dev/packages/source_gen
+
+[source_gen_test]: https://pub.dev/packages/source_gen_test
