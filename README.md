@@ -11,11 +11,11 @@ subsequent maintenance is often easier, less error prone, and certainly less rep
 
 The premise of source code generation is that we can somehow specify (hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
 
-Dart's static analyzer provides access to libraries, classes, fields, class methods, etc (contained in *.dart files) in the form of elements. These elements are static representations of runtime objects.
+Dart's static [analyzer] provides access to libraries, classes, fields, class methods, etc (contained in *.dart files) in the form of elements. These elements are static representations of runtime objects.
 
-Source code generation relies heavily on constant objects (instantiated by a constructor prefixed with the keyword const) since constants are known during static analysis. Constant values are represented by a DartObject and can be accessed by using the method computeConstantValue().
+Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are known during static analysis. Constants are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
 
-For built-in types, DartObject has methods that allow reading the underlying constant object.
+For built-in types, [DartObject] has methods that allow reading the underlying constant object.
 For example, it is an easy task to retrieve a constant of type `String`.
 ```Dart
 // Let name be a FieldElement containing a String.
@@ -24,7 +24,7 @@ final String name = constantObject.toStringValue();
 ```
 
 For complex user defined data-types that may be defined in terms of other user defined types it can be a daunting task to read the underlying value.
-GenericReader provides a systematic way of retrieving constants objects with arbitrary types.
+[GenericReader] provides a systematic way of retrieving constants objects with arbitrary types.
 
 ## Terminology
 
@@ -52,12 +52,12 @@ class User{
 ```
 ### Decoder Functions
 
-GenericReader simplifies the task of retrieving constants of complex data-types by allowing users to register `Decoder` functions (for lack of better word).
+[GenericReader] simplifies the task of retrieving constants of complex data-types by allowing users to register `Decoder` functions (for lack of better word).
 Decoder functions know how to handle a specific data-type. As such, a decoder is a parametrized function with the following signature:
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
-The input argument is of type `ConstantReader` (a wrapper around DartObject) and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T` and this is checked and enforced.
+The input argument is of type [ConstantReader] (a wrapper around DartObject) and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T` and this is checked and enforced.
 
 The following shows how to register decoder functions for the types `Age`, `Name`, and `User`.
 ```Dart
@@ -219,3 +219,13 @@ For further information on how to generate a topological sorting of vertices see
 Please file feature requests and bugs at the [issue tracker].
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
 [example]: example
+[analyzer]: https://pub.dev/packages/analyzer
+[DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
+[computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
+[GenericReader]: https://pub.dev/packages/generic_reader
+[ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
+
+[source_gen]: https://pub.dev/packages/source_gen
+[source_gen_test]: https://pub.dev/packages/source_gen_test
+[Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
+[GeneratorForAnnotation]: https://pub.dev/documentation/source_gen/latest/source_gen/GeneratorForAnnotation-class.html
