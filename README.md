@@ -90,7 +90,7 @@ final User user = reader.get<User>(userCR);
 
 ## Limitations
 
-Dart does allow storing a class literals as a variable to type [Type], but it is not possible to use this variable as an alias to instantiate an object of type [Type]. This is demonstrated by the short program below:
+Dart does allow storing a class literals as a variable to data-type `Type`, but it is not possible to use this variable as a class alias to instantiate a new object. This is demonstrated by the short program below:
 ```Dart
 class Wrapper<T>{
   const Wrapper(T t);
@@ -114,9 +114,9 @@ bin/example.dart: Error: 'intType' isn't a type.
   final wrappedInt = Wrapper<intType>(29);
                              ^^^^^^^
 ```
-This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of type `Type` as a type parameter or to instantiate new objects. In these cases a class literal is required.
+This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of data-type `Type` as a type parameter or to instantiate new objects. In these cases a class literal is required.
 
-As a consequence it makes is cumbersome to retrieve constants of parametrized data-types. A decoder function for a generic data-type like `Wrapper` could be something like:
+As a consequence it makes it cumbersome to retrieve constants of arbitrary parametrized data-types. A decoder function for a generic data-type like `Wrapper` could be something like:
 ```Dart
 reader.addDecoder<Wrapper>((constantReader){
   final valueCR = constantReader.peek('value');
@@ -130,15 +130,12 @@ reader.addDecoder<Wrapper>((constantReader){
   }
   return null;
 });
-
 ```
 
+Each possible type parameter has to be handled separately. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful.
+An demonstration on how to restrict the possible range of type parameters is shown in section [example].
 
-
-
-
-
-
+Last but not least, constants that need to be retrieved during the source-generation process are most likely annotations and simple data-types that convey useful information to source code generators.
 
 
 ## Usage
