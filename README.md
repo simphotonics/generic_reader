@@ -47,7 +47,7 @@ class User{
   const User({this.name, this.id, this.age});
   final Name name;
   final Age age;
-  final Id id;
+  final int id;
 }
 ```
 ### Decoder Functions
