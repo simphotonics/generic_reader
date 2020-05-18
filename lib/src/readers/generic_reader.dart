@@ -32,7 +32,6 @@ typedef Decoder<T> = T Function(ConstantReader constantReader);
 /// A sealed type that is not and cannot be registered with GenericReader.
 @sealed
 class TypeNotRegistered<T> {
-
   /// Type that is not registered with GenericReader.
   final Type unkownType = T;
 
@@ -145,6 +144,7 @@ class GenericReader {
   }
 
   @deprecated
+
   /// Returns true if [type] and the static type of [constantReader] have
   /// matching display Strings.
   bool hasSameType(ConstantReader constantReader, Type type) {

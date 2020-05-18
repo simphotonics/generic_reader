@@ -19,5 +19,4 @@ Future<void> main() async {
 
   final numbers =
       ConstantReader(lib.classes.first.fields[2].computeConstantValue());
-      
 }
