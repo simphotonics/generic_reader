@@ -2,17 +2,17 @@
 
 
 ## Example
-The file `example.dart` (see folder *bin*) demonstrates how to use [generic_reader] to convert a static Dart representation of a constant object to a runtime object.
+The file `example.dart` (see folder *bin*) demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression.
 
-The program also shows how to register *Decoder* functions for the types **Column** and **SqliteType**.
+The program also shows how to register *Decoder* functions for the types `Column` and `SqliteType`.
 
-The program can be run in a terminal by navigating to the
-folder *generic_reader/example* in your local copy of this library and using the command:
+To run the program in a terminal navigate to the
+folder *generic_reader/example* in your local copy of this library and use the command:
 ```Shell
 $ dart bin/example.dart
 ```
 
-The constant values that are going to be read are the fields of the constant class **Player**:
+The constant values that are going to be read are the fields of the const class `Player`:
 ```Dart
 import 'package:sqlite_entity/sqlite_entity.dart';
 
@@ -22,36 +22,74 @@ class Player {
   final columnName = 'Player';
 
   final id = const Column<Integer>(
-    constraints: {
-      Constraint.PRIMARY_KEY,
-    },
   );
 
   /// First name of player.
   final firstName = const Column<Text>(
     defaultValue: Text('Thomas'),
-    constraints: {
-      Constraint.NOT_NULL,
-      Constraint.UNIQUE,
-    },
   );
 }
 ```
-The first class field holds a **String** value while the following two fields hold values of type **Column<Integer>** and **Column<Text>**, respectively.
+The classes `Column` and `SqliteType` are defined below.
+```Dart
+import 'package:example/src/sqlite_type.dart';
 
+/// Class used to define Sqlite columns.
+class Column<T extends SqliteType> {
+  const Column({
+    this.defaultValue,
+    this.name,
+  });
+
+  /// Default value specified when defining the Sqlite column.
+  final T defaultValue;
+
+  /// Optional [name]. Has to be a valid Dart identifier.
+  final String name;
+
+  /// Returns the type argument.
+  Type get type => T;
+
+  /// Returns true if the generic type [T] is one of the
+  /// following types: [Integer],[Boolean],[Real], or [Text].
+  bool get isValid => (T == Integer || T == Boolean || T == Real || T == Text);
+
+  /// Returns a [String] containing source code
+  /// representing [this].
+  @override
+  String toString() {
+    var b = StringBuffer();
+    b.writeln('Column<$T>(');
+    if (name != null) {
+      b.writeln('  name: \'$name\',');
+    }
+    if (defaultValue != null) {
+      b.writeln('  defalultValue: $defaultValue');
+    }
+    b.writeln(')');
+    return b.toString();
+  }
+}
+```
+
+
+The first class field holds a `String` value while the following two fields hold values of type `Column<Integer>` and `Column<Text>`, respectively.
+
+In this simple example the function [initializeLibraryReaderForDirectory] provided by [source_gen_test] is used to load the source code and initialize objects of type [LibraryReader].
+
+In a standard setting this task is delegated to a builder that reads a builder configuration and loads the relevant assets.
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
-import 'package:sqlite_entity/sqlite_entity.dart';
+import 'package:example/lib/src/sqlite_entity.dart';
 
 Future<void> main() async {
+
   /// Reading the library player.dart.
-  /// This is usually performed by the build-system, for example by using
-  /// the package source_gen. https://pub.dev/packages/source_gen .
-  final playerLib =
+    final playerLib =
       await initializeLibraryReaderForDirectory('src', 'player.dart');
 
   // ConstantReader representing field 'columnName'.
