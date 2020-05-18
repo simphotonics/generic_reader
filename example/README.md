@@ -36,16 +36,28 @@ In a standard setting this task is delegated to a [builder] that reads a builder
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
+import 'package:example/src/column.dart';
+import 'package:example/src/sqlite_type.dart';
+import 'package:example/src/wrapper.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
-import 'package:example/lib/src/sqlite_entity.dart';
 
+/// Demonstrates how use [GenericReader] to read constants
+/// with parametrized type from a static representation
+/// of a compile-time constant expression
+/// represented by a [ConstantReader].
 Future<void> main() async {
+  /// Reading libraries.
+  final playerLib = await initializeLibraryReaderForDirectory(
+    'lib/src',
+    'player.dart',
+  );
 
-  /// Reading the library player.dart.
-    final playerLib =
-      await initializeLibraryReaderForDirectory('src', 'player.dart');
+  final wrapperTestLib = await initializeLibraryReaderForDirectory(
+    'lib/src',
+    'wrapper_test.dart',
+  );
 
   // ConstantReader representing field 'columnName'.
   final columnNameCR =
@@ -55,10 +67,13 @@ Future<void> main() async {
   final firstNameCR =
       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
 
-  // Getting the singleton instance of the reader.
+  final wrapperCR = ConstantReader(
+      wrapperTestLib.classes.first.fields[0].computeConstantValue());
+
+  // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  // Adding a decoder function for constants of type [SqliteType].
+  // Add a decoder function for constants of type [SqliteType].
   reader.addDecoder<SqliteType>((cr) {
     final value = cr.peek('value');
     if (value.isInt) return Integer(value.intValue);
@@ -68,25 +83,15 @@ Future<void> main() async {
     return null;
   });
 
-  // Adding a decoder for constants of type [Constraint].
-  // Note: [Constraint] extends [GenericEnum]. The instance is retrieved from an internal
-  // map. For more information see: https://pub.dev/packages/generic_enum .
-  reader.addDecoder<Constraint>(
-    (cr) => Constraint.valueMap[cr.peek('value').stringValue],
-  );
-
   // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
     final defaultValueCR = cr.peek('defaultValue');
     final defaultValue = reader.get<SqliteType>(defaultValueCR);
-    final constraintsCR = cr.peek('constraints');
-    final constraints = reader.getSet<Constraint>(constraintsCR);
     final nameCR = cr.peek('name');
     final name = reader.get<String>(nameCR);
 
     Column<T> columnFactory<T extends SqliteType>() {
       return Column<T>(
-        constraints: constraints,
         defaultValue: defaultValue,
         name: name,
       );
@@ -101,16 +106,37 @@ Future<void> main() async {
 
   AnsiPen green = AnsiPen()..green(bold: true);
 
-  // How to retrieve an instance of type [String].
+  // Retrieve an instance of [String].
   final columnName = reader.get<String>(columnNameCR);
   print(green('Retrieving a [String]'));
   print('columnName = \'$columnName\'');
   print('');
+  // Prints:
+  // Retrieving a [String]
+  // columnName = 'Player'
 
-  // How to retrieve an instance of type [Column<Text>].
+  // Retrieve an instance of [Column<Text>].
   final columnFirstName = reader.get<Column>(firstNameCR);
   print(green('Retrieving a [Column<Text>].'));
-  print(columnFirstName.sourceCode);
+  print(columnFirstName);
+  // Prints:
+  // Retrieving a [Column<Text>].
+  // Column<Text>(
+  //   defaultValue: Text('Thomas')
+  // )
+
+  reader.addDecoder<Wrapper>((cr) {
+    final valueCR = cr.peek('value');
+    final value = reader.get<dynamic>(valueCR);
+    return Wrapper(value);
+  });
+
+  final wrappedText = reader.get<Wrapper>(wrapperCR);
+  print(green('Retrieving a [Wrapper<Text>]'));
+  print(wrappedText);
+  // Prints:
+  // Retrieving a [Wrapper<Text>]
+  // Wrapper<dynamic>(value: Text('I am of type [Text])'))
 }
 ```
 
@@ -127,7 +153,7 @@ Taking advantage of the fact that [SqliteType] is the supertype of `Integer`, `B
   });
 
 ```
-The only difference is that the resulting constant will be of type `Column<SqliteType>`. 
+The only difference is that the resulting constant will be of type `Column<SqliteType>`.
 
 
 ## Features and bugs
