@@ -2,7 +2,7 @@
 
 
 ## Example
-The file `example.dart` demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression. The program also shows how to register *Decoder* functions for the types `Column` and `SqliteType`.
+The file [example.dart] demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
 To run the program in a terminal navigate to the
 folder *generic_reader/example* in your local copy of this library and use the command:
@@ -10,7 +10,7 @@ folder *generic_reader/example* in your local copy of this library and use the c
 $ dart bin/example.dart
 ```
 
-The constant values that are going to be read are the fields of the const class `Player`:
+The constant values that are going to be read are the fields of the const class [Player] shown below:
 ```Dart
 import 'package:sqlite_entity/sqlite_entity.dart';
 
@@ -28,54 +28,11 @@ class Player {
   );
 }
 ```
-The classes `Column` and `SqliteType` are defined below.
-```Dart
-import 'package:example/src/sqlite_type.dart';
-
-/// Class used to define Sqlite columns.
-class Column<T extends SqliteType> {
-  const Column({
-    this.defaultValue,
-    this.name,
-  });
-
-  /// Default value specified when defining the Sqlite column.
-  final T defaultValue;
-
-  /// Optional [name]. Has to be a valid Dart identifier.
-  final String name;
-
-  /// Returns the type argument.
-  Type get type => T;
-
-  /// Returns true if the generic type [T] is one of the
-  /// following types: [Integer],[Boolean],[Real], or [Text].
-  bool get isValid => (T == Integer || T == Boolean || T == Real || T == Text);
-
-  /// Returns a [String] containing source code
-  /// representing [this].
-  @override
-  String toString() {
-    var b = StringBuffer();
-    b.writeln('Column<$T>(');
-    if (name != null) {
-      b.writeln('  name: \'$name\',');
-    }
-    if (defaultValue != null) {
-      b.writeln('  defalultValue: $defaultValue');
-    }
-    b.writeln(')');
-    return b.toString();
-  }
-}
-```
-
-
-The first class field holds a `String` value while the following two fields hold values of type `Column<Integer>` and `Column<Text>`, respectively.
+The class field columnName holds a `String` value while the following two fields hold values of type `Column<Integer>` and `Column<Text>`, respectively.
 
 In this simple example the function [initializeLibraryReaderForDirectory] provided by [source_gen_test] is used to load the source code and initialize objects of type [LibraryReader].
 
-In a standard setting this task is delegated to a builder that reads a builder configuration and loads the relevant assets.
+In a standard setting this task is delegated to a [builder] that reads a builder configuration and loads the relevant assets.
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
@@ -162,8 +119,16 @@ Future<void> main() async {
 ## Features and bugs
 Please file feature requests and bugs at the [issue tracker].
 
+[builder]: https://github.com/dart-lang/build
 [issue tracker]: https://github.com/simphotonics/directed_graph/issues
-[graphs]: https://pub.dev/packages/graphs
+
+[initializeLibraryForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
+[LibraryReader]: https://pub.dev/documentation/source_gen/latest/source_gen/LibraryReader-class.html
+
+[generic_reader]: https://pub.dev/packages/generic_reader
 [directed_graph]: https://github.com/simphotonics/directed_graph/
-[Column]: 
-[SqliteType]:
+[Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/column.dart
+[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
+[Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
+[example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/example.dart
+[Decoder]:https://github.com/simphotonics/generic_reader#decoder-functions
