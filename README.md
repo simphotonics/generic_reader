@@ -11,9 +11,9 @@ subsequent maintenance is often easier, less error prone, and certainly less rep
 
 The premise of source code generation is that we can somehow specify (hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
 
-Dart's static [analyzer] provides access to libraries, classes, fields, class methods, etc (contained in *.dart files) in the form of [Elements]. These elements are static representations of runtime objects.
+Dart's static [analyzer] provides access to libraries, classes, class fields, class methods, functions, variables, etc (contained in *.dart files) in the form of [Elements].
 
-Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are known during static analysis. Constants values are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
+Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are at compile time and known during static analysis. Compile-time constant expressions are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [DartObject] has methods that allow reading the underlying constant object.
 For example, it is an easy task to retrieve a constant value of type `String`:
@@ -24,11 +24,11 @@ final String name = constantObject.toStringValue();
 ```
 
 For user defined data-types that may be defined in terms of other user defined types it can be a sightly more difficult task to read the underlying constant value.
-[GenericReader] provides a systematic way of retrieving constant objects with arbitrary types.
+[GenericReader] is aimed at retrieving compile-time constant expressions with arbitrary types.
 
 ## Terminology
 
-User defined data-types are often a composition of other types, as illustrated in the example below. In order to retrieve a constant value of type `User` one has to retrieve its components first.
+User defined data-types are often a composition of other types, as illustrated in the example below. In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, and `Age` first.
 ```Dart
 class Age{
   const Age(this.age);
@@ -54,7 +54,7 @@ class User{
 
 [GenericReader] provides a systematic method of retrieving constants of arbitrary data-types by allowing users to register `Decoder` functions (for lack of better word).
 
-Decoders functions know how to `decode` a specific data-type. As such, a decoder is a parametrized function with the following signature:
+Decoders functions know how to `decode` a specific data-type and have the following signature:
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
@@ -96,7 +96,7 @@ final User user = reader.get<User>(userCR);
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
 Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
 
-This is demonstrated by the short program below:
+<!-- This is demonstrated by the short program below:
 ```Dart
 class Wrapper<T>{
   const Wrapper(T t);
@@ -119,7 +119,7 @@ bin/example.dart: Error: 'intType' isn't a type.
   final wrappedInt = Wrapper<intType>(29);
                              ^^^^^^^
 ```
-This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of data-type `Type` as a type parameter or to instantiate new objects. In these cases a **type literal** is required.
+This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of data-type `Type` as a type parameter or to instantiate new objects. In these cases a **type literal** is required. -->
 
 <!-- As a consequence, it is rather cumbersome to retrieve constants of arbitrary parametrized data-types.
 
@@ -151,7 +151,7 @@ reader.addDecoder<Wrapper>((constantReader){
 
 In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constants with generic type is presented in [example].
 
-Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and simple data-types that convey useful information to source code generators.
+Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey useful information to source code generators.
 
 
 ## Usage
@@ -160,7 +160,7 @@ To use this library include [generic_reader] and [source_gen] as dependencies in
 
 ## Examples
 
-For further information on how to generate a topological sorting of vertices see [example].
+For further information on how to a reader [DartObject]s and retrieve constants of arbitrary type see [example].
 
 ## Features and bugs
 
