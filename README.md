@@ -165,7 +165,9 @@ For further information on how to generate a topological sorting of vertices see
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker].
+
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
+
 [example]: example
 
 [analyzer]: https://pub.dev/packages/analyzer
