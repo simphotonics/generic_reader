@@ -30,7 +30,7 @@ class Column<T extends SqliteType> {
       b.writeln('  name: \'$name\',');
     }
     if (defaultValue != null) {
-      b.writeln('  defalultValue: $defaultValue');
+      b.writeln('  defaultValue: $defaultValue');
     }
     b.writeln(')');
     return b.toString();

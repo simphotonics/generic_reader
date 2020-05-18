@@ -112,8 +112,22 @@ Future<void> main() async {
   print(green('Retrieving a [Column<Text>].'));
   print(columnFirstName.sourceCode);
 }
+```
+
+Taking advantage of the fact that [SqliteType] is the supertype of `Integer`, `Boolean`, `Text`, and `Real`, we can shorten the decoder function of [Column] to:
+```Dart
+// Adding a decoder for constants of type [Column].
+  reader.addDecoder<Column>((cr) {
+    final defaultValueCR = cr.peek('defaultValue');
+    final defaultValue = reader.get<SqliteType>(defaultValueCR);
+    final nameCR = cr.peek('name');
+    final name = reader.get<String>(nameCR);
+
+    return Column(defaultValue: defaultValue, name: name,);
+  });
 
 ```
+The only difference is that the resulting constant will be of type `Column<SqliteType>`. 
 
 
 ## Features and bugs
