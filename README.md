@@ -60,7 +60,7 @@ typedef T Decoder<T>(ConstantReader constantReader);
 ```
 The input argument is of type [ConstantReader] (a wrapper around DartObject) and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T` and this is checked and enforced.
 
-The following shows how to register decoder functions for the types `Age`, `Name`, and `User`. Note that each decoder knows the *field-names* and *field-types* of the class it handles. For example the decoder for `User` knows that `age` is of type `Age` and that the field-name is 'age'.
+The following shows how to register decoder functions for the types `Age`, `Name`, and `User`. Note that each decoder knows the *field-names* and *field-types* of the class it handles. For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is 'age'.
 ```Dart
 ...
 
@@ -96,7 +96,7 @@ final User user = reader.get<User>(userCR);
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
 Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
 
-<!-- This is demonstrated by the short program below:
+This is demonstrated by the short program below:
 ```Dart
 class Wrapper<T>{
   const Wrapper(T t);
@@ -121,9 +121,9 @@ bin/example.dart: Error: 'intType' isn't a type.
 ```
 This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of data-type `Type` as a type parameter or to instantiate new objects. In these cases a **type literal** is required.
 
-As a consequence, it is rather cumbersome to retrieve constants of arbitrary parametrized data-types. -->
+<!-- As a consequence, it is rather cumbersome to retrieve constants of arbitrary parametrized data-types.
 
-<!-- A decoder function for a generic data-type like `Wrapper` could be something like:
+ A decoder function for a generic data-type like `Wrapper` could be something like:
 ```Dart
 reader.addDecoder<Wrapper>((constantReader){
   final valueCR = constantReader.peek('value');
