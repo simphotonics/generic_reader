@@ -122,7 +122,8 @@ Please file feature requests and bugs at the [issue tracker].
 [builder]: https://github.com/dart-lang/build
 [issue tracker]: https://github.com/simphotonics/directed_graph/issues
 
-[initializeLibraryForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
+[initializeLibraryReaderForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
+
 [LibraryReader]: https://pub.dev/documentation/source_gen/latest/source_gen/LibraryReader-class.html
 
 [generic_reader]: https://pub.dev/packages/generic_reader
@@ -132,3 +133,6 @@ Please file feature requests and bugs at the [issue tracker].
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
 [example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/example.dart
 [Decoder]:https://github.com/simphotonics/generic_reader#decoder-functions
+
+[source_gen]: https://pub.dev/packages/source_gen
+[source_gen_test]: https://pub.dev/packages/source_gen_test
