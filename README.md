@@ -11,7 +11,7 @@ subsequent maintenance is often easier, less error prone, and certainly less rep
 
 The premise of source code generation is that we can somehow specify (hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
 
-Dart's static [analyzer] provides access to libraries, classes, fields, class methods, etc (contained in *.dart files) in the form of elements. These elements are static representations of runtime objects.
+Dart's static [analyzer] provides access to libraries, classes, fields, class methods, etc (contained in *.dart files) in the form of [Elements]. These elements are static representations of runtime objects.
 
 Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are known during static analysis. Constants values are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
 
@@ -167,6 +167,8 @@ For further information on how to generate a topological sorting of vertices see
 Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
+
+[Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
 
 [example]: example
 
