@@ -94,7 +94,7 @@ final User user = reader.get<User>(userCR);
 ## Limitations
 
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
-Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments. 
+Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
 
 <!-- This is demonstrated by the short program below:
 ```Dart
@@ -167,12 +167,10 @@ For further information on how to a reader [DartObject]s and retrieve constants 
 Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
+[analyzer]: https://pub.dev/packages/analyzer
 
 [Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
 
-[example]: example
-
-[analyzer]: https://pub.dev/packages/analyzer
 
 [computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
 
@@ -180,11 +178,15 @@ Please file feature requests and bugs at the [issue tracker].
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
+[example]: example
+
 [Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
 
 [GeneratorForAnnotation]: https://pub.dev/documentation/source_gen/latest/source_gen/GeneratorForAnnotation-class.html
 
 [GenericReader]: https://pub.dev/packages/generic_reader
+
+[generic_reader]: https://pub.dev/packages/generic_reader
 
 [source_gen]: https://pub.dev/packages/source_gen
 
