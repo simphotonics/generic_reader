@@ -11,7 +11,7 @@ subsequent maintenance is often easier, less error prone, and certainly less rep
 
 The premise of source code generation is that we can somehow specify (hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
 
-Dart's static [analyzer] provides access to libraries, classes, class fields, class methods, functions, variables, etc (contained in *.dart files) in the form of [Elements].
+Dart's static [analyzer] provides access to libraries, classes, class fields, class methods, functions, variables, etc in the form of [Elements].
 
 Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are at compile time and known during static analysis. Compile-time constant expressions are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
 
@@ -94,7 +94,7 @@ final User user = reader.get<User>(userCR);
 ## Limitations
 
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
-Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
+Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments. 
 
 <!-- This is demonstrated by the short program below:
 ```Dart
