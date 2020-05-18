@@ -1,13 +1,22 @@
 import 'package:ansicolor/ansicolor.dart';
+import 'package:example/src/column.dart';
+import 'package:example/src/sqlite_type.dart';
+import 'package:example/src/wrapper.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
-import 'package:sqlite_entity/sqlite_entity.dart';
 
 Future<void> main() async {
-  /// Read library player.dart.
-  final playerLib =
-      await initializeLibraryReaderForDirectory('src', 'player.dart');
+  /// Reading libraries.
+  final playerLib = await initializeLibraryReaderForDirectory(
+    'lib/src',
+    'player.dart',
+  );
+
+  final wrapperTestLib = await initializeLibraryReaderForDirectory(
+    'lib/src',
+    'wrapper_test.dart',
+  );
 
   // ConstantReader representing field 'columnName'.
   final columnNameCR =
@@ -16,6 +25,9 @@ Future<void> main() async {
   // ConstantReade representing field 'firstName'.
   final firstNameCR =
       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
+
+  final wrapperCR = ConstantReader(
+      wrapperTestLib.classes.first.fields[0].computeConstantValue());
 
   // Get singleton instance of the reader.
   final reader = GenericReader();
@@ -30,25 +42,15 @@ Future<void> main() async {
     return null;
   });
 
-  // Add a decoder for constants of type [Constraint].
-  // Note: [Constraint] extends [GenericEnum]. The instance is retrieved from an internal
-  // map. For more information see: https://pub.dev/packages/generic_enum .
-  reader.addDecoder<Constraint>(
-    (cr) => Constraint.valueMap[cr.peek('value').stringValue],
-  );
-
   // Add a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
     final defaultValueCR = cr.peek('defaultValue');
     final defaultValue = reader.get<SqliteType>(defaultValueCR);
-    final constraintsCR = cr.peek('constraints');
-    final constraints = reader.getSet<Constraint>(constraintsCR);
     final nameCR = cr.peek('name');
     final name = reader.get<String>(nameCR);
 
     Column<T> columnFactory<T extends SqliteType>() {
       return Column<T>(
-        constraints: constraints,
         defaultValue: defaultValue,
         name: name,
       );
@@ -62,7 +64,7 @@ Future<void> main() async {
   });
 
   AnsiPen green = AnsiPen()..green(bold: true);
- 
+
   // Retrieve an instance of [String].
   final columnName = reader.get<String>(columnNameCR);
   print(green('Retrieving a [String]'));
@@ -73,4 +75,33 @@ Future<void> main() async {
   final columnFirstName = reader.get<Column>(firstNameCR);
   print(green('Retrieving a [Column<Text>].'));
   print(columnFirstName.sourceCode);
+
+  reader.addDecoder<Text>((cr) {
+    final valueCR = cr.peek('value');
+    final value = valueCR.stringValue;
+    return Text(value);
+  });
+
+  reader.addDecoder<Wrapper>((cr) {
+    final valueCR = cr.peek('value');
+    final value = reader.getOrError(valueCR);
+
+    final type = reader.findType(valueCR);
+    //final value = reader.getDecoder(type)(valueCR);
+    return Wrapper(value);
+  });
+
+  print(reader.registeredTypes);
+
+  print(wrapperCR.objectValue.type);
+
+  final test = reader.get<Wrapper>(wrapperCR);
+
+  print(test);
+
+  final wrapper1 = Wrapper<dynamic>(Text('wrapper1'));
+
+  print(wrapper1);
+
+  print(Decoder7 is Decoder8);
 }

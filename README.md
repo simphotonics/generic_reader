@@ -151,7 +151,7 @@ reader.addDecoder<Wrapper>((constantReader){
 
 In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constants with generic type is presented in [example].
 
-Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey useful information to source code generators.
+Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
 
 
 ## Usage

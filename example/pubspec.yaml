@@ -11,5 +11,3 @@ dependencies:
     path: ../
   source_gen: ^0.9.5
   source_gen_test: ^0.1.1
-  sqlite_entity:
-    path: ../../../FlutterProjects/model_builder/sqlite_entity

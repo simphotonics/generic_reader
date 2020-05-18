@@ -2,9 +2,7 @@
 
 
 ## Example
-The file `example.dart` (see folder *bin*) demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression.
-
-The program also shows how to register *Decoder* functions for the types `Column` and `SqliteType`.
+The file `example.dart` demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression. The program also shows how to register *Decoder* functions for the types `Column` and `SqliteType`.
 
 To run the program in a terminal navigate to the
 folder *generic_reader/example* in your local copy of this library and use the command:
@@ -167,3 +165,5 @@ Please file feature requests and bugs at the [issue tracker].
 [issue tracker]: https://github.com/simphotonics/directed_graph/issues
 [graphs]: https://pub.dev/packages/graphs
 [directed_graph]: https://github.com/simphotonics/directed_graph/
+[Column]: 
+[SqliteType]:
