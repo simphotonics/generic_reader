@@ -6,6 +6,10 @@ import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
 
+/// Demonstrates how use [GenericReader] to read constants
+/// with parametrized type from a static representation
+/// of a compile-time constant expression
+/// represented by a [ConstantReader].
 Future<void> main() async {
   /// Reading libraries.
   final playerLib = await initializeLibraryReaderForDirectory(
@@ -42,7 +46,7 @@ Future<void> main() async {
     return null;
   });
 
-  // Add a decoder for constants of type [Column].
+  // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
     final defaultValueCR = cr.peek('defaultValue');
     final defaultValue = reader.get<SqliteType>(defaultValueCR);
@@ -70,38 +74,30 @@ Future<void> main() async {
   print(green('Retrieving a [String]'));
   print('columnName = \'$columnName\'');
   print('');
+  // Prints:
+  // Retrieving a [String]
+  // columnName = 'Player'
 
   // Retrieve an instance of [Column<Text>].
   final columnFirstName = reader.get<Column>(firstNameCR);
   print(green('Retrieving a [Column<Text>].'));
-  print(columnFirstName.sourceCode);
-
-  reader.addDecoder<Text>((cr) {
-    final valueCR = cr.peek('value');
-    final value = valueCR.stringValue;
-    return Text(value);
-  });
+  print(columnFirstName);
+  // Prints:
+  // Retrieving a [Column<Text>].
+  // Column<Text>(
+  //   defaultValue: Text('Thomas')
+  // )
 
   reader.addDecoder<Wrapper>((cr) {
     final valueCR = cr.peek('value');
-    final value = reader.getOrError(valueCR);
-
-    final type = reader.findType(valueCR);
-    //final value = reader.getDecoder(type)(valueCR);
+    final value = reader.get<dynamic>(valueCR);
     return Wrapper(value);
   });
 
-  print(reader.registeredTypes);
-
-  print(wrapperCR.objectValue.type);
-
-  final test = reader.get<Wrapper>(wrapperCR);
-
-  print(test);
-
-  final wrapper1 = Wrapper<dynamic>(Text('wrapper1'));
-
-  print(wrapper1);
-
-  print(Decoder7 is Decoder8);
+  final wrappedText = reader.get<Wrapper>(wrapperCR);
+  print(green('Retrieving a [Wrapper<Text>]'));
+  print(wrappedText);
+  // Prints:
+  // Retrieving a [Wrapper<Text>]
+  // Wrapper<dynamic>(value: Text('I am of type [Text])'))
 }
