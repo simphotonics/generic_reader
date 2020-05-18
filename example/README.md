@@ -2,7 +2,7 @@
 
 
 ## Example
-The file [example.dart] demonstrates how to use [generic_reader] to read a constant value from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
+The file [example.dart] demonstrates how to use [generic_reader] to read the value of a constant from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
 To run the program in a terminal navigate to the
 folder *generic_reader/example* in your local copy of this library and use the command:
@@ -140,7 +140,7 @@ Future<void> main() async {
 }
 ```
 
-Taking advantage of the fact that [SqliteType] is the supertype of `Integer`, `Boolean`, `Text`, and `Real`, we can shorten the decoder function of [Column] to:
+Taking advantage of the fact that [SqliteType] is the supertype of `Integer`, `Boolean`, `Text`, and `Real`, the decoder function of [Column] can be shortened to:
 ```Dart
 // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
@@ -153,7 +153,7 @@ Taking advantage of the fact that [SqliteType] is the supertype of `Integer`, `B
   });
 
 ```
-The only difference is that the resulting constant will be of type `Column<SqliteType>`.
+The only difference is that the resulting variable [wrappedText] will be of type `Column<SqliteType>`.
 
 
 ## Features and bugs

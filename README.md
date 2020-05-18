@@ -16,7 +16,7 @@ Dart's static [analyzer] provides access to libraries, classes, class fields, cl
 Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are known at compile time. Compile-time constant expressions are represented by a [DartObject] and can be accessed by using the method [computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [DartObject] has methods that allow reading the underlying constant object.
-For example, it is an easy task to retrieve a constant value of type `String`:
+For example, it is an easy task to retrieve a value of type `String`:
 ```Dart
 // Let 'nameFieldElement' be a FieldElement containing a String.
 final constantObject = nameFieldElement.computeConstantValue();
@@ -149,7 +149,7 @@ reader.addDecoder<Wrapper>((constantReader){
 });
 ``` -->
 
-In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constants with generic type is presented in [example].
+In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constants values with generic type is presented in [example].
 
 Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
 
