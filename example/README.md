@@ -256,7 +256,7 @@ Please file feature requests and bugs at the [issue tracker].
 [Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/column.dart
 [SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/example.dart
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
 [Decoder]:https://github.com/simphotonics/generic_reader#decoder-functions
 
 [source_gen]: https://pub.dev/packages/source_gen
