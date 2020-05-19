@@ -90,6 +90,11 @@ reader.addDecoder<User>((constantReader){
 // Retrieving a constant value of type User:
 final User user = reader.get<User>(userCR);
 ```
+Note: The method [peek] returns an instance of [ConstantReader] representing the class field specified by the input `String`. It returns `null` if the field was not initialized or not present.
+Moreover, [peek] will recursively scan the super classes if the field could not be found in the current context.
+
+In principle, decoded instructions on how to re-create a constant at runtime can be obtained by using
+the class [Revivable]. However, in the context of writing decoder functions, the code might be easier to read if the fieldNames are specified manually when using the function peek.
 
 ## Limitations
 
@@ -149,7 +154,7 @@ reader.addDecoder<Wrapper>((constantReader){
 });
 ``` -->
 
-In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constants values with generic type is presented in [example].
+In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. A demonstration on how to retrieve constant values with generic type is presented in [example].
 
 Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
 
@@ -187,6 +192,8 @@ Please file feature requests and bugs at the [issue tracker].
 [GenericReader]: https://pub.dev/packages/generic_reader
 
 [generic_reader]: https://pub.dev/packages/generic_reader
+
+[peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
 
 [source_gen]: https://pub.dev/packages/source_gen
 
