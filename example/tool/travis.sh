@@ -53,9 +53,10 @@ dartanalyzer \
 
 # Running benchmark
 echo
-echo -e "${GREEN}=== Running Example $PWD...${RESET}"
+echo -e "${GREEN}=== Running Examples $PWD...${RESET}"
 echo
 
-dart ./bin/example.dart
+dart ./bin/player_example.dart
+dart ./bin/wrapper_example.dart
 
 echo
