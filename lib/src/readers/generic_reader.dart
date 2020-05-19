@@ -66,23 +66,24 @@ class GenericReader {
 
   /// Pre-registered instances of [TypeChecker].
   final Map<Type, TypeChecker> _checkers = {
-    int: TypeChecker.fromRuntime(int),
-    double: TypeChecker.fromRuntime(double),
     bool: TypeChecker.fromRuntime(bool),
-    String: TypeChecker.fromRuntime(String),
-    Type: TypeChecker.fromRuntime(Type),
-    Symbol: TypeChecker.fromRuntime(Symbol),
+    double: TypeChecker.fromRuntime(double),
+    int: TypeChecker.fromRuntime(int),
     List: TypeChecker.fromRuntime(List),
     Set: TypeChecker.fromRuntime(Set),
-    Map: TypeChecker.fromRuntime(Map),
+    String: TypeChecker.fromRuntime(String),
+    Symbol: TypeChecker.fromRuntime(Symbol),
+    Type: TypeChecker.fromRuntime(Type),
   };
 
   /// Pre-registered instances of [Decoder] functions.
+  /// Note: [List]s and [Set]s are handled by
+  /// [getList<T>()] and [getSet<T>()], respectively.
   final Map<Type, Decoder> _decoders = {
     //Null: (constantReader) => null,
-    int: (constantReader) => constantReader.intValue,
-    double: (constantReader) => constantReader.doubleValue,
     bool: (constantReader) => constantReader.boolValue,
+    double: (constantReader) => constantReader.doubleValue,
+    int: (constantReader) => constantReader.intValue,
     String: (constantReader) => constantReader.stringValue,
     Type: (constantReader) => constantReader.typeValue,
     Symbol: (constantReader) => constantReader.symbolValue,
@@ -90,7 +91,8 @@ class GenericReader {
 
   /// Adds or updates a decoder function for type [T].
   ///
-  /// Note: Decoders for built-in type can not be added or updated.
+  /// Note: Decoders for built-in types or [TypeNotRegistered]
+  /// must not be added or updated.
   void addDecoder<T>(Decoder decoder) {
     if (isBuiltIn<T>() || T == TypeNotRegistered) return;
     // Adding TypeChecker.
@@ -102,7 +104,8 @@ class GenericReader {
 
   /// Clears the decoder function for type [T] and returns it.
   ///
-  /// Note: Pre-registered decoders for built-in types can not be cleared.
+  /// Note: Decoders that cannot be cleared handle the following types:
+  /// [bool], [double], [int], [String], [Type], [Symbol], and [TypeNotRegistered].
   Decoder<T> clearDecoder<T>() {
     if (T != isBuiltIn<T>()) {
       return _decoders.remove(T);
@@ -111,9 +114,19 @@ class GenericReader {
     }
   }
 
+  /// Returns [true] if a decoder function for [T] is registered with [this].
+  bool hasDecoder<T>() {
+    if (_decoders[T] == null) return false;
+    return true;
+  }
+
   /// Returns the decoder for type [T].
+  @deprecated
   Decoder<T> decoder<T>() => _decoders[T];
 
+
+  /// Returns the decoder for [type].
+  @deprecated
   Decoder getDecoder(Type type) => _decoders[type];
 
   /// Returns all types with registered decoders as [Set<Type>].
@@ -125,15 +138,17 @@ class GenericReader {
   ///       For example: [Colum<int>] and [Column<String>]
   ///       both resolve to [Column].
   bool isA<T>(ConstantReader constantReader) {
-    _checkers[T] ??= TypeChecker.fromRuntime(T);
     if (T == Null && constantReader == null) return true;
-    if (constantReader == null) return false;
-    return constantReader.instanceOf(_checkers[T]);
+    if (constantReader == null) return true;
+    final checker = _checkers[T] ?? TypeChecker.fromRuntime(T);
+    return constantReader.instanceOf(checker);
   }
 
   /// Returns a type [Type] that matches the static [DartType] of
-  /// [constantReader] or [TypeNotRegistered] if no match is found
-  /// among the types that are registered with [this].
+  /// [constantReader].
+  ///
+  /// Returns [TypeNotRegistered] if no match is found
+  /// among the types that are registered, i.e. have a decoder function.
   Type findType(ConstantReader constantReader) {
     for (final type in _checkers.keys) {
       if (constantReader.instanceOf(_checkers[type])) {
@@ -143,10 +158,9 @@ class GenericReader {
     return TypeNotRegistered;
   }
 
-  @deprecated
-
   /// Returns true if [type] and the static type of [constantReader] have
   /// matching display Strings.
+  @deprecated
   bool hasSameType(ConstantReader constantReader, Type type) {
     if (type == Null && constantReader == null) return true;
     if (constantReader == null) return false;
@@ -267,15 +281,16 @@ class GenericReader {
   /// Returns true if [T] is a built-in type.
   bool isBuiltIn<T>() {
     return (T == int ||
-        T == String ||
-        T == bool ||
         T == double ||
+        T == bool ||
+        T == String ||
         T == Map ||
         T == List ||
         T == num ||
         T == Set ||
         T == Symbol ||
         T == Null ||
+        T == Type ||
         T == num);
   }
 }
