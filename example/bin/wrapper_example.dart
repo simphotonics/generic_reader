@@ -22,7 +22,7 @@ Future<void> main() async {
     'wrapper_test.dart',
   );
 
-  final wrapperCR = ConstantReader(
+  final wrappedCR = ConstantReader(
       wrapperTestLib.classes.first.fields[0].computeConstantValue());
 
   // Get singleton instance of the reader.
@@ -47,10 +47,10 @@ Future<void> main() async {
     return Wrapper(value);
   });
 
-  final wrappedText = reader.get<Wrapper>(wrapperCR);
-  print(green('Retrieving a [Wrapper<Text>]:'));
-  print(wrappedText);
+  final wrapped = reader.get<Wrapper>(wrappedCR);
+  print(green('Retrieving a [Wrapper<dynamic>]:'));
+  print(wrapped);
   // Prints:
-  // Retrieving a [Wrapper<Text>]:
-  // Wrapper<dynamic>(value: Text('I am of type [Text])'))
+  // Retrieving a [Wrapper<dynamic>]:
+  // Wrapper<dynamic>(value: 29)
 }
