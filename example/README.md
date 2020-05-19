@@ -254,11 +254,16 @@ Please file feature requests and bugs at the [issue tracker].
 [generic_reader]: https://pub.dev/packages/generic_reader
 [directed_graph]: https://github.com/simphotonics/directed_graph/
 [Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/column.dart
-[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
+[ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
+[Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
-[Decoder]:https://github.com/simphotonics/generic_reader#decoder-functions
 
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
+
+[ReaderError]: https://pub.dev/documentation/generic_reader/latest/generic_reader/ReaderError-class.html
 [source_gen]: https://pub.dev/packages/source_gen
 [source_gen_test]: https://pub.dev/packages/source_gen_test
+
+[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
+
 [wrapper_test.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/wrapper_test.dart
