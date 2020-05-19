@@ -1,5 +1,6 @@
 import 'package:ansicolor/ansicolor.dart';
 import 'package:example/src/column.dart';
+import 'package:example/src/sponsor.dart';
 import 'package:example/src/sqlite_type.dart';
 import 'package:example/src/wrapper.dart';
 import 'package:generic_reader/generic_reader.dart';
@@ -29,6 +30,9 @@ Future<void> main() async {
   // ConstantReade representing field 'firstName'.
   final firstNameCR =
       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
+
+  final sponsorsCR =
+      ConstantReader(playerLib.classes.first.fields[3].computeConstantValue());
 
   final wrapperCR = ConstantReader(
       wrapperTestLib.classes.first.fields[0].computeConstantValue());
@@ -80,14 +84,15 @@ Future<void> main() async {
 
   // Retrieve an instance of [Column<Text>].
   final columnFirstName = reader.get<Column>(firstNameCR);
-  print(green('Retrieving a [Column<Text>].'));
+  print(green('Retrieving a [Column<Text>]:'));
   print(columnFirstName);
   // Prints:
-  // Retrieving a [Column<Text>].
+  // Retrieving a [Column<Text>]:
   // Column<Text>(
   //   defaultValue: Text('Thomas')
   // )
 
+  // Adding a decoder function for type [Wrapper].
   reader.addDecoder<Wrapper>((cr) {
     final valueCR = cr.peek('value');
     final value = reader.get<dynamic>(valueCR);
@@ -95,9 +100,21 @@ Future<void> main() async {
   });
 
   final wrappedText = reader.get<Wrapper>(wrapperCR);
-  print(green('Retrieving a [Wrapper<Text>]'));
+  print(green('Retrieving a [Wrapper<Text>]:'));
   print(wrappedText);
   // Prints:
-  // Retrieving a [Wrapper<Text>]
+  // Retrieving a [Wrapper<Text>]:
   // Wrapper<dynamic>(value: Text('I am of type [Text])'))
+
+  // Adding a decoder function for type [Sponsor].
+  reader.addDecoder<Sponsor>((cr) => Sponsor(cr.peek('name').stringValue));
+
+  final sponsors = reader.getList<Sponsor>(sponsorsCR);
+
+  print('');
+  print(green('Retrieving a [List<Sponsor>]:'));
+  print(sponsors);
+  // Prints:
+  // Retrieving a [List<Sponsor>]:
+  // [Sponsor: Johnson's, Sponsor: Smith Brothers]
 }
