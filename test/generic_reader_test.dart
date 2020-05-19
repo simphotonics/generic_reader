@@ -172,6 +172,5 @@ Future<void> main() async {
         expect(e, isA<ReaderError>());
       }
     });
-
   });
 }

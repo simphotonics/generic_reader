@@ -6,7 +6,7 @@ abstract class SqliteType {
 }
 
 /// Private class
-class _SqliteType<T> extends SqliteType{
+class _SqliteType<T> extends SqliteType {
   const _SqliteType._(this.value) : super._();
   final T value;
   Type get type => T;
@@ -22,7 +22,6 @@ class _SqliteType<T> extends SqliteType{
 
   @override
   int get hashCode => value.hashCode;
-
 }
 
 /// Sqlite type representing [int].
