@@ -3,11 +3,10 @@ import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:generic_reader/src/errors/reader_error.dart';
 
-/// Typedef of a parameterized function with generic
-/// type parameter [T] and an input argument of type [ConstantReader].
+/// Typedef of a function return type [T]
+/// and an input argument of type [ConstantReader].
 ///
-/// The function returns an instance of [T] and
-/// can be used to register a decoder function with the [GenericReader].
+/// The can be used to register a decoder with the [GenericReader].
 ///
 /// Example:
 /// ```
@@ -94,7 +93,7 @@ class GenericReader {
   /// Note: Decoders for built-in types or [TypeNotRegistered]
   /// must not be added or updated.
   void addDecoder<T>(Decoder decoder) {
-    if (isBuiltIn<T>() || T == TypeNotRegistered) return;
+    if (isBuiltIn(T) || T == TypeNotRegistered || T == dynamic) return;
     // Adding TypeChecker.
     _checkers[T] ??= TypeChecker.fromRuntime(T);
 
@@ -102,20 +101,19 @@ class GenericReader {
     _decoders[T] = decoder;
   }
 
-  /// Clears the decoder function for type [T] and returns it.
+  /// Clears the decoder function for type [T] and returns it as instance
+  /// of [Decoder<T>].
   ///
   /// Note: Decoders that cannot be cleared handle the following types:
   /// [bool], [double], [int], [String], [Type], [Symbol], and [TypeNotRegistered].
   Decoder<T> clearDecoder<T>() {
-    if (T != isBuiltIn<T>()) {
-      return _decoders.remove(T);
-    } else {
-      return null;
-    }
+    if (isBuiltIn(T)) return null;
+    _checkers.remove(T);
+    return _decoders.remove(T);
   }
 
   /// Returns [true] if a decoder function for [T] is registered with [this].
-  bool hasDecoder<T>() {
+  bool hasDecoder(Type T) {
     if (_decoders[T] == null) return false;
     return true;
   }
@@ -123,7 +121,6 @@ class GenericReader {
   /// Returns the decoder for type [T].
   @deprecated
   Decoder<T> decoder<T>() => _decoders[T];
-
 
   /// Returns the decoder for [type].
   @deprecated
@@ -279,7 +276,7 @@ class GenericReader {
   }
 
   /// Returns true if [T] is a built-in type.
-  bool isBuiltIn<T>() {
+  bool isBuiltIn(Type T) {
     return (T == int ||
         T == double ||
         T == bool ||
