@@ -52,7 +52,7 @@ class User{
 ```
 ### Decoder Functions
 
-[GenericReader] provides a systematic method of retrieving constants of arbitrary data-types by allowing users to register `Decoder` functions (for lack of better word).
+[GenericReader] provides a systematic method of retrieving constants of arbitrary data-types by allowing users to register `Decoder` functions (for lack of better a word).
 
 Decoders functions know how to `decode` a specific data-type and have the following signature:
 ```Dart
