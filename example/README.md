@@ -3,7 +3,7 @@
 
 ## Retrieving Constants with Parametrized Type
 
-The file [example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parametrized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
+The file [player_example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parametrized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
 To run the program in a terminal navigate to the
 folder *generic_reader/player_example* in your local copy of this library and use the command:
@@ -256,7 +256,7 @@ Please file feature requests and bugs at the [issue tracker].
 [Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/column.dart
 [SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
-[example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/example.dart
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/example.dart
 [Decoder]:https://github.com/simphotonics/generic_reader#decoder-functions
 
 [source_gen]: https://pub.dev/packages/source_gen
