@@ -1,6 +1,5 @@
 import 'package:example/src/column.dart';
 import 'package:example/src/sqlite_type.dart';
-import 'package:example/src/wrapper.dart';
 
 class Player {
   const Player();
@@ -14,5 +13,3 @@ class Player {
     defaultValue: Text('Thomas'),
   );
 }
-
-
