@@ -46,7 +46,6 @@ class User{
 ```
 In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, and `Age` first.
 
-[GenericReader] provides a systematic method of retrieving constant values of arbitrary type.
 
 ## Usage
 
@@ -201,6 +200,8 @@ Please file feature requests and bugs at the [issue tracker].
 [computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
 
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
+
+[Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
