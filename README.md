@@ -166,7 +166,7 @@ To use this library include [generic_reader] and [source_gen] as dependencies in
 
 ## Examples
 
-For further information on how to a reader [DartObject]s and retrieve constants of arbitrary type see [example].
+For further information on how to use [GenericReader] to retrieve constants of arbitrary type see [example].
 
 ## Features and bugs
 
