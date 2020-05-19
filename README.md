@@ -98,7 +98,7 @@ final userCR = ConstantReader(userFieldElement.computeConstantValue());
 final reader = GenericReader();
 
 // Adding decoders.
-reader.addDecoder<Age>((constantReader) => Age(constantReader.peak('age').intValue));
+reader.addDecoder<Age>((constantReader) => Age(constantReader.peek('age').intValue));
 
 reader.addDecoder<Name>((constantReader) {
   final firstName = constantReader.peek('firstName').stringValue;
