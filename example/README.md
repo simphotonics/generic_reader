@@ -182,7 +182,7 @@ class Wrapper<T> {
 
 The type argument `T` can assume any data-type and it is impractical to handle all available types manually in the decoder function of `Wrapper`.
 
-Instead, one can use the method `get` with the type `dynamic` and the reader attempts to match the static type of the [ConstantReader] input to a registered data-type.
+Instead, one can use the method `get` with the type `dynamic`. This signals to the reader to match the static type of the [ConstantReader] input to a registered data-type.
 If a match is found `get<dynamic>(constantReader)` returns a constant with
 the appropriate value, otherwise a [ReaderError] is thrown.
 
