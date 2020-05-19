@@ -164,9 +164,9 @@ The only difference is that the resulting variable `columnFirstName` will then b
 
 ## Retrieving Constants with Arbitrary Type
 
-The example in the section above demonstrates how to retrieve constants with known parametrized type. The program presented below shows how to proceed if the constant has an arbitrary type parameter.
+The example in the section above demonstrates how to retrieve constants with *known* parametrized type. The program presented below shows how to proceed if the constant has an arbitrary type parameter.
 
-For this purpose consider the following *wrapper* class. It is a generic class that wraps a value of type `T`:
+For this purpose consider the following generic class that wraps a value of type `T`:
 ```Dart
 /// Wraps a variable of type [T].
 class Wrapper<T> {
