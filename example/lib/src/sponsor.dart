@@ -9,4 +9,11 @@ class Sponsor {
   String toString() {
     return 'Sponsor: $name';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Sponsor && other.hashCode == hashCode;
+
+  @override
+  int get hashCode => name.hashCode;
 }

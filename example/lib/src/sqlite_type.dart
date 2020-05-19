@@ -15,6 +15,14 @@ class _SqliteType<T> extends SqliteType{
 
   @override
   String toString() => sourceCode;
+
+  @override
+  bool operator ==(Object other) =>
+      other is _SqliteType<T> && other.hashCode == hashCode;
+
+  @override
+  int get hashCode => value.hashCode;
+
 }
 
 /// Sqlite type representing [int].
