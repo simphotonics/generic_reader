@@ -60,7 +60,11 @@ typedef T Decoder<T>(ConstantReader constantReader);
 ```
 The input argument is of type [ConstantReader] (a wrapper around DartObject) and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T` and this is checked and enforced.
 
-The following shows how to register decoder functions for the types `Age`, `Name`, and `User`. Note that each decoder knows the *field-names* and *field-types* of the class it handles. For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is 'age'.
+The following shows how to register decoder functions for the types `Age`, `Name`, and `User`. Note that each decoder knows the *field-names* and *field-types* of the class it handles.
+For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is 'age'.
+
+In principle, decoded instructions on how to re-create a constant at runtime can be obtained by using
+the class [Revivable]. However, in the context of writing decoder functions, the source-code might be easier to read if the field-names are specified manually when using the function [peek] (see below).
 ```Dart
 ...
 
@@ -92,9 +96,6 @@ final User user = reader.get<User>(userCR);
 ```
 Note: The method [peek] returns an instance of [ConstantReader] representing the class field specified by the input `String`. It returns `null` if the field was not initialized or not present.
 Moreover, [peek] will recursively scan the super classes if the field could not be found in the current context.
-
-In principle, decoded instructions on how to re-create a constant at runtime can be obtained by using
-the class [Revivable]. However, in the context of writing decoder functions, the code might be easier to read if the fieldNames are specified manually when using the function peek.
 
 ## Limitations
 
@@ -194,6 +195,8 @@ Please file feature requests and bugs at the [issue tracker].
 [generic_reader]: https://pub.dev/packages/generic_reader
 
 [peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
+
+[Revivable]: https://pub.dev/documentation/source_gen/latest/source_gen/Revivable-class.html
 
 [source_gen]: https://pub.dev/packages/source_gen
 
