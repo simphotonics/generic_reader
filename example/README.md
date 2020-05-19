@@ -6,7 +6,7 @@
 The file [example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parametrized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
 To run the program in a terminal navigate to the
-folder *generic_reader/example* in your local copy of this library and use the command:
+folder *generic_reader/player_example* in your local copy of this library and use the command:
 ```Shell
 $ dart bin/example.dart
 ```
