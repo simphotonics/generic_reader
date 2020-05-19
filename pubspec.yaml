@@ -1,8 +1,8 @@
 name: generic_reader
 
 description:
-  Customizable class aimed at reading static Dart analyzer object representations and
-  converting them into runtime object instances.
+  GenericReader provides a systematic method of retrieving constants of arbitrary data-type from a static representation
+  of a Dart compile-time constant.
 
 version: 0.0.1
 
