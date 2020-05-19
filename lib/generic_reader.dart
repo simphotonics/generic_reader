@@ -3,3 +3,4 @@
 library generic_reader;
 
 export 'src/readers/generic_reader.dart';
+export 'src/errors/reader_error.dart';
