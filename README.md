@@ -50,12 +50,12 @@ In order to retrieve a constant value of type `User` one has to retrieve its com
 ## Usage
 
 To use this library the following steps are required:
-1. Include [generic_reader], [source_gen] as dev_dependencies in your pubspec.yaml file.
+1. Include [generic_reader], and [source_gen] as dev_dependencies in your pubspec.yaml file.
 2. Create an instance of [GenericReader] (e.g. within a source code generator function):
    ```Dart
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
-3. Register a [Decoder] function for each user created data-types that needs to handled.
+3. Register a [Decoder] function for each data-type that needs to be handled.
    The built-in types `bool, double, int, String, Type, and Symbol` have pre-registered
    decoder functions.
 4. Retrieve the constant values that are required using the methods `get<T>, getList<T>,       getSet<T>`:
