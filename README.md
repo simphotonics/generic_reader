@@ -22,13 +22,7 @@ For example, it is an easy task to retrieve a value of type `String`:
 final constantObject = nameFieldElement.computeConstantValue();
 final String name = constantObject.toStringValue();
 ```
-
-For user defined data-types that may be defined in terms of other user defined types it can be a sightly more difficult task to read the underlying constant value.
-[GenericReader] is aimed at retrieving compile-time constant expressions with arbitrary types.
-
-## Terminology
-
-User defined data-types are often a composition of other types, as illustrated in the example below. In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, and `Age` first.
+It can be a sightly more difficult task to read the underlying constant value of user defined data-types. These are often a composition of other types, as illustrated in the example below.
 ```Dart
 class Age{
   const Age(this.age);
@@ -50,7 +44,37 @@ class User{
   final int id;
 }
 ```
-### Decoder Functions
+In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, and `Age` first.
+
+[GenericReader] provides a systematic method of retrieving constant values of arbitrary type.
+
+## Usage
+
+To use this library the following steps are required:
+1. Include [generic_reader], [source_gen] as dev_dependencies in your pubspec.yaml file.
+2. Create an instance of [GenericReader] (e.g. within a source code generator function):
+   ```Dart
+   final reader = GenericReader(); // Note: [reader] is a singleton.
+   ```
+3. Register a [Decoder] function for each user created data-types that needs to handled.
+   The built-in types `bool, double, int, String, Type, and Symbol` have pre-registered
+   decoder functions.
+4. Retrieve the constant values that are required using the methods `get<T>, getList<T>,       getSet<T>`:
+   ```Dart
+   ...
+   // Retrieving a constant of type [User]
+   final user = get<User>(userConstantReader);
+
+   // Retrieving a list with entries of type [Name].
+   final names = getList<Name>(namesConstantReader);
+
+   // Retrieving a set with entries of type [double].
+   final values = getSet<double>(valuesConstantReader);
+
+   ```
+5. Process the runtime constants and generate the required source code.
+
+## Decoder Functions
 
 [GenericReader] provides a systematic method of retrieving constants of arbitrary data-types by allowing users to register `Decoder` functions (for lack of better a word).
 
@@ -159,10 +183,6 @@ In practice, however, generic classes are often designed in such a manner that o
 
 Last but not least, constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
 
-
-## Usage
-
-To use this library include [generic_reader] and [source_gen] as dependencies in your pubspec.yaml file.
 
 ## Examples
 
