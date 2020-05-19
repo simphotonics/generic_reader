@@ -1,6 +1,4 @@
-import 'package:example/src/column.dart';
-import 'package:example/src/sponsor.dart';
-import 'package:example/src/sqlite_type.dart';
+import 'package:example/example_generic_reader.dart';
 
 /// Class modelling a player.
 class Player {
@@ -22,4 +20,10 @@ class Player {
     Sponsor('Johnson\'s'),
     Sponsor('Smith Brothers'),
   ];
+
+  /// Test unregistered type.
+  final unregistered = const UnRegisteredTestType();
+
+  /// Test [Set<int>].
+  final Set<int> primeNumbers = const {1, 3, 5, 7, 11, 13};
 }
