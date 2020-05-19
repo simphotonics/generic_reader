@@ -26,6 +26,12 @@ class Player {
   final firstName = const Column<Text>(
     defaultValue: Text('Thomas'),
   );
+
+  /// List of sponsors
+  final List<Sponsor> sponsors = const [
+    Sponsor('Johnson\'s'),
+    Sponsor('Smith Brothers'),
+  ];
 }
 ```
 The class field columnName holds a `String` value while the following two fields hold values of type `Column<Integer>` and `Column<Text>`, respectively.
@@ -137,6 +143,18 @@ Future<void> main() async {
   // Prints:
   // Retrieving a [Wrapper<Text>]
   // Wrapper<dynamic>(value: Text('I am of type [Text])'))
+
+  // Adding a decoder function for type [Sponsor].
+  reader.addDecoder<Sponsor>((cr) => Sponsor(cr.peek('name').stringValue));
+
+  final sponsors = reader.getList<Sponsor>(sponsorsCR);
+
+  print('');
+  print(green('Retrieving a [List<Sponsor>]:'));
+  print(sponsors);
+  // Prints:
+  // Retrieving a [List<Sponsor>]:
+  // [Sponsor: Johnson's, Sponsor: Smith Brothers]
 }
 ```
 
