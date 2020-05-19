@@ -56,7 +56,7 @@ To use this library the following steps are required:
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
 3. Register a [Decoder] function for each data-type that needs to be handled.
-   The built-in types `bool, double, int, String, Type, and Symbol` have pre-registered
+   The built-in types `bool, double, int, String, Type,` and `Symbol` have pre-registered
    decoder functions.
 4. Retrieve the constant values that are required using the methods `get<T>, getList<T>,       getSet<T>`:
    ```Dart
