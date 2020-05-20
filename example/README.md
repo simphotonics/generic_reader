@@ -1,9 +1,9 @@
 # Generic Reader - Example
 [![Build Status](https://travis-ci.com/simphotonics/generic_reader.svg?branch=master)](https://travis-ci.com/simphotonics/generic_reader)
 
-## Retrieving Constants with Parametrized Type
+## Retrieving Constants with Parameterized Type
 
-The file [player_example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parametrized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
+The file [player_example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parameterized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
 The constant values that are going to be read are the fields of the const class [Player]:
 <details>
@@ -68,7 +68,7 @@ import 'package:source_gen_test/src/init_library_reader.dart';
 /// # dart bin/player_example.dart
 
 /// Demonstrates how to use [GenericReader] to read constants
-/// with parametrized type from a static representation
+/// with parameterized type from a static representation
 /// of a compile-time constant expression
 /// represented by a [ConstantReader].
 Future<void> main() async {
@@ -177,7 +177,7 @@ The only difference is that the resulting variable `columnFirstName` will then b
 
 ## Retrieving Constants with Arbitrary Type
 
-The example in the section above demonstrates how to retrieve constants with *known* parametrized type. The program presented below shows how to proceed if the constant has an arbitrary type parameter.
+The example in the section above demonstrates how to retrieve constants with *known* parameterized type. The program presented below shows how to proceed if the constant has an arbitrary type parameter.
 
 For this purpose consider the following generic class that wraps a value of type `T`:
 ```Dart
@@ -221,7 +221,7 @@ import 'package:source_gen_test/src/init_library_reader.dart';
 /// # dart bin/wrapper_example.dart
 
 /// Demonstrates how use [GenericReader] to read constants
-/// with parametrized type from a static representation
+/// with parameterized type from a static representation
 /// of a compile-time constant expression
 /// represented by a [ConstantReader].
 Future<void> main() async {

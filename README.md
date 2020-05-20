@@ -163,7 +163,7 @@ bin/example.dart: Error: 'intType' isn't a type.
 ```
 This is slightly confusing since `intType` is of type `Type`. The point is that one cannot use a variable of data-type `Type` as a type parameter or to instantiate new objects. In these cases a **type literal** is required. -->
 
-<!-- As a consequence, it is rather cumbersome to retrieve constants of arbitrary parametrized data-types.
+<!-- As a consequence, it is rather cumbersome to retrieve constants of arbitrary parameterized data-types.
 
  A decoder function for a generic data-type like `Wrapper` could be something like:
 ```Dart

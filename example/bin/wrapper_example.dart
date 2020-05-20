@@ -12,7 +12,7 @@ import 'package:source_gen_test/src/init_library_reader.dart';
 /// # dart bin/wrapper_example.dart
 
 /// Demonstrates how use [GenericReader] to read constants
-/// with parametrized type from a static representation
+/// with parameterized type from a static representation
 /// of a compile-time constant expression
 /// represented by a [ConstantReader].
 Future<void> main() async {
