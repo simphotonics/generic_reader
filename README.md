@@ -23,7 +23,10 @@ final constantObject = nameFieldElement.computeConstantValue();
 final String name = constantObject.toStringValue();
 ```
 It can be a sightly more difficult task to read the underlying constant value of user defined data-types. These are often a composition of other types, as illustrated in the example below.
-```Dart
+<details>
+  <summary>Click to show source-code.</summary>
+
+  ```Dart
 class Age{
   const Age(this.age);
   final int age;
@@ -44,6 +47,10 @@ class User{
   final int id;
 }
 ```
+
+</details>
+
+
 In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, and `Age` first.
 
 
