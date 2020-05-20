@@ -8,7 +8,7 @@ The file [player_example.dart] demonstrates how to use [generic_reader] to read 
 The constant values that are going to be read are the fields of the const class [Player]:
 <details>
 
-<summary> Click to show source-code. </summary>
+<summary> Click to show player.dart. </summary>
 
 ```Dart
 import 'package:generic_reader/src/test_types/column.dart';
@@ -50,7 +50,7 @@ In the simple example below, the function [initializeLibraryReaderForDirectory] 
 In a standard setting this task is delegated to a [builder] that reads a builder configuration and loads the relevant assets.
 
 <details>
-<summary> Click to show source-code. </summary>
+<summary> Click to show player_example.dart. </summary>
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
@@ -204,6 +204,8 @@ The program below retrieves the constant `wrappedVariable` defined in [wrapper_t
 Note the use of the method `get<dynamic>()` when defining the [Decoder] function for
 the data-type `Wrapper`.
 
+<details> <summary> Click to show wrapper_example.dart. </summary>
+
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
 import 'package:example/src/sqlite_type.dart';
@@ -252,6 +254,7 @@ Future<void> main() async {
   // Wrapper<dynamic>(value: 29)
 }
 ```
+</details>
 
 
 ## Features and bugs
