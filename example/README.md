@@ -269,7 +269,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [generic_reader]: https://pub.dev/packages/generic_reader
 [directed_graph]: https://github.com/simphotonics/directed_graph/
-[Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/column.dart
+[Column]: https://github.com/simphotonics/generic_reader/blob/master/lib/src/test_types/column.dart
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
@@ -280,6 +280,6 @@ Please file feature requests and bugs at the [issue tracker].
 [source_gen]: https://pub.dev/packages/source_gen
 [source_gen_test]: https://pub.dev/packages/source_gen_test
 
-[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/sqlite_type.dart
+[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/lib/src/test_types/sqlite_type.dart
 
 [wrapper_test.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/wrapper_test.dart

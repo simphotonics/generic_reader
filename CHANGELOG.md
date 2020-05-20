@@ -12,4 +12,8 @@ Amended docs.
 
 # 0.0.4
 
-Fixed test 'get<Integer>()'.
+Fixed test 'get<>()'.
+
+# 0.0.5
+
+Amended README.md
