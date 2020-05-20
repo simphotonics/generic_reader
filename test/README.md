@@ -2,8 +2,9 @@
 
 ## Introduction
 
-[GenericEnumBuilder] provides source code generating classes
-based on [source_gen] and [analyzer].
+[GenericReader] provides a systematic method of retrieving constants of arbitrary data-type
+from a static representation
+of a Dart compile-time constant.
 
 This part of the library contains tests designed to verify
 that generic_reader behaves as expected.
@@ -24,5 +25,5 @@ Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
 [analyzer]: https://pub.dev/packages/analyzer
-[source_gen]: https://pub.dev/packages/source_gen
+[GenericReader]: https://pub.dev/packages/generic_reader
 [LibraryReader]: https://pub.dev/documentation/source_gen/latest/source_gen/LibraryReader-class.html
