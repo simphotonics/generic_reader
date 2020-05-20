@@ -9,3 +9,7 @@ Changed Dart SDK version to >=2.8.1
 # 0.0.3
 
 Amended docs.
+
+# 0.0.4
+
+Fixed test 'get<Integer>()'.
