@@ -42,7 +42,7 @@ class TypeNotRegistered<T> {
 /// Reader providing generic methods aimed at converting static Dart analyzer
 /// object representations into runtime objects.
 ///
-/// Intended use: Retrieval of complile-time constant expressions during source code generation.
+/// Intended use: Retrieval of compile-time constant expressions during source code generation.
 class GenericReader {
   /// Private constructor.
   GenericReader._() {
