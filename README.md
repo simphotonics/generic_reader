@@ -24,13 +24,7 @@ final String name = constantObject.toStringValue();
 ```
 It can be a sightly more difficult task to read the underlying constant value of user defined data-types. These are often a composition of other types, as illustrated in the example below.
 <details>
-  <summary> 
-
-    ```Dart
-    class Age{ ...
-    ```
-
-  </summary>
+  <summary> Click to show source-code. </summary>
 
   ```Dart
 class Age{
@@ -94,13 +88,17 @@ Decoders functions know how to `decode` a specific data-type and have the follow
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
-The input argument is of type [ConstantReader] (a wrapper around DartObject) and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T` and this is checked and enforced.
+The input argument is of type [ConstantReader] (a wrapper around DartObject) and the function
+returns an object of type `T`. It is presumed that the input argument `constantReader` represents
+an object of type `T` and this is checked and enforced.
 
-The following shows how to register decoder functions for the types `Age`, `Name`, and `User`. Note that each decoder knows the *field-names* and *field-types* of the class it handles.
+The following shows how to register decoder functions for the types `Age`, `Name`, and `User`.
+Note that each decoder knows the *field-names* and *field-types* of the class it handles.
 For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is *age*.
 
 In principle, decoded instructions on how to re-create a constant at runtime can be obtained by using
-the class [Revivable]. However, in the context of writing decoder functions, the source-code might be easier to read if the field-names are specified manually when using the function [peek] (see below).
+the class [Revivable]. However, in the context of writing decoder functions, the source-code
+might be easier to read if the field-names are specified manually when using the function [peek] (see below).
 ```Dart
 ...
 
@@ -130,13 +128,15 @@ reader.addDecoder<User>((constantReader){
 // Retrieving a constant value of type User:
 final User user = reader.get<User>(userCR);
 ```
-Note: The method [peek] returns an instance of [ConstantReader] representing the class field specified by the input `String`. It returns `null` if the field was not initialized or not present.
+Note: The method [peek] returns an instance of [ConstantReader] representing the class field specified by the input `String`.
+It returns `null` if the field was not initialized or not present.
 Moreover, [peek] will recursively scan the super classes if the field could not be found in the current context.
 
 ## Limitations
 
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
-Programming the logic for reading generic constant values is made more difficult by the fact that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
+Programming the logic for reading generic constant values is made more difficult by the fact
+that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
 
 <!-- This is demonstrated by the short program below:
 ```Dart

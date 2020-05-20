@@ -5,25 +5,28 @@
 
 The file [player_example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parametrized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
 
-To run the program in a terminal navigate to the
-folder *generic_reader/player_example* in your local copy of this library and use the command:
-```Shell
-$ dart bin/example.dart
-```
+The constant values that are going to be read are the fields of the const class [Player]:
+<details>
 
-The constant values that are going to be read are the fields of the const class [Player] shown below:
+<summary> Click to show source-code. </summary>
+
 ```Dart
-import 'package:sqlite_entity/sqlite_entity.dart';
+import 'package:generic_reader/src/test_types/column.dart';
+import 'package:generic_reader/src/test_types/sponsor.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/unregistered_test_type.dart';
 
+/// Class modelling a player.
 class Player {
   const Player();
 
+  /// Column name
   final columnName = 'Player';
 
-  final id = const Column<Integer>(
-  );
+  /// Column storing player id.
+  final id = const Column<Integer>();
 
-  /// First name of player.
+  /// Column storing first name of player.
   final firstName = const Column<Text>(
     defaultValue: Text('Thomas'),
   );
@@ -33,13 +36,21 @@ class Player {
     Sponsor('Johnson\'s'),
     Sponsor('Smith Brothers'),
   ];
-}
-```
-The class field *columnName* holds a `String` value while the following two fields hold values of type `Column<Integer>` and `Column<Text>`, respectively.
 
-In this simple example the function [initializeLibraryReaderForDirectory] provided by [source_gen_test] is used to load the source code and initialize objects of type [LibraryReader].
+  /// Test unregistered type.
+  final unregistered = const UnRegisteredTestType();
+
+  /// Test [Set<int>].
+  final Set<int> primeNumbers = const {1, 3, 5, 7, 11, 13};
+```
+</details>
+
+In the simple example below, the function [initializeLibraryReaderForDirectory] provided by [source_gen_test] is used to load the source code and initialize objects of type [LibraryReader].
 
 In a standard setting this task is delegated to a [builder] that reads a builder configuration and loads the relevant assets.
+
+<details>
+<summary> Click to show source-code. </summary>
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
@@ -146,6 +157,8 @@ Future<void> main() async {
   // [Sponsor: Johnson's, Sponsor: Smith Brothers]
 }
 ```
+
+</details>
 
 Taking advantage of the fact that [SqliteType] is the super-type of `Integer`, `Boolean`, `Text`, and `Real`, the decoder function of [Column] can be shortened to:
 ```Dart
