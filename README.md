@@ -24,7 +24,13 @@ final String name = constantObject.toStringValue();
 ```
 It can be a sightly more difficult task to read the underlying constant value of user defined data-types. These are often a composition of other types, as illustrated in the example below.
 <details>
-  <summary>Click to show source-code.</summary>
+  <summary> 
+
+    ```Dart
+    class Age{ ...
+    ```
+
+  </summary>
 
   ```Dart
 class Age{
