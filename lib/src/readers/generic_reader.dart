@@ -1,4 +1,3 @@
-import 'package:analyzer/dart/element/type.dart' show DartType;
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:generic_reader/src/errors/reader_error.dart';
@@ -262,17 +261,6 @@ class GenericReader {
       if (entry != null) result.add(entry);
     }
     return result;
-  }
-
-  /// Returns the [DartType] of [constantReader.objectValue].
-  DartType dartType(ConstantReader constantReader) {
-    return constantReader.objectValue.type;
-  }
-
-  /// Returns [List<DartType], the type arguments for parametrized types.
-  /// Return an empty list if no type arguments are present.
-  List<DartType> dartTypeArguments(ConstantReader constantReader) {
-    return constantReader.objectValue.type.typeArguments ?? [];
   }
 
   /// Returns true if [T] is a built-in type.
