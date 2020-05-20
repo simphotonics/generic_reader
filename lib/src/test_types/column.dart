@@ -1,4 +1,4 @@
-import 'package:example/src/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
 
 /// Class used to define Sqlite columns.
 class Column<T extends SqliteType> {

@@ -1,10 +1,9 @@
 import 'package:generic_reader/src/test_types/sqlite_type.dart';
 
-/// Const class for testing purposes.
 class Researcher {
   const Researcher();
 
-  final List<Integer> id = const [Integer(87)];
+  final int id = 87;
 
   final List<String> names = const ['Thomas', 'Mayor'];
 

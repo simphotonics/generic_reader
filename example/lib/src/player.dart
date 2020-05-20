@@ -1,4 +1,7 @@
-import 'package:example/example_generic_reader.dart';
+import 'package:generic_reader/src/test_types/column.dart';
+import 'package:generic_reader/src/test_types/sponsor.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/unregistered_test_type.dart';
 
 /// Class modelling a player.
 class Player {

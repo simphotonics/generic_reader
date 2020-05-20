@@ -1,8 +1,8 @@
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
 import 'package:test/test.dart';
-import 'package:example/example_generic_reader.dart';
 
 /// To run this program navigate to the top directory the package
 /// [generic_reader] and use the command:
@@ -12,84 +12,58 @@ import 'package:example/example_generic_reader.dart';
 /// directory of [generic_reader].
 Future<void> main() async {
   /// Read library.
-  final lib = await initializeLibraryReaderForDirectory(
-      'example/lib/src', 'player.dart');
+  final lib =
+      await initializeLibraryReaderForDirectory('test/src', 'researcher.dart');
 
   print(lib.classes.first.fields);
 
-  final columnNameCR =
+  final idCR =
       ConstantReader(lib.classes.first.fields[0].computeConstantValue());
 
-  final idCR =
+  final namesCR =
       ConstantReader(lib.classes.first.fields[1].computeConstantValue());
 
-  final firstNameCR =
+  final integersCR =
       ConstantReader(lib.classes.first.fields[2].computeConstantValue());
 
-  final textCR = firstNameCR.peek('defaultValue');
-
-  final sponsorsCR =
+  final numberCR =
       ConstantReader(lib.classes.first.fields[3].computeConstantValue());
 
-  final unregCR =
+  final titleCR =
       ConstantReader(lib.classes.first.fields[4].computeConstantValue());
 
-  final primeNumbersCR =
+  final realCR =
       ConstantReader(lib.classes.first.fields[5].computeConstantValue());
 
-  final reader = GenericReader();
-
-  Decoder<SqliteType> sqliteTypeDecoder = (cr) {
+  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
     final value = cr.peek('value');
     if (value.isInt) return Integer(value.intValue);
     if (value.isBool) return Boolean(value.boolValue);
     if (value.isString) return Text(value.stringValue);
     if (value.isDouble) return Real(value.doubleValue);
     return null;
-  };
+  });
 
-  Decoder<Column> columnDecoder = (cr) {
-    final defaultValueCR = cr.peek('defaultValue');
-    final defaultValue = reader.get<SqliteType>(defaultValueCR);
-    final nameCR = cr.peek('name');
-    final name = reader.get<String>(nameCR);
-
-    Column<T> columnFactory<T extends SqliteType>() {
-      return Column<T>(
-        defaultValue: defaultValue,
-        name: name,
-      );
-    }
-
-    if (reader.isA<Text>(defaultValueCR)) return columnFactory<Text>();
-    if (reader.isA<Integer>(defaultValueCR)) return columnFactory<Integer>();
-    if (reader.isA<Boolean>(defaultValueCR)) return columnFactory<Boolean>();
-    if (reader.isA<Real>(defaultValueCR)) return columnFactory<Real>();
-    return null;
-  };
-
-  Decoder<Sponsor> sponsorDecoder = (cr) {
-    return Sponsor(cr.peek('name').stringValue);
-  };
+  final reader = GenericReader();
 
   group('Type functions:', () {
     test('isA<String>()', () {
-      expect(reader.isA<String>(columnNameCR), true);
+      expect(reader.isA<String>(titleCR), true);
     });
-    test('isA<Column>()', () {
-      expect(reader.isA<Column>(idCR), true);
+    test('isA<Set>()', () {
+      expect(reader.isA<Set>(integersCR), true);
     });
     test('isBuiltIn<String>()', () {
       expect(reader.isBuiltIn(String), true);
     });
     test('isBuiltIn<Column>()', () {
-      expect(reader.isBuiltIn(Column), false);
+      expect(reader.isBuiltIn(Runes), false);
     });
 
     test('findType()', () {
-      expect(reader.findType(columnNameCR), String);
+      expect(reader.findType(titleCR), String);
       // [firstNameCR] represents a constant of type [Text].
-      expect(reader.findType(firstNameCR), TypeNotRegistered);
+      expect(reader.findType(realCR), TypeNotRegistered);
     });
   });
 
@@ -120,39 +94,28 @@ Future<void> main() async {
     test('get<SqliteType>()', () {
       reader.addDecoder<SqliteType>(sqliteTypeDecoder);
       expect(
-        reader.get<SqliteType>(textCR),
-        Text('Thomas'),
+        reader.get<SqliteType>(realCR),
+        Real(39.5),
       );
       reader.clearDecoder<SqliteType>();
     });
-    test('get<Column>()', () {
+    test('getList<String>()', () {
+      expect(
+        reader.getList<String>(namesCR),
+        const ['Thomas', 'Mayor'],
+      );
+    });
+    test('getList<Integer>()', () {
       reader.addDecoder<SqliteType>(sqliteTypeDecoder);
-      reader.addDecoder<Column>(columnDecoder);
       expect(
-        reader.get<Column>(firstNameCR).toString(),
-        Column<Text>(
-          defaultValue: Text('Thomas'),
-        ).toString(),
+        reader.getList<SqliteType>(idCR),
+        const [Integer(87)],
       );
-      reader.clearDecoder<SqliteType>();
-      reader.clearDecoder<Column>();
-    });
-
-    test('getList<Sponsor>()', () {
-      reader.addDecoder<Sponsor>(sponsorDecoder);
-      expect(
-        reader.getList<Sponsor>(sponsorsCR),
-        const [
-          Sponsor('Johnson\'s'),
-          Sponsor('Smith Brothers'),
-        ],
-      );
-      reader.clearDecoder<Sponsor>();
     });
     test('getSet<int>()', () {
       expect(
-        reader.getSet<int>(primeNumbersCR),
-        const {1, 3, 5, 7, 11, 13},
+        reader.getSet<int>(integersCR),
+        const {47, 91},
       );
     });
   });
@@ -160,14 +123,14 @@ Future<void> main() async {
   group('Errors:', () {
     test('ReaderError: Unreg. type', () {
       try {
-        reader.get<UnRegisteredTestType>(unregCR);
+        reader.get<Runes>(numberCR);
       } catch (e) {
         expect(e, isA<ReaderError>());
       }
     });
     test('ReaderError: Wrong type', () {
       try {
-        reader.get<String>(unregCR);
+        reader.get<String>(realCR);
       } catch (e) {
         expect(e, isA<ReaderError>());
       }

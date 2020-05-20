@@ -1,4 +1,4 @@
-import 'package:example/src/wrapper.dart';
+import 'package:generic_reader/src/test_types/wrapper.dart';
 
 /// User to the [Wrapper].
 class WrapperTest {

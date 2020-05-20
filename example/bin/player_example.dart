@@ -1,10 +1,10 @@
 import 'package:ansicolor/ansicolor.dart';
-import 'package:example/src/column.dart';
-import 'package:example/src/sponsor.dart';
-import 'package:example/src/sqlite_type.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
+import 'package:generic_reader/src/test_types/column.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/sponsor.dart';
 
 /// To run this program navigate to the folder: /example
 /// in your local copy the package [generic_reader] and

@@ -1,6 +1,6 @@
 import 'package:ansicolor/ansicolor.dart';
-import 'package:example/src/sqlite_type.dart';
-import 'package:example/src/wrapper.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/wrapper.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
@@ -48,9 +48,11 @@ Future<void> main() async {
   });
 
   final wrapped = reader.get<Wrapper>(wrappedCR);
+  print('');
   print(green('Retrieving a [Wrapper<dynamic>]:'));
   print(wrapped);
   // Prints:
+  //
   // Retrieving a [Wrapper<dynamic>]:
   // Wrapper<dynamic>(value: 29)
 }
