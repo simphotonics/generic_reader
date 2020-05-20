@@ -1,6 +1,6 @@
 
 # Generic Reader
-
+[![Build Status](https://travis-ci.com/simphotonics/generic_reader.svg?branch=master)](https://travis-ci.com/simphotonics/generic_reader)
 
 
 ## Introduction
