@@ -111,6 +111,7 @@ Future<void> main() async {
         reader.getList<SqliteType>(idCR),
         const [Integer(87)],
       );
+      reader.clearDecoder<SqliteType>();
     });
     test('getSet<int>()', () {
       expect(
