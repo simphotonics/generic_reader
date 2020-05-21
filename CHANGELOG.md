@@ -18,4 +18,7 @@ Fixed test 'get<>()'.
 
 Amended README.md
 
+# 0.0.6
 
+The method addDecoder<> now returns an instance
+of the reader to allow method chaining.

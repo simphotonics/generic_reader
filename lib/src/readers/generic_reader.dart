@@ -88,16 +88,19 @@ class GenericReader {
   };
 
   /// Adds or updates a decoder function for type [T].
+  /// Returns [this] to allow method chaining.
   ///
   /// Note: Decoders for built-in types or [TypeNotRegistered]
   /// must not be added or updated.
-  void addDecoder<T>(Decoder decoder) {
-    if (isBuiltIn(T) || T == TypeNotRegistered || T == dynamic) return;
+  GenericReader addDecoder<T>(Decoder decoder) {
+    if (isBuiltIn(T) || T == TypeNotRegistered || T == dynamic) return this;
     // Adding TypeChecker.
     _checkers[T] ??= TypeChecker.fromRuntime(T);
 
     // Adding Decoder function.
     _decoders[T] = decoder;
+
+    return this;
   }
 
   /// Clears the decoder function for type [T] and returns it as instance
