@@ -92,20 +92,37 @@ Future<void> main() async {
   // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  // Add a decoder function for constants of type [SqliteType].
-  reader.addDecoder<SqliteType>((cr) {
-    final value = cr.peek('value');
-    if (value.isInt) return Integer(value.intValue);
-    if (value.isBool) return Boolean(value.boolValue);
-    if (value.isString) return Text(value.stringValue);
-    if (value.isDouble) return Real(value.doubleValue);
-    return null;
+  final Decoder<Integer> integerDecoder = ((cr) {
+    if (cr == null) return null;
+    return Integer(cr.peek('value')?.intValue);
+  });
+  final Decoder<Real> realDecoder = ((cr) {
+    if (cr == null) return null;
+    return Real(cr.peek('value')?.doubleValue);
+  });
+  final Decoder<Boolean> booleanDecoder = ((cr) {
+    if (cr == null) return null;
+    return Boolean(cr.peek('value')?.boolValue);
+  });
+  final Decoder<Text> textDecoder = ((cr) {
+    if (cr == null) return null;
+    return Text(cr.peek('value')?.stringValue);
+  });
+
+  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
+    if (cr == null) return null;
+    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
+    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
+    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
+    return reader.get<Boolean>(cr);
   });
 
   // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
+    if (cr == null) return null;
     final defaultValueCR = cr.peek('defaultValue');
     final defaultValue = reader.get<SqliteType>(defaultValueCR);
+
     final nameCR = cr.peek('name');
     final name = reader.get<String>(nameCR);
 
@@ -116,12 +133,22 @@ Future<void> main() async {
       );
     }
 
-    if (reader.isA<Text>(defaultValueCR)) return columnFactory<Text>();
-    if (reader.isA<Integer>(defaultValueCR)) return columnFactory<Integer>();
-    if (reader.isA<Boolean>(defaultValueCR)) return columnFactory<Boolean>();
-    if (reader.isA<Real>(defaultValueCR)) return columnFactory<Real>();
-    return null;
+    if (reader.holdsA<Column>(cr, typeArgs: [Text]))
+      return columnFactory<Text>();
+    if (reader.holdsA<Column>(cr, typeArgs: [Real]))
+      return columnFactory<Real>();
+    if (reader.holdsA<Column>(cr, typeArgs: [Integer]))
+      return columnFactory<Integer>();
+    return columnFactory<Boolean>();
   });
+
+  reader
+      .addDecoder<Integer>(integerDecoder)
+      .addDecoder<Boolean>(booleanDecoder)
+      .addDecoder<Text>(textDecoder)
+      .addDecoder<Real>(realDecoder)
+      .addDecoder<SqliteType>(sqliteTypeDecoder);
+
 
   AnsiPen green = AnsiPen()..green(bold: true);
 
@@ -155,25 +182,19 @@ Future<void> main() async {
   // Prints:
   // Retrieving a [List<Sponsor>]:
   // [Sponsor: Johnson's, Sponsor: Smith Brothers]
+
+  final id = reader.get<Column>(idCR);
+  print('');
+  print(green('Retrieving a [Column<Integer>]:'));
+  print(id);
+  // Prints:
+  // Retrieving a [Column<Integer>]:
+  // Column<Integer>(
+  // )
 }
 ```
 
 </details>
-
-Taking advantage of the fact that [SqliteType] is the super-type of `Integer`, `Boolean`, `Text`, and `Real`, the decoder function of [Column] can be shortened to:
-```Dart
-// Adding a decoder for constants of type [Column].
-  reader.addDecoder<Column>((cr) {
-    final defaultValueCR = cr.peek('defaultValue');
-    final defaultValue = reader.get<SqliteType>(defaultValueCR);
-    final nameCR = cr.peek('name');
-    final name = reader.get<String>(nameCR);
-
-    return Column(defaultValue: defaultValue, name: name,);
-  });
-
-```
-The only difference is that the resulting variable `columnFirstName` will then be of type `Column<SqliteType>`.
 
 ## Retrieving Constants with Arbitrary Type
 
@@ -241,7 +262,9 @@ Future<void> main() async {
 
   // Adding a decoder function for type [Wrapper].
   reader.addDecoder<Wrapper>((cr) {
-    final valueCR = cr.peek('value');
+    valueType = reader.findType(cr.objectValue.);
+
+    final valueCR = cr.peek('value') as type;
     final value = reader.get<dynamic>(valueCR);
     return Wrapper(value);
   });

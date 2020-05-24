@@ -65,7 +65,7 @@ To use this library the following steps are required:
 3. Register a [Decoder] function for each data-type that needs to be handled.
    The built-in types `bool, double, int, String, Type,` and `Symbol` have pre-registered
    decoder functions.
-4. Retrieve the constant values that are required using the methods `get<T>, getList<T>,       getSet<T>`:
+4. Retrieve the constant values that are required using the methods `get<T>, getList<T>, getSet<T>`:
    ```Dart
    ...
    // Retrieving a constant of type [User]
@@ -122,7 +122,7 @@ reader.addDecoder<User>((constantReader){
   final id = constantReader.peek('id').intValue;
   final age = reader.get<Age>(constantReader.peek('age'));
   final name = reader.get<Name>(constantReader.peek('name'));
-  return User(name: name, age: age, id: id);
+  return User(name: name, age: age, id: id,);
 });
 
 // Retrieving a constant value of type User:
@@ -137,6 +137,7 @@ Moreover, [peek] will recursively scan the super classes if the field could not 
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
 Programming the logic for reading generic constant values is made more difficult by the fact
 that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
+
 
 <!-- This is demonstrated by the short program below:
 ```Dart
