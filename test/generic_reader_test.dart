@@ -130,7 +130,6 @@ Future<void> main() async {
       reader.clearDecoder<Integer>();
       reader.clearDecoder<Text>();
       reader.clearDecoder<Boolean>();
-
     });
     test('getList<String>()', () {
       expect(
