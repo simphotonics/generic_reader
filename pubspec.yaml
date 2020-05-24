@@ -4,7 +4,7 @@ description:
   GenericReader provides a systematic method of retrieving constants of arbitrary data-type from a static representation
   of a Dart compile-time constant.
 
-version: 0.0.6
+version: 0.0.7
 
 homepage: https://github.com/simphotonics/generic_reader
 
@@ -12,6 +12,7 @@ environment:
   sdk: '>=2.8.1 <3.0.0'
 
 dependencies:
+  analyzer: ^0.39.8
   meta: ^1.1.8
   source_gen: ^0.9.5
 
