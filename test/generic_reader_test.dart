@@ -35,24 +35,48 @@ Future<void> main() async {
   final realCR =
       ConstantReader(lib.classes.first.fields[5].computeConstantValue());
 
-  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
-    final value = cr.peek('value');
-    if (value.isInt) return Integer(value.intValue);
-    if (value.isBool) return Boolean(value.boolValue);
-    if (value.isString) return Text(value.stringValue);
-    if (value.isDouble) return Real(value.doubleValue);
-    return null;
+  final Decoder<Integer> integerDecoder = ((cr) {
+    if (cr == null) return null;
+    return Integer(cr.peek('value')?.intValue);
+  });
+  final Decoder<Real> realDecoder = ((cr) {
+    if (cr == null) return null;
+    return Real(cr.peek('value')?.doubleValue);
+  });
+  final Decoder<Boolean> booleanDecoder = ((cr) {
+    if (cr == null) return null;
+    return Boolean(cr.peek('value')?.boolValue);
+  });
+  final Decoder<Text> textDecoder = ((cr) {
+    if (cr == null) return null;
+    return Text(cr.peek('value')?.stringValue);
   });
 
   final reader = GenericReader();
 
+  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
+    if (cr == null) return null;
+    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
+    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
+    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
+    if (reader.holdsA<Boolean>(cr)) return reader.get<Boolean>(cr);
+    return null;
+  });
+
   group('Type functions:', () {
-    test('isA<String>()', () {
-      expect(reader.isA<String>(titleCR), true);
+    test('holdsA<String>()', () {
+      expect(reader.holdsA<String>(titleCR), true);
     });
-    test('isA<Set>()', () {
-      expect(reader.isA<Set>(integersCR), true);
+    test('holdsA<Set>()', () {
+      expect(reader.holdsA<Set>(integersCR), true);
     });
+    test('holdsA<Set>(,[int])', () {
+      expect(reader.holdsA<Set>(integersCR, typeArgs: [int]), true);
+    });
+    test('holdsA<Set>(,[int])', () {
+      expect(reader.holdsA<Set>(integersCR, typeArgs: [double]), false);
+    });
+
     test('isBuiltIn<String>()', () {
       expect(reader.isBuiltIn(String), true);
     });
@@ -61,9 +85,9 @@ Future<void> main() async {
     });
 
     test('findType()', () {
-      expect(reader.findType(titleCR), String);
+      expect(reader.findTypeOf(titleCR), String);
       // [firstNameCR] represents a constant of type [Text].
-      expect(reader.findType(realCR), TypeNotRegistered);
+      expect(reader.findTypeOf(realCR), TypeNotRegistered);
     });
   });
 
@@ -93,11 +117,20 @@ Future<void> main() async {
   group('get:', () {
     test('get<SqliteType>()', () {
       reader.addDecoder<SqliteType>(sqliteTypeDecoder);
+      reader.addDecoder<Real>(realDecoder);
+      reader.addDecoder<Integer>(integerDecoder);
+      reader.addDecoder<Text>(textDecoder);
+      reader.addDecoder<Boolean>(booleanDecoder);
       expect(
         reader.get<SqliteType>(realCR),
         Real(39.5),
       );
       reader.clearDecoder<SqliteType>();
+      reader.clearDecoder<Real>();
+      reader.clearDecoder<Integer>();
+      reader.clearDecoder<Text>();
+      reader.clearDecoder<Boolean>();
+
     });
     test('getList<String>()', () {
       expect(
@@ -106,12 +139,12 @@ Future<void> main() async {
       );
     });
     test('getList<Integer>()', () {
-      reader.addDecoder<SqliteType>(sqliteTypeDecoder);
+      reader.addDecoder<Integer>(integerDecoder);
       expect(
-        reader.getList<SqliteType>(idCR),
+        reader.getList<Integer>(idCR),
         const [Integer(87)],
       );
-      reader.clearDecoder<SqliteType>();
+      reader.clearDecoder<Integer>();
     });
     test('getSet<int>()', () {
       expect(
