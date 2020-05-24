@@ -28,22 +28,43 @@ Future<void> main() async {
   // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  // Add a decoder function for constants of type [SqliteType].
-  reader.addDecoder<SqliteType>((cr) {
-    final value = cr.peek('value');
-    if (value.isInt) return Integer(value.intValue);
-    if (value.isBool) return Boolean(value.boolValue);
-    if (value.isString) return Text(value.stringValue);
-    if (value.isDouble) return Real(value.doubleValue);
-    return null;
+  final Decoder<Integer> integerDecoder = ((cr) {
+    if (cr == null) return null;
+    return Integer(cr.peek('value')?.intValue);
   });
+  final Decoder<Real> realDecoder = ((cr) {
+    if (cr == null) return null;
+    return Real(cr.peek('value')?.doubleValue);
+  });
+  final Decoder<Boolean> booleanDecoder = ((cr) {
+    if (cr == null) return null;
+    return Boolean(cr.peek('value')?.boolValue);
+  });
+  final Decoder<Text> textDecoder = ((cr) {
+    if (cr == null) return null;
+    return Text(cr.peek('value')?.stringValue);
+  });
+
+  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
+    if (cr == null) return null;
+    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
+    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
+    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
+    return reader.get<Boolean>(cr);
+  });
+
+  reader
+      .addDecoder<Integer>(integerDecoder)
+      .addDecoder<Boolean>(booleanDecoder)
+      .addDecoder<Text>(textDecoder)
+      .addDecoder<Real>(realDecoder)
+      .addDecoder<SqliteType>(sqliteTypeDecoder);
 
   AnsiPen green = AnsiPen()..green(bold: true);
 
   // Adding a decoder function for type [Wrapper].
   reader.addDecoder<Wrapper>((cr) {
-    final valueCR = cr.peek('value');
-    final value = reader.get<dynamic>(valueCR);
+    final value = reader.get<dynamic>(cr.peek('value'));
     return Wrapper(value);
   });
 

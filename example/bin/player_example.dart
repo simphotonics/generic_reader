@@ -27,6 +27,9 @@ Future<void> main() async {
   final columnNameCR =
       ConstantReader(playerLib.classes.first.fields[0].computeConstantValue());
 
+  final idCR =
+      ConstantReader(playerLib.classes.first.fields[1].computeConstantValue());
+
   // ConstantReade representing field 'firstName'.
   final firstNameCR =
       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
@@ -37,20 +40,41 @@ Future<void> main() async {
   // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  // Add a decoder function for constants of type [SqliteType].
-  reader.addDecoder<SqliteType>((cr) {
-    final value = cr.peek('value');
-    if (value.isInt) return Integer(value.intValue);
-    if (value.isBool) return Boolean(value.boolValue);
-    if (value.isString) return Text(value.stringValue);
-    if (value.isDouble) return Real(value.doubleValue);
-    return null;
+  // Decoders for [SqliteType] and its derived types.
+  final Decoder<Integer> integerDecoder =
+      (cr) => (cr == null) ? null : Integer(cr.peek('value')?.intValue);
+
+  final Decoder<Real> realDecoder =
+      (cr) => (cr == null) ? null : Real(cr.peek('value')?.doubleValue);
+
+  final Decoder<Boolean> booleanDecoder =
+      (cr) => (cr == null) ? null : Boolean(cr.peek('value')?.boolValue);
+
+  final Decoder<Text> textDecoder =
+      (cr) => (cr == null) ? null : Text(cr.peek('value')?.stringValue);
+
+  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
+    if (cr == null) return null;
+    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
+    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
+    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
+    return reader.get<Boolean>(cr);
   });
+
+  // Registering decoders.
+  reader
+      .addDecoder<Integer>(integerDecoder)
+      .addDecoder<Boolean>(booleanDecoder)
+      .addDecoder<Text>(textDecoder)
+      .addDecoder<Real>(realDecoder)
+      .addDecoder<SqliteType>(sqliteTypeDecoder);
 
   // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
+    if (cr == null) return null;
     final defaultValueCR = cr.peek('defaultValue');
     final defaultValue = reader.get<SqliteType>(defaultValueCR);
+
     final nameCR = cr.peek('name');
     final name = reader.get<String>(nameCR);
 
@@ -61,11 +85,13 @@ Future<void> main() async {
       );
     }
 
-    if (reader.isA<Text>(defaultValueCR)) return columnFactory<Text>();
-    if (reader.isA<Integer>(defaultValueCR)) return columnFactory<Integer>();
-    if (reader.isA<Boolean>(defaultValueCR)) return columnFactory<Boolean>();
-    if (reader.isA<Real>(defaultValueCR)) return columnFactory<Real>();
-    return null;
+    if (reader.holdsA<Column>(cr, typeArgs: [Text]))
+      return columnFactory<Text>();
+    if (reader.holdsA<Column>(cr, typeArgs: [Real]))
+      return columnFactory<Real>();
+    if (reader.holdsA<Column>(cr, typeArgs: [Integer]))
+      return columnFactory<Integer>();
+    return columnFactory<Boolean>();
   });
 
   AnsiPen green = AnsiPen()..green(bold: true);
@@ -100,4 +126,13 @@ Future<void> main() async {
   // Prints:
   // Retrieving a [List<Sponsor>]:
   // [Sponsor: Johnson's, Sponsor: Smith Brothers]
+
+  final id = reader.get<Column>(idCR);
+  print('');
+  print(green('Retrieving a [Column<Integer>]:'));
+  print(id);
+  // Prints:
+  // Retrieving a [Column<Integer>]:
+  // Column<Integer>(
+  // )
 }
