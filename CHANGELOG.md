@@ -22,3 +22,7 @@ Amended README.md
 
 The method addDecoder<> now returns an instance
 of the reader to allow method chaining.
+
+# 0.0.7
+
+Added method holdsA<>(). Deprecated method isA<>().
