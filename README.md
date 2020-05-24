@@ -57,7 +57,7 @@ In order to retrieve a constant value of type `User` one has to retrieve its com
 ## Usage
 
 To use this library the following steps are required:
-1. Include [generic_reader], and [source_gen] as dependencies in your pubspec.yaml file.
+1. Include [generic_reader] and [source_gen] as dependencies in your pubspec.yaml file.
 2. Create an instance of [GenericReader] (e.g. within a source code generator function):
    ```Dart
    final reader = GenericReader(); // Note: [reader] is a singleton.
