@@ -75,5 +75,5 @@ Future<void> main() async {
   // Prints:
   //
   // Retrieving a [Wrapper<dynamic>]:
-  // Wrapper<dynamic>(value: 29)
+  // Wrapper<dynamic>(value: 27.9)
 }

@@ -272,7 +272,7 @@ Future<void> main() async {
   print(wrapped);
   // Prints:
   // Retrieving a [Wrapper<dynamic>]:
-  // Wrapper<dynamic>(value: 29)
+  // Wrapper<dynamic>(value: 27.9)
 }
 ```
 </details>
