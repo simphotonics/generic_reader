@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/type.dart' show DartType;
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:generic_reader/src/errors/reader_error.dart';
@@ -48,8 +49,8 @@ class GenericReader {
   GenericReader._() {
     // Register decoder for built-in data-type [num]:
     addDecoder<num>((constantReader) {
-      if (isA<int>(constantReader)) return constantReader.intValue;
-      if (isA<double>(constantReader)) return constantReader.doubleValue;
+      if (holdsA<int>(constantReader)) return constantReader.intValue;
+      if (holdsA<double>(constantReader)) return constantReader.doubleValue;
       return null;
     });
   }
@@ -87,12 +88,14 @@ class GenericReader {
     Symbol: (constantReader) => constantReader.symbolValue,
   };
 
+  final Map<DartType, Type> _types = {};
+
   /// Adds or updates a decoder function for type [T].
   /// Returns [this] to allow method chaining.
   ///
   /// Note: Decoders for built-in types or [TypeNotRegistered]
   /// must not be added or updated.
-  GenericReader addDecoder<T>(Decoder decoder) {
+  GenericReader addDecoder<T>(Decoder<T> decoder) {
     if (isBuiltIn(T) || T == TypeNotRegistered || T == dynamic) return this;
     // Adding TypeChecker.
     _checkers[T] ??= TypeChecker.fromRuntime(T);
@@ -114,9 +117,10 @@ class GenericReader {
     return _decoders.remove(T);
   }
 
-  /// Returns [true] if a decoder function for [T] is registered with [this].
-  bool hasDecoder(Type T) {
-    if (_decoders[T] == null) return false;
+  /// Returns [true] if a decoder function for [type]
+  /// is registered with [this].
+  bool hasDecoder(Type type) {
+    if (_decoders[type] == null) return false;
     return true;
   }
 
@@ -136,6 +140,8 @@ class GenericReader {
   /// Note: Type arguments of [T] are ignored.
   ///       For example: [Colum<int>] and [Column<String>]
   ///       both resolve to [Column].
+  @Deprecated(
+      'Use the method "holdsA<T>(ConstantReader constantReader, {List<Type> typeArgs})" instead')
   bool isA<T>(ConstantReader constantReader) {
     if (T == Null && constantReader == null) return true;
     if (constantReader == null) return true;
@@ -143,14 +149,61 @@ class GenericReader {
     return constantReader.instanceOf(checker);
   }
 
+  /// Returns true if [constantReader] represents an object of type [T].
+  ///
+  /// Note: Type arguments of [T] may be specified by the optional argument [typeArgs].
+  ///
+  bool holdsA<T>(ConstantReader constantReader, {List<Type> typeArgs}) {
+    if (T == Null && constantReader == null) return true;
+    if (constantReader == null) return true;
+    // Get checker.
+    final checker = _checkers[T] ?? TypeChecker.fromRuntime(T);
+    if (!constantReader.instanceOf(checker)) return false;
+    // Passed comparison so far, return [true] if no typeArgs were passed.
+    if (typeArgs == null) return true;
+    if (typeArgs.isEmpty) return true;
+    // Get parameterized DartType arguments:
+    List<DartType> dartTypeArgs =
+        constantReader.objectValue.type.typeArguments ?? [];
+    if (dartTypeArgs.length != typeArgs.length) return false;
+    for (var i = 0; i < typeArgs.length; i++) {
+      if (!isMatch(
+        dartType: dartTypeArgs[i],
+        type: typeArgs[i],
+      )) return false;
+    }
+    return true;
+  }
+
+  /// Returns true if [dartType] represents the type [type].
+  bool isMatch({DartType dartType, Type type}) {
+    final checker = _checkers[type] ?? TypeChecker.fromRuntime(type);
+    return checker.isExactlyType(dartType);
+  }
+
   /// Returns a type [Type] that matches the static [DartType] of
   /// [constantReader].
   ///
   /// Returns [TypeNotRegistered] if no match is found
-  /// among the types that are registered, i.e. have a decoder function.
-  Type findType(ConstantReader constantReader) {
+  /// among the types that are registered,
+  /// i.e. have a decoder function.
+  Type findTypeOf(ConstantReader constantReader) {
     for (final type in _checkers.keys) {
       if (constantReader.instanceOf(_checkers[type])) {
+        return type;
+      }
+    }
+    return TypeNotRegistered;
+  }
+
+  /// Returns a type [Type] that matches the static [DartType]
+  ///
+  /// Returns [TypeNotRegistered] if no match is found
+  /// among the types that are registered,
+  /// i.e. have a decoder function.
+  Type findType(DartType dartType) {
+    for (final type in _checkers.keys) {
+      if (_checkers[type].isExactlyType(dartType)) {
         return type;
       }
     }
@@ -177,7 +230,7 @@ class GenericReader {
 
     if (T == dynamic) return _getDynamic(constantReader);
 
-    if (!isA<T>(constantReader)) {
+    if (!holdsA<T>(constantReader)) {
       throw ReaderError(
           message: 'Input does not represent an object of type <$T>',
           invalidState:
@@ -199,7 +252,7 @@ class GenericReader {
   dynamic _getDynamic(ConstantReader constantReader) {
     if (constantReader == null) return null;
 
-    final type = findType(constantReader);
+    final type = findTypeOf(constantReader);
 
     if (type == TypeNotRegistered) {
       throw ReaderError(
@@ -216,7 +269,7 @@ class GenericReader {
   ///
   /// Throws [ReaderError] if an instance of [List<T>] can not be constructed.
   List<T> getList<T>(ConstantReader constantReader) {
-    if (!isA<List>(constantReader)) {
+    if (!holdsA<List>(constantReader, typeArgs: [T])) {
       throw ReaderError(
           message: 'Input does not represent an object of type <List<$T>',
           invalidState:
@@ -224,7 +277,7 @@ class GenericReader {
     }
     if (!_decoders.containsKey(T)) {
       throw ReaderError(
-          message: 'Could not list entry value of type [$T].',
+          message: 'Could not read list-entry value of type [$T].',
           invalidState: 'A decoder function for type [$T] is missing.',
           expectedState:
               'Use addDecoder<$T>() to register a decoder function for type [$T].');
@@ -243,7 +296,7 @@ class GenericReader {
   ///
   /// Throws [ReaderError] if an instance of [Set<T>] cannot be constructed.
   Set<T> getSet<T>(ConstantReader constantReader) {
-    if (!isA<Set>(constantReader)) {
+    if (!holdsA<Set>(constantReader, typeArgs: [T])) {
       throw ReaderError(
           message: 'Input does not represent an object of type <Set<$T>',
           invalidState:
@@ -251,7 +304,7 @@ class GenericReader {
     }
     if (!_decoders.containsKey(T)) {
       throw ReaderError(
-          message: 'Could not list entry value of type [$T].',
+          message: 'Could not read set-entry value of type [$T].',
           invalidState: 'A decoder function for type [$T] is missing.',
           expectedState:
               'Use addDecoder<$T>() to register a decoder function for type [$T].');
