@@ -54,12 +54,12 @@ In a standard setting this task is delegated to a [builder] that reads a builder
 
 ```Dart
 import 'package:ansicolor/ansicolor.dart';
-import 'package:example/src/column.dart';
-import 'package:example/src/sponsor.dart';
-import 'package:example/src/sqlite_type.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
+import 'package:generic_reader/src/test_types/column.dart';
+import 'package:generic_reader/src/test_types/sqlite_type.dart';
+import 'package:generic_reader/src/test_types/sponsor.dart';
 
 /// To run this program navigate to the folder: /example
 /// in your local copy the package [generic_reader] and
@@ -82,6 +82,9 @@ Future<void> main() async {
   final columnNameCR =
       ConstantReader(playerLib.classes.first.fields[0].computeConstantValue());
 
+  final idCR =
+      ConstantReader(playerLib.classes.first.fields[1].computeConstantValue());
+
   // ConstantReade representing field 'firstName'.
   final firstNameCR =
       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
@@ -92,22 +95,18 @@ Future<void> main() async {
   // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  final Decoder<Integer> integerDecoder = ((cr) {
-    if (cr == null) return null;
-    return Integer(cr.peek('value')?.intValue);
-  });
-  final Decoder<Real> realDecoder = ((cr) {
-    if (cr == null) return null;
-    return Real(cr.peek('value')?.doubleValue);
-  });
-  final Decoder<Boolean> booleanDecoder = ((cr) {
-    if (cr == null) return null;
-    return Boolean(cr.peek('value')?.boolValue);
-  });
-  final Decoder<Text> textDecoder = ((cr) {
-    if (cr == null) return null;
-    return Text(cr.peek('value')?.stringValue);
-  });
+  // Decoders for [SqliteType] and its derived types.
+  final Decoder<Integer> integerDecoder =
+      (cr) => (cr == null) ? null : Integer(cr.peek('value')?.intValue);
+
+  final Decoder<Real> realDecoder =
+      (cr) => (cr == null) ? null : Real(cr.peek('value')?.doubleValue);
+
+  final Decoder<Boolean> booleanDecoder =
+      (cr) => (cr == null) ? null : Boolean(cr.peek('value')?.boolValue);
+
+  final Decoder<Text> textDecoder =
+      (cr) => (cr == null) ? null : Text(cr.peek('value')?.stringValue);
 
   final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
     if (cr == null) return null;
@@ -116,6 +115,14 @@ Future<void> main() async {
     if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
     return reader.get<Boolean>(cr);
   });
+
+  // Registering decoders.
+  reader
+      .addDecoder<Integer>(integerDecoder)
+      .addDecoder<Boolean>(booleanDecoder)
+      .addDecoder<Text>(textDecoder)
+      .addDecoder<Real>(realDecoder)
+      .addDecoder<SqliteType>(sqliteTypeDecoder);
 
   // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {
@@ -141,14 +148,6 @@ Future<void> main() async {
       return columnFactory<Integer>();
     return columnFactory<Boolean>();
   });
-
-  reader
-      .addDecoder<Integer>(integerDecoder)
-      .addDecoder<Boolean>(booleanDecoder)
-      .addDecoder<Text>(textDecoder)
-      .addDecoder<Real>(realDecoder)
-      .addDecoder<SqliteType>(sqliteTypeDecoder);
-
 
   AnsiPen green = AnsiPen()..green(bold: true);
 
@@ -191,7 +190,6 @@ Future<void> main() async {
   // Retrieving a [Column<Integer>]:
   // Column<Integer>(
   // )
-}
 ```
 
 </details>
