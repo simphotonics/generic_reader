@@ -88,8 +88,6 @@ class GenericReader {
     Symbol: (constantReader) => constantReader.symbolValue,
   };
 
-  final Map<DartType, Type> _types = {};
-
   /// Adds or updates a decoder function for type [T].
   /// Returns [this] to allow method chaining.
   ///
