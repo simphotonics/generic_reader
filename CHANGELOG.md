@@ -26,3 +26,7 @@ of the reader to allow method chaining.
 # 0.0.7
 
 Added method holdsA<>(). Deprecated method isA<>().
+
+# 0.0.8
+
+Removed pre-registered decoder for type `Type`.

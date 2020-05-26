@@ -40,20 +40,20 @@ class TypeNotRegistered<T> {
   }
 }
 
+/// Decoder function for type [num].
+final Decoder<num> _numDecoder = (cr) {
+  if (cr.isInt) return cr.intValue;
+  if (cr.isDouble) return cr.doubleValue;
+  return null;
+};
+
 /// Reader providing generic methods aimed at converting static Dart analyzer
 /// object representations into runtime objects.
 ///
 /// Intended use: Retrieval of compile-time constant expressions during source code generation.
 class GenericReader {
   /// Private constructor.
-  GenericReader._() {
-    // Register decoder for built-in data-type [num]:
-    addDecoder<num>((constantReader) {
-      if (holdsA<int>(constantReader)) return constantReader.intValue;
-      if (holdsA<double>(constantReader)) return constantReader.doubleValue;
-      return null;
-    });
-  }
+  GenericReader._();
 
   /// Singleton factory constructor.
   factory GenericReader() {
@@ -83,8 +83,8 @@ class GenericReader {
     bool: (constantReader) => constantReader.boolValue,
     double: (constantReader) => constantReader.doubleValue,
     int: (constantReader) => constantReader.intValue,
+    num: _numDecoder,
     String: (constantReader) => constantReader.stringValue,
-    Type: (constantReader) => constantReader.typeValue,
     Symbol: (constantReader) => constantReader.symbolValue,
   };
 
@@ -240,6 +240,13 @@ class GenericReader {
           invalidState: 'A decoder function for type [$T] is missing.',
           expectedState:
               'Use addDecoder<$T>() to register a decoder function for type [$T].');
+    }
+
+    //print('${constantReader.typeValue}');
+
+    print('Running decoder of $T:');
+    if (holdsA<Type>(constantReader)) {
+      print('Type >>>>: ${constantReader.typeValue}');
     }
     return _decoders[T](constantReader);
   }
