@@ -35,6 +35,6 @@ Removed pre-registered decoder for type `Type`.
 
 Removed debug print statement. Updated dependencies.
 
-# 1.0.0
+# 0.1.0
 
 Added condition to handle `null` input in methods `getList<>()` and `getSet<>()`.Restructured folder `example`.
