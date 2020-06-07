@@ -18,7 +18,7 @@ import 'package:source_gen_test/src/init_library_reader.dart';
 Future<void> main() async {
   /// Reading libraries.
   final wrapperTestLib = await initializeLibraryReaderForDirectory(
-    'lib/src',
+    'example/src',
     'wrapper_test.dart',
   );
 

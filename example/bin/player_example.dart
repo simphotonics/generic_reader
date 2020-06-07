@@ -19,7 +19,7 @@ import 'package:generic_reader/src/test_types/sponsor.dart';
 Future<void> main() async {
   /// Reading libraries.
   final playerLib = await initializeLibraryReaderForDirectory(
-    'lib/src',
+    'example/src',
     'player.dart',
   );
 
