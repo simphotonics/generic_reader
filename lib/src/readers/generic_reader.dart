@@ -241,13 +241,6 @@ class GenericReader {
           expectedState:
               'Use addDecoder<$T>() to register a decoder function for type [$T].');
     }
-
-    //print('${constantReader.typeValue}');
-
-    print('Running decoder of $T:');
-    if (holdsA<Type>(constantReader)) {
-      print('Type >>>>: ${constantReader.typeValue}');
-    }
     return _decoders[T](constantReader);
   }
 

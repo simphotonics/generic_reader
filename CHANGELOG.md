@@ -30,3 +30,7 @@ Added method holdsA<>(). Deprecated method isA<>().
 # 0.0.8
 
 Removed pre-registered decoder for type `Type`.
+
+# 0.0.9
+
+Removed debug print statement. Updated dependencies.
