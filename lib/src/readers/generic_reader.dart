@@ -267,6 +267,8 @@ class GenericReader {
   ///
   /// Throws [ReaderError] if an instance of [List<T>] can not be constructed.
   List<T> getList<T>(ConstantReader constantReader) {
+    if (constantReader == null) return null;
+
     if (!holdsA<List>(constantReader, typeArgs: [T])) {
       throw ReaderError(
           message: 'Input does not represent an object of type <List<$T>',
@@ -294,6 +296,8 @@ class GenericReader {
   ///
   /// Throws [ReaderError] if an instance of [Set<T>] cannot be constructed.
   Set<T> getSet<T>(ConstantReader constantReader) {
+    if (constantReader == null) return null;
+
     if (!holdsA<Set>(constantReader, typeArgs: [T])) {
       throw ReaderError(
           message: 'Input does not represent an object of type <Set<$T>',
