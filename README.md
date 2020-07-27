@@ -53,14 +53,14 @@ These are often a composition of other types, as illustrated in the example belo
  ```
 </details>
 
-In order to retrieve a constant value of type `User` one has to retrieve its components of type  `int`, `Name`, `Title`, and `Age` first.
+In order to retrieve a constant value of type `User` one has to retrieve the constructor parameter of type  `int`, `Name`, `Title`, and `Age` first.
 
 
 ## Usage
 
-To use this library the following steps are required:
-1. Include [generic_reader] and [source_gen] as dependencies in your pubspec.yaml file.
-2. Create an instance of [GenericReader] (e.g. within a source code generator function):
+To use [`generic_reader`][generic_reader] the following steps are required:
+1. Include [`generic_reader`][generic_reader] and [`source_gen`][source_gen] as dependencies in your pubspec.yaml file.
+2. Create an instance of [`GenericReader`][GenericReader] (e.g. within a source code generator function):
    ```Dart
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
@@ -73,10 +73,10 @@ To use this library the following steps are required:
 
 ## Decoder Functions
 
-[GenericReader] provides a systematic method of retrieving constants of
+[`GenericReader`][GenericReader] provides a systematic method of retrieving constants of
 arbitrary data-types by allowing users to register `Decoder` functions (for lack of a better a name).
 
-Decoders functions know how to `decode` a specific data-type and have the following signature:
+Decoders functions know how to **decode** a specific data-type and have the following signature:
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
