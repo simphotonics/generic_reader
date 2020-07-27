@@ -5,17 +5,14 @@
 
 ## Introduction
 
-Source code generation has become an integral software development tool when building and maintaining
-a large number of data models, data access object, widgets, etc.
-Setting up the build system initially takes time and effort but
-subsequent maintenance is often easier, less error prone, and certainly
-less repetitive compared to applying manual modifications.
+The premise of *source code generation* is that we can somehow specify
+(hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
+Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
+class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
 
-The premise of source code generation is that we can somehow specify (hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
-
-Dart's static [`analyzer`][analyzer] provides access to libraries, classes, class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
-
-Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const) since constants are known at compile time. Compile-time constant expressions are represented by a [`DartObject`][DartObject] and can be accessed by using the method
+Source code generation relies heavily on *constants* (instantiated by a constructor prefixed with the keyword const)
+since constants are known at compile time.
+Compile-time constant expressions are represented by a [`DartObject`][DartObject] and can be accessed by using the method
 [`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [`DartType`][DartObject] has methods that allow reading the underlying constant object.
