@@ -65,9 +65,10 @@ To use this library the following steps are required:
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
 3. Register a [Decoder] function for each data-type that needs to be handled.
-   The built-in types `bool, double, int, String, Type,`,`Symbol` as well as Dart `enums` do not require
-   decoder functions.
-4. Retrieve the constant values that are required using the methods `get<T>, getList<T>, getSet<T>, getEnum<T>, get<dynamic>`:
+   The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` as well as Dart `enums`
+   do *not* require decoder functions.
+4. Retrieve the constant values that using the methods `get<T>()`, `getList<T>()`,
+   `getSet<T>()`, `getEnum<T>()`, and `get<dynamic>()`:
 5. Process the retrieved compile-time constants and generate the required source code.
 
 ## Decoder Functions
