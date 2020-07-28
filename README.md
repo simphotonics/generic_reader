@@ -37,7 +37,7 @@ of user defined data-types. These are often a composition of other types, as ill
  }
 
  class User{
-   const User({this.name, this.id, this.age});
+   const User({this.name, this.id, this.age, this.title});
    final Name name;
    final Age age;
    final int id;
@@ -45,6 +45,7 @@ of user defined data-types. These are often a composition of other types, as ill
  }
  ```
 </details>
+
 In order to retrieve a constant value of type `User` one has
 to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
 
