@@ -53,12 +53,13 @@ These are often a composition of other types, as illustrated in the example belo
  ```
 </details>
 
-In order to retrieve a constant value of type `User` one has to retrieve the constructor parameter of type  `int`, `Name`, `Title`, and `Age` first.
+In order to retrieve a constant value of type `User` one has
+to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
 
 
 ## Usage
 
-To use [`generic_reader`][generic_reader] the following steps are required:
+To use the package [`generic_reader`][generic_reader] the following steps are required:
 1. Include [`generic_reader`][generic_reader] and [`source_gen`][source_gen] as dependencies in your pubspec.yaml file.
 2. Create an instance of [`GenericReader`][GenericReader] (e.g. within a source code generator function):
    ```Dart
@@ -67,25 +68,37 @@ To use [`generic_reader`][generic_reader] the following steps are required:
 3. Register a [Decoder] function for each data-type that needs to be handled.
    The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` as well as Dart `enums`
    do *not* require decoder functions.
-4. Retrieve the constant values that using the methods `get<T>()`, `getList<T>()`,
-   `getSet<T>()`, `getEnum<T>()`, and `get<dynamic>()`:
+
+   However, in order to read e.g. a constant of type `List<dynamic>`
+   where some entries might contain an instance of an enum `MyEnum`
+   one must first register a decoder:
+   ```Dart
+    reader.addDecoder<MyEnum>((cr) => cr.getEnum<MyEnum>());
+   ```
+   This is due to fact that the method `get<dynamic>` tries to match the input against a
+   built-in or registered type. 
+4. Retrieve the compile-time constant values using the methods `get<T>()`, `getList<T>()`,
+   `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`:
 5. Process the retrieved compile-time constants and generate the required source code.
 
 ## Decoder Functions
 
 [`GenericReader`][GenericReader] provides a systematic method of retrieving constants of
 arbitrary data-types by allowing users to register `Decoder` functions (for lack of a better a name).
+Decoder functions can make use of other registered decoder functions enabling the retrieval of
+complex generic data-structures.
 
 Decoders functions know how to **decode** a specific data-type and have the following signature:
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
-The input argument is of type [`ConstantReader`][ConstantReader] (a wrapper around DartObject) and the function
-returns an object of type `T`. It is presumed that the input argument `constantReader` represents
+The input argument is of type [`ConstantReader`][ConstantReader] (a wrapper around DartObject)
+and the function returns an object of type `T`.
+It is presumed that the input argument `constantReader` represents
 an object of type `T`.
 
 The following shows how to define decoder functions for the types `Age`, `Name`,`Title`, and `User`.
-Note that each decoder knows the *field-names* and *field-types* of the class it handles.
+Note that each decoder knows the constructor *parameter-names* and *parameter-types* of the class it handles.
 For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is *age*.
 
 ```Dart
@@ -95,23 +108,23 @@ import 'package:source_gen/source_gen.dart' show ConstantReader;
 // The reader instance. (It is a singleton).
 final reader = GenericReader();
 
-/// Decoder function for type `Age`.
-final Decoder<Age> ageDecoder = ((constantReader) => Age(constantReader.peek('age').intValue));
+/// Decoder function for the data-type `Age`.
+Age ageDecoder(constantReader) => Age(constantReader.peek('age').intValue);
 
-final Decoder<Name> nameDecoder = ((constantReader) {
+Name nameDecoder(constantReader) {
   final firstName = constantReader.peek('firstName').stringValue;
   final lastName = constantReader.peek('lastName').stringValue;
   final middleName = constantReader.peek('middleName').stringValue;
   return Name(firstName: firstName, lastName: lastName, middleName: middleName);
-});
+};
 
-final Decoder<User> userDecoder = ((constantReader){
+User userDecoder(constantReader){
   final id = constantReader.peek('id').intValue;
   final age = reader.get<Age>(constantReader.peek('age'));
   final name = reader.get<Name>(constantReader.peek('name'));
   final tile = reader.getEnum<Title>(constantReader.peek('title'));
   return User(name: name, age: age, id: id, title: title);
-});
+};
 
 reader.addDecoder<Age>(ageDecoder).addDecoder<Name>(nameDecoder).addDecoder<User>(userDecoder);
 ...
@@ -119,15 +132,17 @@ reader.addDecoder<Age>(ageDecoder).addDecoder<Name>(nameDecoder).addDecoder<User
 // Retrieving a constant value of type User:
 final User user = reader.get<User>(userCR);
 ```
-Note: The method [peek] returns an instance of [ConstantReader] representing the class field specified by the input `String`.
+Note: Instances of **Dart enum** are retrieved by calling `getEnum<T>()` without having to register
+a decoder function for `T`.
+
+Remark: The method [peek] returns an instance of [ConstantReader]
+representing the class field specified by the input `String`.
 It returns `null` if the field was not initialized or not present.
 Moreover, [peek] will recursively scan the super classes if the field could not be found in the current context.
 
 ## Limitations
 
 Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
-Programming the logic for reading generic constant values is made more difficult by the fact
-that Dart does not allow variables of data-type `Type` but only **type-literals** to be used as type arguments.
 
 In practice, however, generic classes are often designed in such a manner that only few type parameters
 are valid or likely to be useful. A demonstration on how to retrieve
