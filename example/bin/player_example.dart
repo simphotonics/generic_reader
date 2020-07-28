@@ -122,7 +122,7 @@ Future<void> main() async {
 
   // Retrieve an instance of [String].
   final columnName = reader.get<String>(columnNameCR);
-  print(green('Retrieving a [String]'));
+  print(green('Retrieving a String:'));
   print('columnName = \'$columnName\'');
   print('');
   // Prints:
@@ -131,7 +131,7 @@ Future<void> main() async {
 
   // Retrieve an instance of [Column<Text>].
   final columnFirstName = reader.get<Column>(firstNameCR);
-  print(green('Retrieving a [Column<Text>]:'));
+  print(green('Retrieving a Column<Text>:'));
   print(columnFirstName);
   // Prints:
   // Retrieving a [Column<Text>]:
@@ -145,7 +145,7 @@ Future<void> main() async {
   final sponsors = reader.getList<Sponsor>(sponsorsCR);
 
   print('');
-  print(green('Retrieving a [List<Sponsor>]:'));
+  print(green('Retrieving a List<Sponsor>:'));
   print(sponsors);
   // Prints:
   // Retrieving a [List<Sponsor>]:
