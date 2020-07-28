@@ -1,8 +1,8 @@
 name: generic_reader
 
-description: Enables retrieving generic const values from a
-static analyzer representation. Streamlines reading
-constants of type List, Map, Set as well as Dart enums.
+description:
+  Enables retrieving generic const values from a static analyzer representation.
+  Streamlines reading constants of type List, Map, Set as well as Dart enums.
 
 version: 0.1.1
 
