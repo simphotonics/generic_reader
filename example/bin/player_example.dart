@@ -84,11 +84,11 @@ Future<void> main() async {
 
   // Registering decoders.
   reader
-      .addDecoder<Integer>(integerDecoder)
-      .addDecoder<Boolean>(booleanDecoder)
-      .addDecoder<Text>(textDecoder)
-      .addDecoder<Real>(realDecoder)
-      .addDecoder<SqliteType>(sqliteTypeDecoder);
+    ..addDecoder<Integer>(integerDecoder)
+    ..addDecoder<Boolean>(booleanDecoder)
+    ..addDecoder<Text>(textDecoder)
+    ..addDecoder<Real>(realDecoder)
+    ..addDecoder<SqliteType>(sqliteTypeDecoder);
 
   // Adding a decoder for constants of type [Column].
   reader.addDecoder<Column>((cr) {

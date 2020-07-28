@@ -123,7 +123,11 @@ User userDecoder(constantReader){
   return User(name: name, age: age, id: id, title: title);
 };
 
-reader.addDecoder<Age>(ageDecoder).addDecoder<Name>(nameDecoder).addDecoder<User>(userDecoder);
+reader
+  ..addDecoder<Age>(ageDecoder)
+  ..addDecoder<Name>(nameDecoder)
+  ..addDecoder<User>(userDecoder);
+  
 ...
 
 // Retrieving a constant value of type User:
