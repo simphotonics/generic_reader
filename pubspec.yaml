@@ -1,10 +1,10 @@
 name: generic_reader
 
-description:
-  GenericReader provides a systematic method of retrieving constants of arbitrary data-type from a static representation
-  of a Dart compile-time constant.
+description: Enables retrieving generic const values from a
+static analyzer representation. Streamlines reading
+constants of type List, Map, Set as well as Dart enums.
 
-version: 0.1.0
+version: 0.1.1
 
 homepage: https://github.com/simphotonics/generic_reader
 
@@ -13,10 +13,12 @@ environment:
 
 dependencies:
   analyzer: ^0.39.10
-  meta: ^1.1.8
+  meta: ^1.2.2
   source_gen: ^0.9.5
+  exception_templates: ^0.0.4
 
 dev_dependencies:
-  ansicolor: ^1.0.2
   source_gen_test: ^0.1.1
-  test: ^1.14.7
+  test: ^1.15.3
+  generic_reader_example:
+    path: example # Provides data-types used for testing purposes.
