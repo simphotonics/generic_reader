@@ -3,202 +3,277 @@
 
 ## Retrieving Constants with Parameterized Type
 
-The file [player_example.dart] demonstrates how to use [generic_reader] to read the value of a constant with parameterized type from a static representation of a compile-time constant expression. The program also shows how to register [Decoder] functions for the types [Column] and [SqliteType].
+The file [player_example.dart] demonstrates how to use [`generic_reader`][generic_reader]
+to read the value of a constant with parameterized type from a static representation of a
+compile-time constant expression. The program also shows how to register [Decoder] functions for the types [`Column`][Column]
+and [`SqliteType`][SqliteType].
 
-The constant values that are going to be read are the fields of the const class [Player]:
+The constant values that are going to be read are the fields of the const class [`Player`][Player]:
 <details>
 
 <summary> Click to show player.dart. </summary>
 
 ```Dart
-import 'package:generic_reader/src/test_types/column.dart';
-import 'package:generic_reader/src/test_types/sponsor.dart';
-import 'package:generic_reader/src/test_types/sqlite_type.dart';
-import 'package:generic_reader/src/test_types/unregistered_test_type.dart';
+ import 'package:generic_reader_example/src/test_types/column.dart';
+ import 'package:generic_reader_example/src/test_types/greek.dart';
+ import 'package:generic_reader_example/src/test_types/sponsor.dart';
+ import 'package:generic_reader_example/src/test_types/sqlite_type.dart';
+ import 'package:generic_reader_example/src/test_types/unregistered_test_type. dart';
 
-/// Class modelling a player.
-class Player {
-  const Player();
+ /// Class modelling a player.
+ class Player {
+   const Player();
 
-  /// Column name
-  final columnName = 'Player';
+   /// Column name
+   final columnName = 'Player';
 
-  /// Column storing player id.
-  final id = const Column<Integer>();
+   /// Column storing player id.
+   final id = const Column<Integer>();
 
-  /// Column storing first name of player.
-  final firstName = const Column<Text>(
-    defaultValue: Text('Thomas'),
-  );
+   /// Column storing first name of player.
+   final firstName = const Column<Text>(
+     defaultValue: Text('Thomas'),
+   );
 
-  /// List of sponsors
-  final List<Sponsor> sponsors = const [
-    Sponsor('Johnson\'s'),
-    Sponsor('Smith Brothers'),
-  ];
+   /// List of sponsors
+   final List<Sponsor> sponsors = const [
+     Sponsor('Johnson\'s'),
+     Sponsor('Smith Brothers'),
+   ];
 
-  /// Test unregistered type.
-  final unregistered = const UnRegisteredTestType();
+   /// Test unregistered type.
+   final unregistered = const UnRegisteredTestType();
 
-  /// Test [Set<int>].
-  final Set<int> primeNumbers = const {1, 3, 5, 7, 11, 13};
+   /// Test [Set<int>].
+   final Set<int> primeNumbers = const {1, 3, 5, 7, 11, 13};
+
+   /// Test enum
+   final Greek greek = Greek.alpha;
+
+   /// Test map
+   final map = const <String, dynamic>{'one': 1, 'two': 2.0};
+
+   /// Test map with enum entry
+   final mapWithEnumEntry = const <String, dynamic>{
+     'one': 1,
+     'two': 2.0,
+     'enum': Greek.alpha
+   };
+ }
 ```
 </details>
 
-In the simple example below, the function [initializeLibraryReaderForDirectory] provided by [source_gen_test] is used to load the source code and initialize objects of type [LibraryReader].
+In the simple example below, the function [`initializeLibraryReaderForDirectory`][initializeLibraryReaderForDirectory]
+provided by [`source_gen_test`][source_gen_test] is used to load the source code and initialize objects of
+type [`LibraryReader`][LibraryReader].
 
-In a standard setting this task is delegated to a [builder] that reads a builder configuration and loads the relevant assets.
+In a standard setting this task is delegated to a [`builder`][builder]
+that reads a builder configuration and loads the relevant assets.
 
 <details>
 <summary> Click to show player_example.dart. </summary>
 
 ```Dart
-import 'package:ansicolor/ansicolor.dart';
-import 'package:generic_reader/generic_reader.dart';
-import 'package:source_gen/source_gen.dart' show ConstantReader;
-import 'package:source_gen_test/src/init_library_reader.dart';
-import 'package:generic_reader/src/test_types/column.dart';
-import 'package:generic_reader/src/test_types/sqlite_type.dart';
-import 'package:generic_reader/src/test_types/sponsor.dart';
+ import 'package:ansicolor/ansicolor.dart';
+ import 'package:exception_templates/exception_templates.dart';
+ import 'package:generic_reader/generic_reader.dart';
+ import 'package:source_gen/source_gen.dart' show ConstantReader;
+ import 'package:source_gen_test/source_gen_test.dart';
+ import 'package:source_gen_test/src/init_library_reader.dart';
 
-/// To run this program navigate to the folder: /example
-/// in your local copy the package [generic_reader] and
-/// use the command:
-///
-/// # dart bin/player_example.dart
+ import 'package:generic_reader_example/generic_reader_example.dart';
 
-/// Demonstrates how to use [GenericReader] to read constants
-/// with parameterized type from a static representation
-/// of a compile-time constant expression
-/// represented by a [ConstantReader].
-Future<void> main() async {
-  /// Reading libraries.
-  final playerLib = await initializeLibraryReaderForDirectory(
-    'lib/src',
-    'player.dart',
-  );
+ /// To run this program navigate to the folder: /example
+ /// in your local copy the package [generic_reader] and
+ /// use the command:
+ ///
+ /// # dart bin/player_example.dart
 
-  // ConstantReader representing field 'columnName'.
-  final columnNameCR =
-      ConstantReader(playerLib.classes.first.fields[0].computeConstantValue());
+ /// Demonstrates how to use [GenericReader] to read constants
+ /// with parameterized type from a static representation
+ /// of a compile-time constant expression
+ /// represented by a [ConstantReader].
+ Future<void> main() async {
+   /// Reading libraries.
+   final playerLib = await initializeLibraryReaderForDirectory(
+     'example/lib/src',
+     'player.dart',
+   );
 
-  final idCR =
-      ConstantReader(playerLib.classes.first.fields[1].computeConstantValue());
+   // ConstantReader representing field 'columnName'.
+   final columnNameCR =
+       ConstantReader(playerLib.classes.first.fields[0].computeConstantValue());
 
-  // ConstantReade representing field 'firstName'.
-  final firstNameCR =
-      ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
+   final idCR =
+       ConstantReader(playerLib.classes.first.fields[1].computeConstantValue());
 
-  final sponsorsCR =
-      ConstantReader(playerLib.classes.first.fields[3].computeConstantValue());
+   // ConstantReade representing field 'firstName'.
+   final firstNameCR =
+       ConstantReader(playerLib.classes.first.fields[2].computeConstantValue());
 
-  // Get singleton instance of the reader.
-  final reader = GenericReader();
+   final sponsorsCR =
+       ConstantReader(playerLib.classes.first.fields[3].computeConstantValue());
 
-  // Decoders for [SqliteType] and its derived types.
-  final Decoder<Integer> integerDecoder =
-      (cr) => (cr == null) ? null : Integer(cr.peek('value')?.intValue);
+   final greekCR =
+       ConstantReader(playerLib.classes.first.fields[6].computeConstantValue());
 
-  final Decoder<Real> realDecoder =
-      (cr) => (cr == null) ? null : Real(cr.peek('value')?.doubleValue);
+   final mapCR =
+       ConstantReader(playerLib.classes.first.fields[7].computeConstantValue());
 
-  final Decoder<Boolean> booleanDecoder =
-      (cr) => (cr == null) ? null : Boolean(cr.peek('value')?.boolValue);
+   final mapWithEnumEntryCR =
+       ConstantReader(playerLib.classes.first.fields[8].computeConstantValue());
 
-  final Decoder<Text> textDecoder =
-      (cr) => (cr == null) ? null : Text(cr.peek('value')?.stringValue);
+   // Get singleton instance of the reader.
+   final reader = GenericReader();
 
-  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
-    if (cr == null) return null;
-    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
-    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
-    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
-    return reader.get<Boolean>(cr);
-  });
+   Integer integerDecoder(ConstantReader cr) {
+     if (cr == null) return null;
+     return Integer(cr.peek('value')?.intValue);
+   }
 
-  // Registering decoders.
-  reader
-      .addDecoder<Integer>(integerDecoder)
-      .addDecoder<Boolean>(booleanDecoder)
-      .addDecoder<Text>(textDecoder)
-      .addDecoder<Real>(realDecoder)
-      .addDecoder<SqliteType>(sqliteTypeDecoder);
+   Real realDecoder(ConstantReader cr) {
+     if (cr == null) return null;
+     return Real(cr.peek('value')?.doubleValue);
+   }
 
-  // Adding a decoder for constants of type [Column].
-  reader.addDecoder<Column>((cr) {
-    if (cr == null) return null;
-    final defaultValueCR = cr.peek('defaultValue');
-    final defaultValue = reader.get<SqliteType>(defaultValueCR);
+   Boolean booleanDecoder(ConstantReader cr) {
+     if (cr == null) return null;
+     return Boolean(cr.peek('value')?.boolValue);
+   }
 
-    final nameCR = cr.peek('name');
-    final name = reader.get<String>(nameCR);
+   Text textDecoder(ConstantReader cr) {
+     if (cr == null) return null;
+     return Text(cr.peek('value')?.stringValue);
+   }
 
-    Column<T> columnFactory<T extends SqliteType>() {
-      return Column<T>(
-        defaultValue: defaultValue,
-        name: name,
-      );
-    }
+   SqliteType sqliteTypeDecoder(ConstantReader cr) {
+     if (cr == null) return null;
+     if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
+     if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
+     if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
+     if (reader.holdsA<Boolean>(cr)) return reader.get<Boolean>(cr);
+     throw ErrorOf<Decoder<SqliteType>>(
+         message: 'Could not reader const value of type `SqliteType`',
+         invalidState: 'ConstantReader holds a const value of type '
+             '`${cr.objectValue.type}`.');
+   }
 
-    if (reader.holdsA<Column>(cr, typeArgs: [Text]))
-      return columnFactory<Text>();
-    if (reader.holdsA<Column>(cr, typeArgs: [Real]))
-      return columnFactory<Real>();
-    if (reader.holdsA<Column>(cr, typeArgs: [Integer]))
-      return columnFactory<Integer>();
-    return columnFactory<Boolean>();
-  });
+   // Registering decoders.
+   reader
+       .addDecoder<Integer>(integerDecoder)
+       .addDecoder<Boolean>(booleanDecoder)
+       .addDecoder<Text>(textDecoder)
+       .addDecoder<Real>(realDecoder)
+       .addDecoder<SqliteType>(sqliteTypeDecoder);
 
-  AnsiPen green = AnsiPen()..green(bold: true);
+   // Adding a decoder for constants of type [Column].
+   reader.addDecoder<Column>((cr) {
+     if (cr == null) return null;
+     final defaultValueCR = cr.peek('defaultValue');
+     final defaultValue = reader.get<SqliteType>(defaultValueCR);
 
-  // Retrieve an instance of [String].
-  final columnName = reader.get<String>(columnNameCR);
-  print(green('Retrieving a [String]'));
-  print('columnName = \'$columnName\'');
-  print('');
-  // Prints:
-  // Retrieving a [String]
-  // columnName = 'Player'
+     final nameCR = cr.peek('name');
+     final name = reader.get<String>(nameCR);
 
-  // Retrieve an instance of [Column<Text>].
-  final columnFirstName = reader.get<Column>(firstNameCR);
-  print(green('Retrieving a [Column<Text>]:'));
-  print(columnFirstName);
-  // Prints:
-  // Retrieving a [Column<Text>]:
-  // Column<Text>(
-  //   defaultValue: Text('Thomas')
-  // )
+     Column<T> columnFactory<T extends SqliteType>() {
+       return Column<T>(
+         defaultValue: defaultValue,
+         name: name,
+       );
+     }
 
-  // Adding a decoder function for type [Sponsor].
-  reader.addDecoder<Sponsor>((cr) => Sponsor(cr.peek('name').stringValue));
+     if (reader.holdsA<Column>(cr, typeArgs: [Text])) {
+       return columnFactory<Text>();
+     }
+     if (reader.holdsA<Column>(cr, typeArgs: [Real])) {
+       return columnFactory<Real>();
+     }
+     if (reader.holdsA<Column>(cr, typeArgs: [Integer])) {
+       return columnFactory<Integer>();
+     }
+     return columnFactory<Boolean>();
+   });
 
-  final sponsors = reader.getList<Sponsor>(sponsorsCR);
+   final green = AnsiPen()..green(bold: true);
 
-  print('');
-  print(green('Retrieving a [List<Sponsor>]:'));
-  print(sponsors);
-  // Prints:
-  // Retrieving a [List<Sponsor>]:
-  // [Sponsor: Johnson's, Sponsor: Smith Brothers]
+   // Retrieve an instance of [String].
+   final columnName = reader.get<String>(columnNameCR);
+   print(green('Retrieving a String:'));
+   print('columnName = \'$columnName\'');
+   print('');
+   // Prints:
+   // Retrieving a [String]
+   // columnName = 'Player'
 
-  final id = reader.get<Column>(idCR);
-  print('');
-  print(green('Retrieving a [Column<Integer>]:'));
-  print(id);
-  // Prints:
-  // Retrieving a [Column<Integer>]:
-  // Column<Integer>(
-  // )
+   // Retrieve an instance of [Column<Text>].
+   final columnFirstName = reader.get<Column>(firstNameCR);
+   print(green('Retrieving a Column<Text>:'));
+   print(columnFirstName);
+   // Prints:
+   // Retrieving a [Column<Text>]:
+   // Column<Text>(
+   //   defaultValue: Text('Thomas')
+   // )
+
+   // Adding a decoder function for type [Sponsor].
+   reader.addDecoder<Sponsor>((cr) => Sponsor(cr.peek('name').stringValue));
+
+   final sponsors = reader.getList<Sponsor>(sponsorsCR);
+
+   print('');
+   print(green('Retrieving a List<Sponsor>:'));
+   print(sponsors);
+   // Prints:
+   // Retrieving a [List<Sponsor>]:
+   // [Sponsor: Johnson's, Sponsor: Smith Brothers]
+
+   final id = reader.get<Column>(idCR);
+   print('');
+   print(green('Retrieving a Column<Integer>:'));
+   print(id);
+   // Prints:
+   // Retrieving a [Column<Integer>]:
+   // Column<Integer>(
+   // )
+
+   final greek = reader.getEnum<Greek>(greekCR);
+   print('');
+   print(green('Retrieving an instance of the '
+       'enumeration: Greek{alpha, beta}.'));
+   print(greek);
+   // Prints:
+   // 'Retrieving an instance of the enumeration: Greek{alpha, beta}.'
+   // Greek.alpha
+
+   final map = reader.getMap<String, dynamic>(mapCR);
+   print('');
+   print(green('Retrieving a Map<String, dynamic>:'));
+   print(map);
+   // Prints:
+   // 'Retrieving a Map<String, dynamic>:'
+   // {one: 1, two: 2.0}
+
+   reader.addDecoder<Greek>((cr) => cr.enumValue<Greek>());
+   final mapWithEnumEntry = reader.getMap<String, dynamic>(mapWithEnumEntryCR);
+   print('');
+   print(green('Retrieving a Map<String, dynamic>:'));
+   print(mapWithEnumEntry);
+   // Prints:
+   // 'Retrieving a Map<String, dynamic>:'
+   // {one: 1, two: 2.0, enum: Greek.alpha}
+ }
 ```
 
 </details>
 
-## Retrieving Constants with Arbitrary Type
+## Retrieving Constants with Unkown Type
 
-The example in the section above demonstrates how to retrieve constants with *known* parameterized type. The program presented below shows how to proceed if the constant has an arbitrary type parameter.
+The example in the section *above* demonstrates how to retrieve constants
+with *known* parameterized type.
 
-For this purpose consider the following generic class that wraps a value of type `T`:
+The program presented below shows how to proceed if the constant has an **unknown** type parameter. Note: The unknown data-type must be a supported built-in Dart type or a type with a registered decoder.
+
+Consider the following generic class that wraps a value of type `T`:
 ```Dart
 /// Wraps a variable of type [T].
 class Wrapper<T> {
@@ -212,12 +287,13 @@ class Wrapper<T> {
 }
 ```
 
-The type argument `T` can assume any data-type and it is impractical to handle all available types manually in the decoder function of `Wrapper`.
+The type argument `T` can assume any data-type and it is impractical
+to handle all available types manually in the decoder function of `Wrapper`.
 
-Instead, one can use the method `get` with the type `dynamic`. This signals to the reader to match the static type of the [ConstantReader] input to a registered data-type.
-If a match is found `get<dynamic>(constantReader)` returns a constant with
-the appropriate value, otherwise a [ReaderError] is thrown.
-
+Instead, one can use the method `get` with the type `dynamic`.
+This signals to the reader to **match the static type** of the [`ConstantReader`][ConstantReader]
+input to a registered data-type. If a match is found `get<dynamic>(constantReader)` returns a constant with
+the appropriate value, otherwise an error is thrown.
 
 The program below retrieves the constant `wrappedVariable` defined in [wrapper_test.dart].
 Note the use of the method `get<dynamic>()` when defining the [Decoder] function for
