@@ -54,6 +54,7 @@ to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age
 
 To use the package [`generic_reader`][generic_reader] the following steps are required:
 1. Include [`generic_reader`][generic_reader] and [`source_gen`][source_gen] as dependencies in your pubspec.yaml file.
+
 2. Create an instance of [`GenericReader`][GenericReader] (e.g. within a source code generator function):
    ```Dart
    final reader = GenericReader(); // Note: [reader] is a singleton.
@@ -74,7 +75,7 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
      ```
 
 4. Retrieve the compile-time constant values using the methods `get<T>()`, `getList<T>()`,
-   `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`:
+   `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`.
 5. Process the retrieved compile-time constants and generate the required source code.
 
 ## Decoder Functions
