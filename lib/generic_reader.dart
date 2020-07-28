@@ -1,7 +1,7 @@
 /// Library providing a customizable generic reader aimed at creating
 /// runtime constant objects from a static representation
-/// of a compile-time constant expression such as [source_gen.ConstantReader]
-/// or [analyzer.DartObject].
+/// of a compile-time constant expression such as [ConstantReader]
+/// or [DartObject].
 library generic_reader;
 
 export 'src/readers/generic_reader.dart';
