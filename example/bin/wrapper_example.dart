@@ -1,6 +1,5 @@
 import 'package:ansicolor/ansicolor.dart';
-import 'package:generic_reader/src/test_types/sqlite_type.dart';
-import 'package:generic_reader/src/test_types/wrapper.dart';
+import 'package:generic_reader_example/generic_reader_example.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
@@ -18,7 +17,7 @@ import 'package:source_gen_test/src/init_library_reader.dart';
 Future<void> main() async {
   /// Reading libraries.
   final wrapperTestLib = await initializeLibraryReaderForDirectory(
-    'example/src',
+    'example/lib/src',
     'wrapper_test.dart',
   );
 
@@ -28,39 +27,7 @@ Future<void> main() async {
   // Get singleton instance of the reader.
   final reader = GenericReader();
 
-  final Decoder<Integer> integerDecoder = ((cr) {
-    if (cr == null) return null;
-    return Integer(cr.peek('value')?.intValue);
-  });
-  final Decoder<Real> realDecoder = ((cr) {
-    if (cr == null) return null;
-    return Real(cr.peek('value')?.doubleValue);
-  });
-  final Decoder<Boolean> booleanDecoder = ((cr) {
-    if (cr == null) return null;
-    return Boolean(cr.peek('value')?.boolValue);
-  });
-  final Decoder<Text> textDecoder = ((cr) {
-    if (cr == null) return null;
-    return Text(cr.peek('value')?.stringValue);
-  });
-
-  final Decoder<SqliteType> sqliteTypeDecoder = ((cr) {
-    if (cr == null) return null;
-    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
-    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
-    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
-    return reader.get<Boolean>(cr);
-  });
-
-  reader
-      .addDecoder<Integer>(integerDecoder)
-      .addDecoder<Boolean>(booleanDecoder)
-      .addDecoder<Text>(textDecoder)
-      .addDecoder<Real>(realDecoder)
-      .addDecoder<SqliteType>(sqliteTypeDecoder);
-
-  AnsiPen green = AnsiPen()..green(bold: true);
+  final green = AnsiPen()..green(bold: true);
 
   // Adding a decoder function for type [Wrapper].
   reader.addDecoder<Wrapper>((cr) {
@@ -68,9 +35,9 @@ Future<void> main() async {
     return Wrapper(value);
   });
 
-  final wrapped = reader.get<Wrapper>(wrappedCR);
   print('');
-  print(green('Retrieving a [Wrapper<dynamic>]:'));
+  print(green('Retrieving a Wrapper<dynamic>:'));
+  final wrapped = reader.get<Wrapper>(wrappedCR);
   print(wrapped);
   // Prints:
   //
