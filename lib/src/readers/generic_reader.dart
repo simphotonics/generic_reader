@@ -2,62 +2,15 @@ import 'dart:mirrors';
 
 import 'package:analyzer/dart/element/type.dart' show DartType;
 import 'package:exception_templates/exception_templates.dart';
-import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 
+import '../decoders/decoders.dart';
 import '../extensions/type_methods.dart';
-
-/// Typedef of a function return type [T]
-/// and an input argument of type [ConstantReader].
-///
-/// The can be used to register a decoder with the [GenericReader].
-///
-/// Example:
-/// ```
-/// class CustomType{
-///  const CustomType({this.id, this.name});
-///  final int id;
-///  final String name;
-/// }
-/// ...
-///
-/// final reader = Reader();
-/// reader.addDecoder<CustomType>((constantReader) {
-///   // Extract object information
-///   final id = constantReader.peek('id').intValue;
-///   final name = constantReader.peek('name').stringValue;
-///   // Return an instance of CustomType
-///   return CustomType(id:id, name: name);
-/// });
-/// ```
-typedef Decoder<T> = T Function(ConstantReader constantReader);
-
-/// A sealed type that is not and cannot be registered with GenericReader.
-@sealed
-class TypeNotRegistered<T> {
-  /// Type that is not registered with GenericReader.
-  final Type unkownType = T;
-
-  @override
-  String toString() {
-    return 'TypeNotRegistered: $T.';
-  }
-}
-
-/// Decoder function for type [num].
-num numDecoder(ConstantReader constantReader) {
-  if (constantReader == null) return null;
-  if (constantReader.isInt) return constantReader.intValue;
-  if (constantReader.isDouble) return constantReader.doubleValue;
-  throw ErrorOf<Decoder<num>>(
-    message: 'Error reading const `num` value.',
-    invalidState: 'ConstantReader holds a variable of static type: '
-        '${constantReader.type}',
-  );
-}
+import '../types/decoder.dart';
+import '../types/not_registered_type.dart';
 
 /// Reader providing generic methods aimed at converting
-/// instances of [analyzer.DartObject] into runtime objects.
+/// instances of [DartObject] into runtime objects.
 ///
 /// Intended use: Retrieval of compile-time constant expressions
 /// during source code generation.
@@ -104,9 +57,9 @@ class GenericReader {
   /// or updated.
   /// - `bool`, `double`, `int`, `Null`,`num`,`Symbol`,`Type`,
   /// - `dynamic`, `List`, `Set`, `Map`,
-  /// - [TypeNotRegistered].
+  /// - [NotRegisteredType].
   GenericReader addDecoder<T>(Decoder<T> decoder) {
-    if (isBuiltIn(T) || T == TypeNotRegistered || T == dynamic) return this;
+    if (isBuiltIn(T) || T == NotRegisteredType || T == dynamic) return this;
     // Adding TypeChecker.
     _checkers[T] ??= TypeChecker.fromRuntime(T);
 
@@ -121,7 +74,7 @@ class GenericReader {
   /// Note: Decoders that cannot be cleared handle the following types:
   /// - `bool`, `double`, `int`, `Null`,`num`,`Symbol`,`Type`,
   /// - `dynamic`, `List`, `Set`, `Map`,
-  /// - [TypeNotRegistered].
+  /// - [NotRegisteredType].
   Decoder<T> clearDecoder<T>() {
     if (isBuiltIn(T)) return null;
     _checkers.remove(T);
@@ -152,7 +105,7 @@ class GenericReader {
       if (constantReader.isDynamic) {
         return true;
       }
-      if (findTypeOf(constantReader) == TypeNotRegistered) {
+      if (findTypeOf(constantReader) == NotRegisteredType) {
         return false;
       } else {
         return true;
@@ -193,7 +146,7 @@ class GenericReader {
       if (dartType.isDynamic) {
         return true;
       } else {
-        if (findType(dartType) == TypeNotRegistered) {
+        if (findType(dartType) == NotRegisteredType) {
           return false;
         } else {
           return true;
@@ -208,7 +161,7 @@ class GenericReader {
   /// Returns a type [Type] that matches the static [source_gen.DartType] of
   /// [constantReader].
   ///
-  /// Returns [TypeNotRegistered] if no match is found
+  /// Returns [NotRegisteredType] if no match is found
   /// among the types that are registered,
   /// i.e. have a decoder function.
   Type findTypeOf(ConstantReader constantReader) {
@@ -218,12 +171,12 @@ class GenericReader {
         return type;
       }
     }
-    return TypeNotRegistered;
+    return NotRegisteredType;
   }
 
   /// Returns a type [Type] that matches [dartType].
   ///
-  /// Returns [TypeNotRegistered] if no match is found
+  /// Returns [NotRegisteredType] if no match is found
   /// among the types that are registered,
   /// i.e. have a decoder function.
   Type findType(DartType dartType) {
@@ -233,7 +186,7 @@ class GenericReader {
         return type;
       }
     }
-    return TypeNotRegistered;
+    return NotRegisteredType;
   }
 
   /// Reads [constantReader] and returns an instance of [T].
@@ -274,7 +227,7 @@ class GenericReader {
 
     final type = findTypeOf(constantReader);
 
-    if (type == TypeNotRegistered) {
+    if (type == NotRegisteredType) {
       throw ErrorOf<GenericReader>(
         message: 'Could not read constant via get<$dynamic>().',
         expectedState: 'A registered decoder for data-type '

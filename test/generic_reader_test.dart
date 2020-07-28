@@ -3,6 +3,7 @@ import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
 import 'package:test/test.dart';
 
+import 'package:generic_reader/src/types/not_registered_type.dart';
 import 'package:generic_reader_example/generic_reader_example.dart';
 import 'package:generic_reader/generic_reader.dart';
 
@@ -137,7 +138,7 @@ Future<void> main() async {
 
     test('findType()', () {
       expect(reader.findTypeOf(roleCR), String);
-      expect(reader.findTypeOf(realCR), TypeNotRegistered);
+      expect(reader.findTypeOf(realCR), NotRegisteredType);
       reader.addDecoder<Real>(realDecoder);
       expect(reader.findTypeOf(realCR), Real);
       reader.clearDecoder<Real>();

@@ -1,3 +1,7 @@
+## 0.1.2
+
+Rearranged folder structure of `lib`.
+
 ## 0.1.1
 
 Added methods `getMap<T>()` and `getEnum<T>()`.
