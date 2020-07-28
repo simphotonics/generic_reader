@@ -1,3 +1,7 @@
+## 0.1.3
+
+Amended `README.md`.
+
 ## 0.1.2
 
 Rearranged folder structure of `lib`.

@@ -6,7 +6,7 @@
 ## Introduction
 
 The premise of *source code generation* is that we can somehow specify
-(hopefully few) details and flesh out the rest of the classes, methods, and variables during the build process.
+(hopefully few) details and flesh out the rest of the classes, and methods during the build process.
 Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
 class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
 
@@ -16,15 +16,8 @@ Compile-time constant expressions are represented by a [`DartObject`][DartObject
 [`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [`DartType`][DartObject] has methods that allow reading the underlying constant object.
-For example, it is an easy task to retrieve a value of type `String`:
-```Dart
-// Let 'nameFieldElement' be a FieldElement containing a String.
-final constantObject = nameFieldElement.computeConstantValue();
-final String name = constantObject.toStringValue();
-```
-It can be a sightly more difficult task to read the underlying constant value
-of user defined data-types.
-These are often a composition of other types, as illustrated in the example below.
+It can be a sightly more difficult task to read constant values
+of user defined data-types. These are often a composition of other types, as illustrated in the example below.
 <details>  <summary> Click to show source-code. </summary>
 
  ```Dart
@@ -52,7 +45,6 @@ These are often a composition of other types, as illustrated in the example belo
  }
  ```
 </details>
-
 In order to retrieve a constant value of type `User` one has
 to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
 
@@ -67,16 +59,15 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
    ```
 3. Register a [Decoder] function for each data-type that needs to be handled.
    The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` as well as Dart `enums`
-   do *not* require decoder functions.
+   do **not** require decoder functions.
 
-   However, in order to read e.g. a constant of type `List<dynamic>`
-   where some entries might contain an instance of an enum `MyEnum`
-   one must first register a decoder:
+   Note: To read a Dart enum, `MyEnum`, using the method `get<dynamic>()` it is required to register a
+   decoder function. This is due to fact that the method `get<dynamic>()` tries to match the input against a
+   built-in or registered type. To register a decoder function for an enumeration use a function similar to:
    ```Dart
     reader.addDecoder<MyEnum>((cr) => cr.getEnum<MyEnum>());
    ```
-   This is due to fact that the method `get<dynamic>` tries to match the input against a
-   built-in or registered type. 
+
 4. Retrieve the compile-time constant values using the methods `get<T>()`, `getList<T>()`,
    `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`:
 5. Process the retrieved compile-time constants and generate the required source code.
