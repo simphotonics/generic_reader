@@ -60,22 +60,28 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
 3. Register a [Decoder] function for each data-type that needs to be handled.
-   The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` as well as Dart `enums`
-   do **not** require decoder functions.
+   - The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
 
-   - To read a Dart enum, e.g. `MyEnum`, using the method `get<dynamic>()` it is required to register a
-   decoder function for this type. This is due to fact that the method `get<dynamic>()` tries to match the
-   input against a built-in or registered type.
-   The file [`player_example.dart`][player_example.dart] demonstrates how to read a constant of type `List<dynamic>`
-   containing enum values.
+   - There is no need to define decoder functions for **Dart enums** as long as they are read using
+     the method [`getEnum<T>()`][getEnum].
 
-   - To register a decoder function for an enumeration use a function similar to:
+     However, to read a Dart enum, e.g. `MyEnum`, using the method [`get<T>()`][get]
+     it is required to register a decoder function for this type.
+     This is due to fact that the [`get<dynamic>()`][get] tries to match the input
+     against a built-in or registered type. The file [`player_example.dart`][player_example.dart]
+     demonstrates how to read a constant of type `List<dynamic>` containing `int`, `double`,
+     and enum values.
+
+   - To register a decoder function for a Dart enumeration, e.g. `MyEnum`, use the method
+     [`enumValue`][enumValue] provided by [TypeMethods][TypeMethods],
+     an extension on [`ConstantReader`][ConstantReader]:
      ```Dart
-      reader.addDecoder<MyEnum>((cr) => cr.getEnum<MyEnum>());
+      reader.addDecoder<MyEnum>((cr) => cr.enumValue<MyEnum>());
      ```
 
 4. Retrieve the compile-time constant values using the methods `get<T>()`, `getList<T>()`,
    `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`.
+
 5. Process the retrieved compile-time constants and generate the required source code.
 
 ## Decoder Functions
@@ -176,11 +182,17 @@ Please file feature requests and bugs at the [issue tracker].
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
+[enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/TypeMethods/enumValue.html
+
 [example]: example
 
 [GenericReader]: https://pub.dev/packages/generic_reader
 
 [generic_reader]: https://pub.dev/packages/generic_reader
+
+[get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
+
+[getEnum]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getEnum.html
 
 [peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
 
@@ -191,3 +203,5 @@ Please file feature requests and bugs at the [issue tracker].
 [source_gen]: https://pub.dev/packages/source_gen
 
 [source_gen_test]: https://pub.dev/packages/source_gen_test
+
+[TypeMethods]: https://pub.dev/documentation/generic_reader/latest/generic_reader/TypeMethods.html
