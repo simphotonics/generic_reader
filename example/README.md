@@ -82,7 +82,7 @@ that reads a builder configuration and loads the relevant assets.
 
  import 'package:generic_reader_example/generic_reader_example.dart';
 
- /// To run this program navigate to the folder: /example
+ /// To run this program navigate to the folder: /example/generic_reader_example
  /// in your local copy the package [generic_reader] and
  /// use the command:
  ///
@@ -310,7 +310,7 @@ import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
 
-/// To run this program navigate to the folder: /example
+/// To run this program navigate to the folder: /example/generic_reader_example
 /// in your local copy the package [generic_reader] and
 /// use the command:
 ///
