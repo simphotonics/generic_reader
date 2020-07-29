@@ -5,8 +5,7 @@
 
 The file [player_example.dart] demonstrates how to use [`generic_reader`][generic_reader]
 to read the value of a constant with parameterized type from a static representation of a
-compile-time constant expression. The program also shows how to register [Decoder] functions for the types [`Column`][Column]
-and [`SqliteType`][SqliteType].
+compile-time constant expression. The program also shows how to register [Decoder] functions for the types [`Column`][Column] and [`SqliteType`][SqliteType].
 
 The constant values that are going to be read are the fields of the const class [`Player`][Player]:
 <details>
@@ -273,8 +272,8 @@ with *known* parameterized type.
 
 The program presented below shows how to proceed if the constant has
 an **unknown** type parameter.
-Note: The unknown data-type must be a supported built-in
-Dart type or a type with a registered decoder.
+Note: The unknown data-type must be a **supported built-in**
+Dart type or a type with a **registered decoder**.
 
 Consider the following generic class that wraps a value of type `T`:
 ```Dart
@@ -293,13 +292,14 @@ class Wrapper<T> {
 The type argument `T` can assume any data-type and it is impractical
 to handle all available types manually in the decoder function of `Wrapper`.
 
-Instead, one can use the method `get` with the type `dynamic`.
+Instead, one can use the method [`get<T>(ConstantReader constantReader)`][get] with the type `dynamic`.
 This signals to the reader to **match the static type** of the [`ConstantReader`][ConstantReader]
-input to a registered data-type. If a match is found `get<dynamic>(constantReader)`
-returns a constant with the appropriate value, otherwise an error is thrown.
+input to a registered data-type.
+If a match is found [`get<dynamic>(constantReader)`][get] returns a constant
+with the appropriate value, otherwise an error is thrown.
 
 The program below retrieves the constant `wrappedVariable` defined in [wrapper_test.dart].
-Note the use of the method `get<dynamic>()` when defining the [Decoder] function for
+Note the use of the method [`get<dynamic>()`][get] when defining the [Decoder] function for
 the data-type `Wrapper`.
 
 <details> <summary> Click to show wrapper_example.dart. </summary>
@@ -375,6 +375,16 @@ Please file feature requests and bugs at the [issue tracker].
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
 
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
+
+[get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
+
+[getEnum]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getEnum.html
+
+[getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
+
+[getMap]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getMap.html
+
+[getSet]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getSet.html
 
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/player.dart
 
