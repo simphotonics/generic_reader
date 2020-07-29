@@ -272,8 +272,7 @@ with *known* parameterized type.
 
 The program presented below shows how to proceed if the constant has
 an **unknown** type parameter.
-Note: The unknown data-type must be a **supported built-in**
-Dart type or a type with a **registered decoder**.
+Note: The unknown data-type should be either a `bool`, `double`, `int`, `String`, `Type`, `Symbol` or a type with a **registered decoder**.
 
 Consider the following generic class that wraps a value of type `T`:
 ```Dart
@@ -292,8 +291,7 @@ class Wrapper<T> {
 The type argument `T` can assume any data-type and it is impractical
 to handle all available types manually in the decoder function of `Wrapper`.
 
-Instead, one can use the method [`get<T>(ConstantReader constantReader)`][get] with the type `dynamic`.
-This signals to the reader to **match the static type** of the [`ConstantReader`][ConstantReader]
+Instead, one can use the method [`get<T>(ConstantReader constantReader)`][get] with the type `dynamic`. This signals to the reader to **match the static type** of the [`ConstantReader`][ConstantReader]
 input to a registered data-type.
 If a match is found [`get<dynamic>(constantReader)`][get] returns a constant
 with the appropriate value, otherwise an error is thrown.
