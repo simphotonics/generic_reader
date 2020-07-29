@@ -184,7 +184,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
 
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/bin/player_example.dart
 
 [Revivable]: https://pub.dev/documentation/source_gen/latest/source_gen/Revivable-class.html
 
