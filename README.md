@@ -103,7 +103,9 @@ and the function returns an object of type `T`.
 It is presumed that the input argument `constantReader` represents
 an object of type `T`.
 
-The following shows how to define decoder functions for the types `Age`, `Name`,`Title`, and `User`.
+The following shows how to define decoder functions for the types `Age`, `Name`,`Title`, and `User`, mentioned
+in the section [Introduction](https://github.com/simphotonics/generic_reader#introduction).
+
 Note that each decoder knows the constructor *parameter-names* and *parameter-types* of the class it handles.
 For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is *age*.
 
