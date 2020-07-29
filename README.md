@@ -186,7 +186,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/TypeMethods/enumValue.html
 
-[example]: example
+[example]: https://github.com/simphotonics/generic_reader/tree/master/example
 
 [GenericReader]: https://pub.dev/packages/generic_reader
 

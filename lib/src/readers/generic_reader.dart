@@ -10,7 +10,7 @@ import '../types/decoder.dart';
 import '../types/not_registered_type.dart';
 
 /// Reader providing generic methods aimed at converting
-/// instances of [DartObject] into runtime objects.
+/// instances of `DartObject` into runtime objects.
 ///
 /// Intended use: Retrieval of compile-time constant expressions
 /// during source code generation.
@@ -81,7 +81,7 @@ class GenericReader {
     return _decoders.remove(T);
   }
 
-  /// Returns [true] if a decoder function for [type]
+  /// Returns `true` if a decoder function for [type]
   /// is registered with [this].
   bool hasDecoder(Type type) {
     if (_decoders[type] == null) return false;
@@ -158,7 +158,7 @@ class GenericReader {
     return checker.isExactlyType(dartType);
   }
 
-  /// Returns a type [Type] that matches the static [source_gen.DartType] of
+  /// Returns a type [Type] that matches the static [DartType] of
   /// [constantReader].
   ///
   /// Returns [NotRegisteredType] if no match is found
@@ -191,9 +191,9 @@ class GenericReader {
 
   /// Reads [constantReader] and returns an instance of [T].
   ///
-  /// Note: Returns [null] if [constantReader] is null.
+  /// Note: Returns `null` if [constantReader] is null.
   ///
-  /// Throws [exceptions_templates.ErrorOf] if an instance cannot be constructed.
+  /// Throws [ErrorOf] if an instance cannot be constructed.
   T get<T>(ConstantReader constantReader) {
     if (constantReader == null) return null;
 
@@ -247,7 +247,7 @@ class GenericReader {
 
   /// Reads [constantReader] and returns an instance of `List<T>`.
   ///
-  /// Throws [exception_templates.ErrorOf] if an instance of `List<T>`
+  /// Throws [ErrorOf] if an instance of `List<T>`
   /// can not be constructed.
   List<T> getList<T>(ConstantReader constantReader) {
     if (constantReader == null) return null;
@@ -272,7 +272,7 @@ class GenericReader {
 
   /// Reads [constantReader] and returns an object of type `Set<T>`.
   ///
-  /// Throws [exception_templates.ErrorOf] if an instance of `Set<T>`
+  /// Throws [ErrorOf] if an instance of `Set<T>`
   /// cannot be constructed.
   Set<T> getSet<T>(ConstantReader constantReader) {
     if (constantReader == null) return null;

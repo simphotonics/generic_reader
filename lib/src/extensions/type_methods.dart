@@ -19,7 +19,7 @@ extension TypeMethods on ConstantReader {
 
   /// Reads a instance of a Dart enumeration.
   ///
-  /// Throws [exception_templates.ErrorOf] if a constant cannot be read.
+  /// Throws [ErrorOf] if a constant cannot be read.
   T enumValue<T>() {
     if (T == dynamic) {
       throw ErrorOfType<InvalidTypeArgument>(

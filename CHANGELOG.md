@@ -1,3 +1,7 @@
+## 0.1.5
+
+Fixed missing references in dartdocs.
+
 ## 0.1.4
 
 Moved package `generic_reader_example` to its own folder to expose `README.md`.
