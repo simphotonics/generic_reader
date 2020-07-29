@@ -127,7 +127,7 @@ reader
   ..addDecoder<Age>(ageDecoder)
   ..addDecoder<Name>(nameDecoder)
   ..addDecoder<User>(userDecoder);
-  
+
 ...
 
 // Retrieving a constant value of type User:
@@ -163,10 +163,10 @@ For further information on how to use [GenericReader] to retrieve constants of a
 Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
+
 [analyzer]: https://pub.dev/packages/analyzer
 
 [Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
-
 
 [computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
 
@@ -177,10 +177,6 @@ Please file feature requests and bugs at the [issue tracker].
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
 [example]: example
-
-[Generator]: https://pub.dev/documentation/source_gen/latest/source_gen/Generator-class.html
-
-[GeneratorForAnnotation]: https://pub.dev/documentation/source_gen/latest/source_gen/GeneratorForAnnotation-class.html
 
 [GenericReader]: https://pub.dev/packages/generic_reader
 

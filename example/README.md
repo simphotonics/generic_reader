@@ -271,7 +271,10 @@ that reads a builder configuration and loads the relevant assets.
 The example in the section *above* demonstrates how to retrieve constants
 with *known* parameterized type.
 
-The program presented below shows how to proceed if the constant has an **unknown** type parameter. Note: The unknown data-type must be a supported built-in Dart type or a type with a registered decoder.
+The program presented below shows how to proceed if the constant has
+an **unknown** type parameter.
+Note: The unknown data-type must be a supported built-in
+Dart type or a type with a registered decoder.
 
 Consider the following generic class that wraps a value of type `T`:
 ```Dart
@@ -292,8 +295,8 @@ to handle all available types manually in the decoder function of `Wrapper`.
 
 Instead, one can use the method `get` with the type `dynamic`.
 This signals to the reader to **match the static type** of the [`ConstantReader`][ConstantReader]
-input to a registered data-type. If a match is found `get<dynamic>(constantReader)` returns a constant with
-the appropriate value, otherwise an error is thrown.
+input to a registered data-type. If a match is found `get<dynamic>(constantReader)`
+returns a constant with the appropriate value, otherwise an error is thrown.
 
 The program below retrieves the constant `wrappedVariable` defined in [wrapper_test.dart].
 Note the use of the method `get<dynamic>()` when defining the [Decoder] function for
@@ -357,26 +360,30 @@ Future<void> main() async {
 ## Features and bugs
 Please file feature requests and bugs at the [issue tracker].
 
+[issue tracker]: https://github.com/simphotonics/generic_reader/issues
+
 [builder]: https://github.com/dart-lang/build
-[issue tracker]: https://github.com/simphotonics/directed_graph/issues
 
 [initializeLibraryReaderForDirectory]: https://pub.dev/documentation/source_gen_test/latest/source_gen_test/initializeLibraryReaderForDirectory.html
 
 [LibraryReader]: https://pub.dev/documentation/source_gen/latest/source_gen/LibraryReader-class.html
 
 [generic_reader]: https://pub.dev/packages/generic_reader
-[directed_graph]: https://github.com/simphotonics/directed_graph/
-[Column]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/test_types/column.dart
+
+[Column]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/test_types/column.dart
+
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
+
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
-[Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
+
+[Player]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/player.dart
 
 [player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/bin/player_example.dart
 
-[ReaderError]: https://pub.dev/documentation/generic_reader/latest/generic_reader/ReaderError-class.html
 [source_gen]: https://pub.dev/packages/source_gen
+
 [source_gen_test]: https://pub.dev/packages/source_gen_test
 
-[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/test_types/sqlite_type.dart
+[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/test_types/sqlite_type.dart
 
 [wrapper_test.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/wrapper_test.dart
