@@ -68,8 +68,8 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 
      However, to read a Dart enum, e.g. `MyEnum`, using the method [`get<T>()`][get]
      it is required to register a decoder function for this type.
-     This is due to fact that the [`get<dynamic>()`][get] tries to match the input
-     against a built-in or registered type.
+     This is due to fact that [`get<dynamic>(ConstantReader constantReader)`][get] tries to match the
+     the static type of `constantReader` against a built-in or registered type.
 
      The file [`player_example.dart`][player_example.dart]
      demonstrates how to read a constant of type `List<dynamic>` containing `int`, `double`,
@@ -82,8 +82,8 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
       reader.addDecoder<MyEnum>((cr) => cr.enumValue<MyEnum>());
      ```
 
-4. Retrieve the compile-time constant values using the methods `get<T>()`, `getList<T>()`,
-   `getSet<T>()`, `getMap<T>()`, `getEnum<T>()`, and `get<dynamic>()`.
+4. Retrieve the compile-time constant values using the methods [`get<T>()`][get], [`getList<T>()`][getList],
+   [`getSet<T>()`][getSet], [`getMap<T>()`][getMap], [`getEnum<T>()`][getEnum].
 
 5. Process the retrieved compile-time constants and generate the required source code.
 
@@ -196,6 +196,12 @@ Please file feature requests and bugs at the [issue tracker].
 [get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
 
 [getEnum]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getEnum.html
+
+[getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
+
+[getMap]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getMap.html
+
+[getSet]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getSet.html
 
 [peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
 
