@@ -16,38 +16,9 @@ Compile-time constant expressions are represented by a [`DartObject`][DartObject
 [`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [`DartType`][DartObject] has methods that allow reading the underlying constant object.
-It can be a sightly more difficult task to read constant values
-of user defined data-types. These are often a composition of other types, as illustrated in the example below.
-<details>  <summary> Click to show source-code. </summary>
-
- ```Dart
- enum Title{Mr, Mrs, Dr}
-
- class Age{
-   const Age(this.age);
-   final int age;
-   bool get isAdult => age > 21;
- }
-
- class Name{
-   const Name({this.firstName, this.lastName, this.middleName});
-   final String firstName;
-   final String lastName;
-   final String middleName;
- }
-
- class User{
-   const User({this.name, this.id, this.age, this.title});
-   final Name name;
-   final Age age;
-   final int id;
-   final Title title;
- }
- ```
-</details>
-
-In order to retrieve a constant value of type `User` one has
-to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
+It can be a more difficult task to read constant values of user defined (parameterized) data-types.
+The package [`generic_reader`][generic_reader] provides a systematic way of reading constants of
+arbitrary data-type.
 
 
 ## Usage
@@ -98,13 +69,42 @@ Decoders functions know how to **decode** a specific data-type and have the foll
 ```Dart
 typedef T Decoder<T>(ConstantReader constantReader);
 ```
-The input argument is of type [`ConstantReader`][ConstantReader] (a wrapper around DartObject)
-and the function returns an object of type `T`.
-It is presumed that the input argument `constantReader` represents
-an object of type `T`.
+The input argument is of type [`ConstantReader`][ConstantReader], a wrapper around DartObject,
+and the function returns an object of type `T`. It is presumed that the input argument `constantReader` represents an object of type `T`.
 
-The following shows how to define decoder functions for the types `Age`, `Name`,`Title`, and `User`, mentioned
-in the section [Introduction](https://github.com/simphotonics/generic_reader#introduction).
+User defined types are often a composition of other types, as illustrated in the example below.
+<details>  <summary> Click to show source-code. </summary>
+
+ ```Dart
+ enum Title{Mr, Mrs, Dr}
+
+ class Age{
+   const Age(this.age);
+   final int age;
+   bool get isAdult => age > 21;
+ }
+
+ class Name{
+   const Name({this.firstName, this.lastName, this.middleName});
+   final String firstName;
+   final String lastName;
+   final String middleName;
+ }
+
+ class User{
+   const User({this.name, this.id, this.age, this.title});
+   final Name name;
+   final Age age;
+   final int id;
+   final Title title;
+ }
+ ```
+</details>
+
+In order to retrieve a constant value of type `User` one has
+to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
+
+The following shows how to define decoder functions for the types `Age`, `Name`, and `User`.
 
 Note that each decoder knows the constructor *parameter-names* and *parameter-types* of the class it handles.
 For example, the decoder for `User` knows that `age` is of type `Age` and that the field-name is *age*.
@@ -144,9 +144,6 @@ reader
 // Retrieving a constant value of type User:
 final User user = reader.get<User>(userCR);
 ```
-Note: Instances of **Dart enum** are retrieved by calling `getEnum<T>()` without having to register
-a decoder function for `T`.
-
 Remark: The method [peek] returns an instance of [ConstantReader]
 representing the class field specified by the input `String`.
 It returns `null` if the field was not initialized or not present.
