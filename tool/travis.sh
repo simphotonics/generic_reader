@@ -58,7 +58,7 @@ pub run test -r expanded --test-randomize-ordering-seed=random
 # ===============================
 
 # Directories to be processed
-directories="example"
+directories="example/generic_reader_example"
 
 for directory in $directories; do
   cd $directory

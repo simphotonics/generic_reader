@@ -3,7 +3,7 @@ name: generic_reader_example
 description:
   Demonstrates the usage of GenericReader.
 
-version: 0.0.1
+version: 0.0.2
 
 homepage: https://github.com/simphotonics/generic_reader
 
@@ -15,7 +15,7 @@ dependencies:
   ansicolor: ^1.0.2
   exception_templates: ^0.0.4
   generic_reader:
-    path: ../
+    path: ../../../generic_reader
   meta: ^1.1.8
   source_gen: ^0.9.5
 

@@ -371,7 +371,7 @@ Please file feature requests and bugs at the [issue tracker].
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 [Player]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/player.dart
 
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/bin/player_example.dart
 
 [ReaderError]: https://pub.dev/documentation/generic_reader/latest/generic_reader/ReaderError-class.html
 [source_gen]: https://pub.dev/packages/source_gen
@@ -379,4 +379,4 @@ Please file feature requests and bugs at the [issue tracker].
 
 [SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/test_types/sqlite_type.dart
 
-[wrapper_test.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/lib/src/wrapper_test.dart
+[wrapper_test.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/lib/src/wrapper_test.dart

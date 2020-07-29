@@ -34,7 +34,7 @@ echo -e "${PURPLE}=== Checking Source Code Formatting${RESET} $PWD..."
 echo
 # Overwrite files with formatted content: -w
 # Dry run: -n
-dartfmt -w $(find bin lib test example -name \*.dart 2>/dev/null)
+dartfmt -w $(find bin lib -name \*.dart 2>/dev/null)
 
 # Analyze dart files
 echo
@@ -56,8 +56,8 @@ echo
 echo -e "${GREEN}=== Running Examples $PWD...${RESET}"
 echo
 
-cd ..
-dart example/bin/player_example.dart
-dart example/bin/wrapper_example.dart
+
+dart bin/player_example.dart
+dart bin/wrapper_example.dart
 
 echo
