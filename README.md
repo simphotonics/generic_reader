@@ -59,7 +59,8 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
    ```Dart
    final reader = GenericReader(); // Note: [reader] is a singleton.
    ```
-3. Register a [Decoder] function for each data-type that needs to be handled.
+3. Register a [Decoder] function for each data-type that is going to be read. If a decoder function is  missing, an error will be thrown detailing what data-type needs to be registered with the reader.
+
    - The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
 
    - There is no need to define decoder functions for **Dart enums** as long as they are read using
@@ -68,12 +69,14 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
      However, to read a Dart enum, e.g. `MyEnum`, using the method [`get<T>()`][get]
      it is required to register a decoder function for this type.
      This is due to fact that the [`get<dynamic>()`][get] tries to match the input
-     against a built-in or registered type. The file [`player_example.dart`][player_example.dart]
+     against a built-in or registered type.
+
+     The file [`player_example.dart`][player_example.dart]
      demonstrates how to read a constant of type `List<dynamic>` containing `int`, `double`,
      and enum values.
 
    - To register a decoder function for a Dart enumeration, e.g. `MyEnum`, use the method
-     [`enumValue`][enumValue] provided by [TypeMethods][TypeMethods],
+     [`enumValue`][enumValue] provided by [`TypeMethods`][TypeMethods],
      an extension on [`ConstantReader`][ConstantReader]:
      ```Dart
       reader.addDecoder<MyEnum>((cr) => cr.enumValue<MyEnum>());
