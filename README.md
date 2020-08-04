@@ -39,7 +39,7 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 
      However, to read a Dart enum, e.g. `MyEnum`, using the method [`get<T>()`][get]
      it is required to register a decoder function for this type.
-     This is due to fact that [`get<dynamic>(ConstantReader constantReader)`][get] tries to match the
+     This is due to fact that [`get<dynamic>(ConstantReader constantReader)`][get] tries to match
      the static type of `constantReader` against a built-in or registered type.
 
      The file [`player_example.dart`][player_example.dart]
