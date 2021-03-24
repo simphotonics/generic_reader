@@ -1,4 +1,4 @@
-## 2.0.0
+## 0.2.0
 
 - Converted `GenericReader` into an extension on `ConstantReader`.
 - Added example `example/bin/user_example.dart`.
