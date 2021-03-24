@@ -158,18 +158,20 @@ GenericReader.addDecoder<User>(userDecoder);
 // Retrieving a constant value of type User:
 final User user = reader.get<User>(constantReaderOfUser);
 ```
-Remark: The method `read` returns an instance of `ConstantReader`
-representing the *class field* name specified by the input `String`.
-It recursively scans the
-super classes if the field could not be found in the current context.
-It throws an error is the field was not initialized or is not present.
-
 A short program demonstrating how to retrieve a constant of type `User`
 is located at [`examples/bin/user_example.dart`](examples/bin/user_example.dart).
 
 ## Limitations
 
-Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
+1) Constants retrievable with [`GenericReader`][GenericReader] must have
+a built-in Dart type or a type made available by depending on a package.
+The functions matching the static type of an analyzer element with the type
+of a runtime object do **not** work with relative imports.
+
+The demos in folder [`example/bin`](example/bin) read types that are provided
+by the package `test_types` located in the subfolder with the same name.
+
+2) Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
 
 In practice, however, generic classes are often designed in such a manner that only few type parameters
 are valid or likely to be useful. Constants that need to be retrieved
