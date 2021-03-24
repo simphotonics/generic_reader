@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Converted `GenericReader` into an extension on `ConstantReader`.
+- Added example `example/bin/user_example.dart`.
+
 ## 0.1.5
 
 Fixed missing references in dartdocs.
