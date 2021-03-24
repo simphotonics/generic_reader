@@ -367,7 +367,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [generic_reader]: https://pub.dev/packages/generic_reader
 
-[Column]: https://github.com/simphotonics/generic_reader/blob/master/test/test_types/lib/src/column.dart
+[Column]: https://github.com/simphotonics/generic_reader/blob/master/example/test_types/lib/src/column.dart
 
 [ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
 
@@ -391,6 +391,6 @@ Please file feature requests and bugs at the [issue tracker].
 
 [source_gen_test]: https://pub.dev/packages/source_gen_test
 
-[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/test/test_types/lib/src/sqlite_type.dart
+[SqliteType]: https://github.com/simphotonics/generic_reader/blob/master/example/test_types/lib/src/sqlite_type.dart
 
 [wrapper_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/wrapper_example.dart

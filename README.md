@@ -160,7 +160,7 @@ GenericReader.addDecoder<User>(userDecoder);
 final User user = reader.get<User>(constantReaderOfUser);
 ```
 A short program demonstrating how to retrieve a constant of type `User`
-is located at [`examples/bin/user_example.dart`](example/bin/user_example.dart).
+is located at [`examples/bin/user_example.dart`](https://github.com/simphotonics/generic_reader/tree/master/example/bin/user_example.dart).
 
 ## Limitations
 
@@ -169,7 +169,7 @@ is located at [`examples/bin/user_example.dart`](example/bin/user_example.dart).
    The functions matching the static type of an analyzer element with the type
    of a runtime object do **not** work with relative imports.
 
-   E.g. the demos in folder [`example/bin`](example/bin) read types that are provided
+   E.g. the demos in folder [`example/bin`](https://github.com/simphotonics/generic_reader/tree/master/example/bin) read types that are provided
    by the package `test_types` located in the subfolder with the same name.
 
 2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators. A demonstration on how to retrieve constant values with generic type is presented in [example].
