@@ -1,12 +1,12 @@
-import 'package:generic_reader_example/generic_reader_example.dart';
+import 'package:generic_reader/src/types/unknown_type.dart';
+import 'package:test_types/test_types.dart';
 
 /// Const class for testing purposes.
 class Researcher {
   const Researcher();
 
-  final Column<Integer> id = const Column<Integer>(
-    defaultValue: Integer(3),
-  );
+  final Column<Integer> id =
+      const Column<Integer>(defaultValue: Integer(3), name: 'id');
 
   final List<String> names = const ['Thomas', 'Mayor'];
 
@@ -18,7 +18,7 @@ class Researcher {
 
   final Real real = const Real(39.5);
 
-  final Title title = Title.DR;
+  final Title title = Title.Dr;
 
   final Map<String, dynamic> map = const <String, dynamic>{
     'one': 1,
@@ -28,6 +28,8 @@ class Researcher {
   final Map<String, dynamic> mapWithEnumValue = const <String, dynamic>{
     'one': 1,
     'two': 2.0,
-    'title': Title.PROF
+    'title': Title.Prof
   };
+
+  final notRegistered = const UnknownType();
 }
