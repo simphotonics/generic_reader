@@ -78,6 +78,6 @@ echo
 
 
 dart example/bin/player_example.dart
-dart example/bin/wrapped_example.dart
+dart example/bin/wrapper_example.dart
 
 echo
