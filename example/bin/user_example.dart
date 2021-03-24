@@ -49,7 +49,9 @@ Future<void> main() async {
 
   for (var element in userLib.allElements) {
     if (element is TopLevelVariableElement) {
-      userCR = ConstantReader(element.computeConstantValue());
+      if (element.name == 'user') {
+        userCR = ConstantReader(element.computeConstantValue());
+      }
     }
   }
 
@@ -59,5 +61,7 @@ Future<void> main() async {
   GenericReader.addDecoder<User>(userDecoder);
 
   print(green('Retrieving a constant of type <User>:'));
-  print(userCR!.get<User>());
+  if (userCR != null) {
+    print(userCR.get<User>());
+  }
 }
