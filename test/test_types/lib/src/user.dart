@@ -23,7 +23,7 @@ class Name {
 
   @override
   String toString() {
-    return '$firstName ${middleName == '' ? '' : middleName + ' ' }$lastName';
+    return '$firstName ${middleName == '' ? '' : middleName + ' '}$lastName';
   }
 }
 
@@ -42,7 +42,7 @@ class User {
   @override
   String toString() {
     return 'user: $name\n'
-        '  title: ${title}\n'
+        '  title: $title\n'
         '  id: $id\n'
         '  $age\n';
   }
