@@ -6,3 +6,7 @@ const user = User(
     id: 1,
     age: Age(32),
     title: Title.Mr);
+
+const list = {0, 1, 2};
+
+const Iterable<int> iterable = list;
