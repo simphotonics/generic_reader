@@ -127,6 +127,7 @@ of the class it handles. For example, the decoder for `User` knows that `age` ha
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 
+import 'package:test_types/test_types.dart';
 
 /// Defining decoder functions.
 Age ageDecoder(ConstantReader constantReader) => Age(constantReader.read('age').intValue);
@@ -164,19 +165,19 @@ is located at [`examples/bin/user_example.dart`](examples/bin/user_example.dart)
 ## Limitations
 
 1) Constants retrievable with [`GenericReader`][GenericReader] must have
-a built-in Dart type or a type made available by depending on a package.
-The functions matching the static type of an analyzer element with the type
-of a runtime object do **not** work with relative imports.
+   a built-in Dart type or a type made available by depending on a package.
+   The functions matching the static type of an analyzer element with the type
+   of a runtime object do **not** work with relative imports.
 
-The demos in folder [`example/bin`](example/bin) read types that are provided
-by the package `test_types` located in the subfolder with the same name.
+   The demos in folder [`example/bin`](example/bin) read types that are provided
+   by the package `test_types` located in the subfolder with the same name.
 
 2) Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
 
-In practice, however, generic classes are often designed in such a manner that only few type parameters
-are valid or likely to be useful. Constants that need to be retrieved
-during the source-generation process are most likely *annotations*
-and *simple data-types* that convey information to source code generators.
+   In practice, however, generic classes are often designed in such a manner that only few    type parameters
+   are valid or likely to be useful. Constants that need to be retrieved
+   during the source-generation process are most likely *annotations*
+   and *simple data-types* that convey information to source code generators.
 
 A demonstration on how to retrieve
 constant values with generic type is presented in [example].
