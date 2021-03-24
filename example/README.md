@@ -253,14 +253,15 @@ Future<void> main() async {
 
 </details>
 
-## Retrieving Constants with Unkown Type
+## Retrieving Constants with Dynamic Type
 
 The example in the section *above* demonstrates how to retrieve constants
-with *known* parameterized type.
+with a *known* parameterized type.
 
 The program presented below shows how to proceed if the constant has
-an **unknown** type parameter.
-Note: The unknown data-type should be either a `bool`, `double`, `int`, `String`, `Type`, `Symbol` or a type with a **registered decoder**.
+a **dynamic** type parameter.
+Note: The unknown data-type must be either a `bool`, `double`, `int`, `num`, `String`, `Type`, `Symbol`
+or a type with a **registered decoder**.
 
 Consider the following generic class that wraps a value of type `T`:
 ```Dart
