@@ -169,7 +169,7 @@ is located at [`examples/bin/user_example.dart`](examples/bin/user_example.dart)
    The functions matching the static type of an analyzer element with the type
    of a runtime object do **not** work with relative imports.
 
-   The demos in folder [`example/bin`](example/bin) read types that are provided
+   E.g. the demos in folder [`example/bin`](example/bin) read types that are provided
    by the package `test_types` located in the subfolder with the same name.
 
 2) Defining decoder functions for each data-type has its obvious limitiations when it comes to generic types.
@@ -225,9 +225,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
 
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/generic_reader_example/bin/player_example.dart
-
-[Revivable]: https://pub.dev/documentation/source_gen/latest/source_gen/Revivable-class.html
+[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
 
 [source_gen]: https://pub.dev/packages/source_gen
 
