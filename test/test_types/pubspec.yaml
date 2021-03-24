@@ -1,0 +1,15 @@
+name: test_types
+
+description: Sample test types.
+
+version: 0.0.2
+
+publish_to: none
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  meta: ^1.3.0
+
+dev_dependencies: null
