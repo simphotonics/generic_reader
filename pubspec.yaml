@@ -1,7 +1,8 @@
 name: generic_reader
 
-description: Extension on ConstantReader enabling the retrieval of generic compile-time constants.
-  Streamlines reading constants of type List, Map, Set, as well as Dart enums.
+description: Extension on ConstantReader enabling the retrieval of generic
+  compile-time constants. Streamlines reading constants of type List, Map, Set,
+  as well as Dart enums.
 
 version: 0.2.0
 
@@ -13,11 +14,12 @@ environment:
 dependencies:
   analyzer: ^1.3.0
   exception_templates: ^0.2.0
+  meta: ^1.3.0
   source_gen: ^1.0.0
 
 dev_dependencies:
   test_types:
-    path: test/test_types
+    path: example/test_types
   ansicolor: ^2.0.1
   dartdoc: ^0.40.0
   source_gen_test: ^1.0.0
