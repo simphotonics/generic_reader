@@ -12,4 +12,5 @@ environment:
 dependencies:
   meta: ^1.3.0
 
-dev_dependencies: null
+dev_dependencies:
+  pedantic: ^1.11.0
