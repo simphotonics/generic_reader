@@ -12,8 +12,8 @@ import '../extensions/type_methods.dart';
 import '../types/decoder.dart';
 import '../types/unknown_type.dart';
 
-/// Provides methods for reviving constants of custom types
-/// with [ConstantReader].
+/// Provides methods for reading constants of custom types
+/// with `ConstantReader`.
 extension GenericReader on ConstantReader {
   static final _gr = _GenericReader();
 
@@ -34,7 +34,7 @@ extension GenericReader on ConstantReader {
   /// Returns a `Set` containing all types with registered decoders.
   static Set<Type> get registeredTypes => _gr.registeredTypes;
 
-  /// Returns `true` if a decoder function for [dartType]
+  /// Returns `true` if a decoder function for `dartType`
   /// is registered.
   static bool hasDecoder<T>() => _gr.hasDecoder<T>();
 
@@ -50,6 +50,9 @@ extension GenericReader on ConstantReader {
   /// Throws `ErrorOf<ConstantReader>` if an instance cannot be constructed.
   T get<T>() => _gr.get<T>(this);
 
+  /// Reads `this` and returns an instance of `T`.
+  ///
+  /// Note: `T` must be a Dart enum.
   T enumValue<T>() => _gr.enumValue<T>(this);
 
   /// Reads `this` and returns an instance of `List<T>`.
@@ -60,7 +63,7 @@ extension GenericReader on ConstantReader {
 
   /// Reads `this` and returns an object of type `Set<T>`.
   ///
-  /// Throws [ErrorOf] if an instance of `Set<T>`
+  /// Throws `ErrorOf` if an instance of `Set<T>`
   /// cannot be constructed.
   Set<T> getSet<T>() => _gr.getSet<T>(this);
 
@@ -86,12 +89,12 @@ class _GenericReader {
   /// Private instance.
   static _GenericReader? _instance;
 
-  /// Caches instances of [TypeChecker].
+  /// Caches instances of `TypeChecker`.
   final Map<Type, TypeChecker> _checkers = {};
 
   final Map<DartType, Type> _resolvedTypes = <DartType, Type>{};
 
-  /// Pre-registered instances of [Decoder] functions.
+  /// Pre-registered instances of `Decoder` functions.
   final Map<Type, Decoder> _decoders = {
     bool: (constantReader) => constantReader.boolValue,
     double: (constantReader) => constantReader.doubleValue,
@@ -102,14 +105,14 @@ class _GenericReader {
     Symbol: (constantReader) => constantReader.symbolValue,
   };
 
-  /// Adds or updates a decoder function for type [T].
-  /// Returns [this].
+  /// Adds or updates a decoder function for type `T`.
+  /// Returns `this`.
   ///
   /// Note: Decoders for the following types can not be added
   /// or updated.
   /// - `bool`, `double`, `int`, `Null`,`num`,`Symbol`,`Type`,
   /// - `dynamic`, `List`, `Set`, `Map`,
-  /// - [UnknownType].
+  /// - `UnknownType`.
   bool addDecoder<T>(Decoder<T> decoder) {
     if (isBuiltIn(T) || T == UnknownType) return false;
     // Adding Decoder function.
@@ -117,7 +120,7 @@ class _GenericReader {
     return true;
   }
 
-  /// Clears the decoder function for type [T].
+  /// Clears the decoder function for type `T`.
   ///
   /// Decoder function for the following types cannot be cleared:
   ///   - `bool`, `double`, `int`, `Null`,`num`,`Symbol`,`Type`,`dynamic`,
@@ -129,7 +132,7 @@ class _GenericReader {
     }
   }
 
-  /// Returns `true` if a decoder function for [type]
+  /// Returns `true` if a decoder function for `type`
   /// is registered with `this`.
   bool hasDecoder<T>() {
     return _decoders.containsKey(T) ? true : false;
@@ -157,7 +160,7 @@ class _GenericReader {
     return reflectClass(T).isEnum;
   }
 
-  /// Returns true if [dartType] represents the type [type].
+  /// Returns true if `dartType` represents the type `type`.
   bool isMatch(DartType? dartType, Type type) {
     if (dartType == null) return false;
     if (resolveDartType(dartType) == type) return true;
@@ -190,10 +193,10 @@ class _GenericReader {
     }
   }
 
-  /// Returns a type [Type] that matches the static [DartType] of
-  /// [constantReader].
+  /// Returns a type `Type` that matches the static `DartType` of
+  /// `constantReader`.
   ///
-  /// Returns [UnknownType] if no match is found.
+  /// Returns `UnknownType` if no match is found.
   Type resolveDartTypeOf(ConstantReader constantReader) {
     if (constantReader.dartType == null) {
       return UnknownType;
@@ -202,9 +205,9 @@ class _GenericReader {
     }
   }
 
-  /// Returns a type [Type] that matches [dartType].
+  /// Returns a type `Type` that matches `dartType`.
   ///
-  /// Returns [UnknownType] if no match is found.
+  /// Returns `UnknownType` if no match is found.
   Type resolveDartType(DartType dartType) {
     if (dartType.isDartCoreString) return String;
     if (dartType.isDartCoreBool) return bool;
@@ -217,7 +220,7 @@ class _GenericReader {
     return _resolvedTypes[dartType] ?? UnknownType;
   }
 
-  /// Reads [constantReader] and returns an instance of [T].
+  /// Reads `constantReader` and returns an instance of `T`.
   ///
   /// Throws `ErrorOf<ConstantReader>` if an instance cannot be constructed.
   T get<T>(ConstantReader constantReader) {
@@ -310,9 +313,9 @@ class _GenericReader {
             'instance of type $T.');
   }
 
-  /// Reads [constantReader] and returns an instance of `List<T>`.
+  /// Reads `constantReader` and returns an instance of `List<T>`.
   ///
-  /// Throws [ErrorOf] if an instance of `List<T>`
+  /// Throws `ErrorOf` if an instance of `List<T>`
   /// can not be constructed.
   List<T> getList<T>(ConstantReader constantReader) {
     if (!holdsA<List<T>>(constantReader)) {
@@ -333,9 +336,9 @@ class _GenericReader {
         .toList();
   }
 
-  /// Reads [constantReader] and returns an object of type `Set<T>`.
+  /// Reads `constantReader` and returns an object of type `Set<T>`.
   ///
-  /// Throws [ErrorOf] if an instance of `Set<T>`
+  /// Throws `ErrorOf` if an instance of `Set<T>`
   /// cannot be constructed.
   Set<T> getSet<T>(ConstantReader constantReader) {
     if (!holdsA<Set<T>>(constantReader)) {
@@ -356,7 +359,7 @@ class _GenericReader {
         .toSet();
   }
 
-  /// Reads [constantReader] and returns an object of type `Map<K, V>`.
+  /// Reads `constantReader` and returns an object of type `Map<K, V>`.
   ///
   /// Throws if an instance of `Map<K, V>` cannot be constructed.
   Map<K, V> getMap<K, V>(ConstantReader constantReader) {
@@ -387,7 +390,7 @@ class _GenericReader {
     });
   }
 
-  /// Returns true if [T] is a built-in type.
+  /// Returns true if `T` is a built-in type.
   /// Decoders for (exactly) these types cannot be registered or cleared.
   ///
   /// Note: It is possible to register decoders for generic types

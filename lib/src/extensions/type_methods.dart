@@ -8,13 +8,13 @@ extension TypeMethods on ConstantReader {
   bool get isDynamic => objectValue.type?.isDynamic ?? false;
 
   /// Returns `true` is `this` represents a constant expression with
-  /// type exactly [Iterable].
+  /// type exactly `Iterable`.
   ///
-  /// Note: Returns `false` if the static type represents [List] or [Set].
+  /// Note: Returns `false` if the static type represents `List` or `Set`.
   bool get isIterable => objectValue.type?.isDartCoreIterable ?? false;
 
   /// Returns `true` if the static type represents
-  /// [List], [Set], [Map], or [Iterable].
+  /// `List`, `Set`, `Map`, or `Iterable`.
   bool get isCollection => isList || isSet || isMap || isIterable;
 
   bool get isRecursiveCollection {
@@ -31,7 +31,7 @@ extension TypeMethods on ConstantReader {
   }
 
   /// Returns `true` if the static type does not represent
-  /// [List], [Set], [Map], or [Iterable].
+  /// `List`, `Set`, `Map`, or `Iterable`.
   bool get isNotCollection => !isList && !isSet && !isMap && !isIterable;
 
   /// Returns the static type of `this`.
