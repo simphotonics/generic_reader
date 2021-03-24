@@ -172,10 +172,7 @@ is located at [`examples/bin/user_example.dart`](examples/bin/user_example.dart)
    E.g. the demos in folder [`example/bin`](example/bin) read types that are provided
    by the package `test_types` located in the subfolder with the same name.
 
-2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
-
-A demonstration on how to retrieve
-constant values with generic type is presented in [example].
+2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators. A demonstration on how to retrieve constant values with generic type is presented in [example].
 
 ## Examples
 
