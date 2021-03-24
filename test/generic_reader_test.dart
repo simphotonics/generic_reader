@@ -1,11 +1,12 @@
 import 'package:exception_templates/exception_templates.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
-import 'package:source_gen_test/src/init_library_reader.dart';
+import 'package:source_gen_test/source_gen_test.dart';
 import 'package:test/test.dart';
 
-import 'package:generic_reader/src/types/not_registered_type.dart';
-import 'package:generic_reader_example/generic_reader_example.dart';
 import 'package:generic_reader/generic_reader.dart';
+import 'package:test_types/test_types.dart';
+
+import 'package:generic_reader/src/types/unknown_type.dart';
 
 /// To run this program navigate to the top directory the package
 /// [generic_reader] and use the command:
@@ -45,219 +46,190 @@ Future<void> main() async {
   final mapWithEnumValueCR =
       ConstantReader(lib.classes.first.fields[8].computeConstantValue());
 
+  final notRegisteredCR =
+      ConstantReader(lib.classes.first.fields[9].computeConstantValue());
+
   Integer integerDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    return Integer(cr.peek('value')?.intValue);
+    return Integer(cr.read('value').intValue);
   }
 
   Real realDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    return Real(cr.peek('value')?.doubleValue);
+    return Real(cr.read('value').doubleValue);
   }
 
   Boolean booleanDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    return Boolean(cr.peek('value')?.boolValue);
+    return Boolean(cr.read('value').boolValue);
   }
 
   Text textDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    return Text(cr.peek('value')?.stringValue);
+    return Text(cr.read('value').stringValue);
   }
-
-  final reader = GenericReader();
 
   // Adding a decoder for constants of type [Column].
   Column columnDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    final defaultValueCR = cr.peek('defaultValue');
-    final defaultValue = reader.get<SqliteType>(defaultValueCR);
-
-    final nameCR = cr.peek('name');
-    final name = reader.get<String>(nameCR);
+    final defaultValue = cr.read('defaultValue').get<SqliteType>();
+    final name = cr.read('name').get<String>();
 
     Column<T> columnFactory<T extends SqliteType>() {
       return Column<T>(
-        defaultValue: defaultValue,
+        defaultValue: defaultValue as T,
         name: name,
       );
     }
 
-    if (reader.holdsA<Column>(cr, typeArgs: [Text])) {
+    if (cr.holdsA<Column<Text>>()) {
       return columnFactory<Text>();
     }
-    if (reader.holdsA<Column>(cr, typeArgs: [Real])) {
+    if (cr.holdsA<Column<Real>>()) {
       return columnFactory<Real>();
     }
-    if (reader.holdsA<Column>(cr, typeArgs: [Integer])) {
+    if (cr.holdsA<Column<Integer>>()) {
       return columnFactory<Integer>();
     }
     return columnFactory<Boolean>();
   }
 
   SqliteType sqliteTypeDecoder(ConstantReader cr) {
-    if (cr == null) return null;
-    if (reader.holdsA<Integer>(cr)) return reader.get<Integer>(cr);
-    if (reader.holdsA<Text>(cr)) return reader.get<Text>(cr);
-    if (reader.holdsA<Real>(cr)) return reader.get<Real>(cr);
-    if (reader.holdsA<Boolean>(cr)) return reader.get<Boolean>(cr);
+    if (cr.holdsA<Integer>()) return cr.get<Integer>();
+    if (cr.holdsA<Text>()) return cr.get<Text>();
+    if (cr.holdsA<Real>()) return cr.get<Real>();
+    if (cr.holdsA<Boolean>()) return cr.get<Boolean>();
     throw ErrorOf<Decoder<SqliteType>>(
         message: 'Could not reader const value of type `SqliteType`',
         invalidState: 'ConstantReader holds a const value of type '
             '`${cr.objectValue.type}`.');
   }
 
+  GenericReader.addDecoder(columnDecoder);
+  GenericReader.addDecoder(realDecoder);
+  GenericReader.addDecoder(sqliteTypeDecoder);
+  GenericReader.addDecoder(textDecoder);
+  GenericReader.addDecoder(booleanDecoder);
+  GenericReader.addDecoder(integerDecoder);
+
   group('Type functions:', () {
+    test('holdsA<String>()', () {
+      expect(roleCR.holdsA<String>(), true);
+    });
+    test('holdsA<UnKnownType>()', () {
+      expect(notRegisteredCR.holdsA<UnknownType>(), true);
+    });
     test('holdsA<Column>()', () {
-      expect(reader.holdsA<Column>(idCR), true);
+      expect(idCR.holdsA<Column>(), true);
     });
     test('holdsA<Set>()', () {
-      expect(reader.holdsA<Set>(integersCR), true);
+      expect(integersCR.holdsA<Set>(), false);
     });
-    test('holdsA<Set>(, [int])', () {
-      expect(reader.holdsA<Set>(integersCR, typeArgs: [int]), true);
+    test('holdsA<Set<int>>()', () {
+      expect(integersCR.holdsA<Set<int>>(), true);
     });
-    test('holdsA<Set>(, [int])', () {
-      expect(reader.holdsA<Set>(integersCR, typeArgs: [double]), false);
+    test('holdsA<Set<double>>()', () {
+      expect(integersCR.holdsA<Set<double>>(), false);
     });
-    test('holdsA<Map>(, [String, dynamic])', () {
-      expect(reader.holdsA<Map>(mapCR, typeArgs: [String, dynamic]), true);
+    test('holdsA<Map<String, dynamic>>()', () {
+      expect(mapCR.holdsA<Map<String, dynamic>>(), true);
     });
 
     test('holdsA<Title>()', () {
-      reader.addDecoder<Title>((cr) => cr.enumValue<Title>());
-      expect(reader.holdsA<Title>(titleCR), true);
-    });
-
-    test('isBuiltIn<String>()', () {
-      expect(reader.isBuiltIn(String), true);
-    });
-    test('isBuiltIn<Column>()', () {
-      expect(reader.isBuiltIn(Column), false);
-    });
-
-    test('findType()', () {
-      expect(reader.findTypeOf(roleCR), String);
-      expect(reader.findTypeOf(realCR), NotRegisteredType);
-      reader.addDecoder<Real>(realDecoder);
-      expect(reader.findTypeOf(realCR), Real);
-      reader.clearDecoder<Real>();
+      GenericReader.addDecoder<Title>((cr) => cr.enumValue<Title>());
+      expect(titleCR.holdsA<Title>(), true);
     });
   });
 
   group('Decoders:', () {
-    test('addDecoder<SqliteType>()', () {
-      reader.addDecoder<SqliteType>(sqliteTypeDecoder);
-      expect(
-        reader.hasDecoder(SqliteType),
-        true,
-      );
-      reader.clearDecoder<SqliteType>();
-    });
-    // Clearing a decoder for an unregistered type.
-    test('clearDecoder<SqliteType>()', () {
-      expect(
-        reader.clearDecoder<SqliteType>(),
-        null,
-      );
-    });
     // Block the removal of decoders for built-in types.
     test('clearDecoder<String>()', () {
-      expect(reader.clearDecoder<String>(), null);
-      expect(reader.hasDecoder(String), true);
+      GenericReader.clearDecoder<String>();
+      expect(GenericReader.hasDecoder<String>(), true);
+    });
+    test('addDecoder<String>()', () {
+      expect(GenericReader.addDecoder<String>((constantReader) => ''), false);
+    });
+    test('addDecoder<List>()', () {
+      expect(GenericReader.addDecoder<List>((constantReader) => []), false);
+    });
+    test('addDecoder<List<dynamic>>()', () {
+      expect(GenericReader.addDecoder<List<dynamic>>((constantReader) => []),
+          false);
+    });
+    test('addDecoder<List<num>>()', () {
+      addTearDown(() => GenericReader.clearDecoder<List<bool>>());
+      expect(
+        GenericReader.addDecoder<List<bool>>((constantReader) => []),
+        true,
+      );
+    });
+    test('addDecoder<Map<num, dynamic>>()', () {
+      addTearDown(() => GenericReader.clearDecoder<Map<num, dynamic>>());
+      expect(
+        GenericReader.addDecoder<Map<num, dynamic>>((constantReader) => {}),
+        true,
+      );
     });
   });
 
-  group('get:', () {
+  group('Reading Constants:', () {
     test('get<SqliteType>()', () {
-      reader.addDecoder<SqliteType>(sqliteTypeDecoder);
-      reader.addDecoder<Real>(realDecoder);
-      reader.addDecoder<Integer>(integerDecoder);
-      reader.addDecoder<Text>(textDecoder);
-      reader.addDecoder<Boolean>(booleanDecoder);
-      expect(
-        reader.get<SqliteType>(realCR),
-        Real(39.5),
-      );
-      reader.clearDecoder<SqliteType>();
-      reader.clearDecoder<Real>();
-      reader.clearDecoder<Integer>();
-      reader.clearDecoder<Text>();
-      reader.clearDecoder<Boolean>();
+      expect(realCR.get<SqliteType>(), Real(39.5));
     });
     test('getList<String>()', () {
       expect(
-        reader.getList<String>(namesCR),
+        namesCR.getList<String>(),
         const ['Thomas', 'Mayor'],
       );
     });
     test('get<Column>()', () {
-      reader
-        ..addDecoder<Column>(columnDecoder)
-        ..addDecoder<SqliteType>(sqliteTypeDecoder)
-        ..addDecoder<Real>(realDecoder)
-        ..addDecoder<Integer>(integerDecoder)
-        ..addDecoder<Text>(textDecoder)
-        ..addDecoder<Boolean>(booleanDecoder);
       expect(
-        reader.get<Column>(idCR),
-        const Column<Integer>(
-          defaultValue: Integer(3),
-        ),
+        idCR.get<Column>(),
+        const Column<Integer>(defaultValue: Integer(3), name: 'id'),
       );
-      reader
-        ..clearDecoder<Column>()
-        ..clearDecoder<SqliteType>()
-        ..clearDecoder<Real>()
-        ..clearDecoder<Integer>()
-        ..clearDecoder<Text>()
-        ..clearDecoder<Boolean>();
     });
     test('getSet<int>()', () {
       expect(
-        reader.getSet<int>(integersCR),
+        integersCR.getSet<int>(),
         const {47, 91},
       );
     });
     test('getEnum<Title>()', () {
       expect(
-        reader.getEnum<Title>(titleCR),
-        Title.DR,
+        titleCR.enumValue<Title>(),
+        Title.Dr,
       );
     });
     test('getMap<String, dynamic>()', () {
       expect(
-        reader.getMap<String, dynamic>(mapCR),
+        mapCR.getMap<String, dynamic>(),
         const <String, dynamic>{'one': 1, 'two': 2.0},
       );
     });
     test('getMap<String, dynamic>(), enum entry', () {
-      reader.addDecoder<Title>((cr) => cr.enumValue<Title>());
+      GenericReader.addDecoder<Title>((cr) => cr.enumValue<Title>());
       expect(
-        reader.getMap<String, dynamic>(mapWithEnumValueCR),
+        mapWithEnumValueCR.getMap<String, dynamic>(),
         const <String, dynamic>{
           'one': 1,
           'two': 2.0,
-          'title': Title.PROF,
+          'title': Title.Prof,
         },
       );
-      reader.clearDecoder<Title>();
     });
   });
 
   group('Errors:', () {
-    test('ErrorOf<GenericReader>: Unreg. type', () {
+    test('ErrorOf<ConstantReader>: Unreg. type', () {
       try {
-        reader.get<Runes>(numberCR);
+        numberCR.get<Runes>();
       } catch (e) {
-        expect(e, isA<ErrorOf<GenericReader>>());
+        expect(e, isA<ErrorOf<ConstantReader>>());
       }
     });
-    test('ErrorOf<GenericReader>: Wrong type', () {
+    test('ErrorOf<ConstantReader>: Wrong type', () {
       try {
-        reader.get<String>(realCR);
-      } catch (e) {
-        expect(e, isA<ErrorOf<GenericReader>>());
+        realCR.get<String>();
+      } on ErrorOf catch (e) {
+        expect(e, isA<ErrorOf<ConstantReader>>());
+        expect(
+            e.message, 'Input does not represent an object of type <String>');
       }
     });
   });
