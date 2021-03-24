@@ -58,10 +58,26 @@ pub run test -r expanded --test-randomize-ordering-seed=random
 # ===============================
 
 # Directories to be processed
-directories="example/generic_reader_example"
+directories="test/test_types"
 
 for directory in $directories; do
   cd $directory
   ./tool/travis.sh
   cd ..
+  cd ..
 done
+
+# ================
+# Running examples
+# ================
+
+# Running example
+echo
+echo -e "${GREEN}=== Running Examples $PWD...${RESET}"
+echo
+
+
+dart example/bin/player_example.dart
+dart example/bin/wrapped_example.dart
+
+echo
