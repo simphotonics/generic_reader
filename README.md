@@ -160,7 +160,7 @@ GenericReader.addDecoder<User>(userDecoder);
 final User user = reader.get<User>(constantReaderOfUser);
 ```
 A short program demonstrating how to retrieve a constant of type `User`
-is located at [`examples/bin/user_example.dart`](examples/bin/user_example.dart).
+is located at [`examples/bin/user_example.dart`](example/bin/user_example.dart).
 
 ## Limitations
 
