@@ -4,7 +4,7 @@ description: Extension on ConstantReader enabling the retrieval of generic
   compile-time constants. Streamlines reading constants of type List, Map, Set,
   as well as Dart enums.
 
-version: 0.2.0
+version: 0.2.1
 
 homepage: https://github.com/simphotonics/generic_reader
 

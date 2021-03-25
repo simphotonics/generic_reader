@@ -1,3 +1,13 @@
+## 0.2.2
+
+- Amended Dart docs.
+- Made the method
+[`isEnum<T>()`](https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/isEnum.html) static.
+
+## 0.2.1
+
+- Amended docs.
+
 ## 0.2.0
 
 - Converted `GenericReader` into an extension on `ConstantReader`.
