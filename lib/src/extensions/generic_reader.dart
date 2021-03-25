@@ -12,8 +12,9 @@ import '../extensions/type_methods.dart';
 import '../types/decoder.dart';
 import '../types/unknown_type.dart';
 
-/// Provides methods for reading constants of custom types
-/// with `ConstantReader`.
+/// Adds the following methods to `ConstantReader`:
+/// `get<T>()`, `getList<T>()`, `getSet<T>()`, `getMap<K, V>()`,
+/// `enumValue<T>()`, `holdsA<T>()`.
 extension GenericReader on ConstantReader {
   static final _gr = _GenericReader();
 
@@ -38,36 +39,41 @@ extension GenericReader on ConstantReader {
   /// is registered.
   static bool hasDecoder<T>() => _gr.hasDecoder<T>();
 
-  /// Returns `true` if `this`
+  /// Returns `true` if `T` is a Dart `enum`.
+  ///
+  /// Note: `T` must not be `dynamic`.
+  static bool isEnum<T>() => _gr.isEnum<T>();
+
+  /// Returns `true` if the instance of `ConstantReader`
   /// represents an object of type `T`.
   bool holdsA<T>() => _gr.holdsA<T>(this);
 
-  /// Returns `true` if `T` is a Dart `enum`.
-  bool isEnum<T>() => _gr.isEnum<T>();
-
-  /// Reads `this` and returns an instance of `T`.
+  /// Reads the instance of `ConstantReader` and returns an instance of `T`.
   ///
   /// Throws `ErrorOf<ConstantReader>` if an instance cannot be constructed.
   T get<T>() => _gr.get<T>(this);
 
-  /// Reads `this` and returns an instance of `T`.
+  /// Reads the instance of `ConstantReader` and returns an instance of `T`.
   ///
   /// Note: `T` must be a Dart enum.
   T enumValue<T>() => _gr.enumValue<T>(this);
 
-  /// Reads `this` and returns an instance of `List<T>`.
+  /// Reads the instance of `ConstantReader` and
+  /// returns an instance of `List<T>`.
   ///
   /// Throws `ErrorOf<ConstantReader>` if an instance of `List<T>`
   /// can not be constructed.
   List<T> getList<T>() => _gr.getList<T>(this);
 
-  /// Reads `this` and returns an object of type `Set<T>`.
+  /// Reads the instance of `ConstantReader` and returns
+  /// an object of type `Set<T>`.
   ///
   /// Throws `ErrorOf` if an instance of `Set<T>`
   /// cannot be constructed.
   Set<T> getSet<T>() => _gr.getSet<T>(this);
 
-  /// Reads `this` and returns an object of type `Map<K, V>`.
+  /// Reads the instance of `ConstantReader` and returns
+  /// an object of type `Map<K, V>`.
   ///
   /// Throws `ErrorOf<GenericReader` if an instance of `Map<K, V>`
   /// cannot be constructed.
@@ -106,7 +112,7 @@ class _GenericReader {
   };
 
   /// Adds or updates a decoder function for type `T`.
-  /// Returns `this`.
+  /// Returns `true` if the decoder was added.
   ///
   /// Note: Decoders for the following types can not be added
   /// or updated.
