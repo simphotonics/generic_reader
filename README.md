@@ -197,7 +197,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
-[enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/TypeMethods/enumValue.html
+[enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/enumValue.html
 
 [example]: https://github.com/simphotonics/generic_reader/tree/master/example
 
@@ -206,8 +206,6 @@ Please file feature requests and bugs at the [issue tracker].
 [generic_reader]: https://pub.dev/packages/generic_reader
 
 [get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
-
-[getEnum]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getEnum.html
 
 [getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
 

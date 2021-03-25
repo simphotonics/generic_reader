@@ -376,7 +376,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
 
-[getEnum]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getEnum.html
+[enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/enumValue.html
 
 [getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
 
