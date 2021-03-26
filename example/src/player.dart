@@ -41,7 +41,7 @@ class Player {
     'enum': Greek.alpha
   };
 
-  /// Test list 
+  /// Test list
   final list = const <List<int>>[
     [0, 1],
     [10, 11]
