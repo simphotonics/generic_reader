@@ -1,5 +1,5 @@
 # Generic Reader - Example
-[![Build Status](https://travis-ci.com/simphotonics/generic_reader.svg?branch=master)](https://travis-ci.com/simphotonics/generic_reader)
+[![Dart](https://github.com/simphotonics/generic_reader/actions/workflows/dart.yml/badge.svg)](https://github.com/simphotonics/generic_reader/actions/workflows/dart.yml)
 
 ## Retrieving Constants with Parameterized Type
 
