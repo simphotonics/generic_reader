@@ -1,6 +1,4 @@
 #!/bin/bash --
-# Adapted from https://github.com/google/built_value.dart/blob/master/tool/presubmit
-# BSD-3 Clause License file: https://github.com/google/built_value.dart/blob/master/LICENSE
 
 # Defining colours
 BLUE='\033[1;34m'
@@ -20,7 +18,7 @@ echo -e "${BLUE}=== Resolving dependencies $PWD...${RESET}"
 echo
 
 # Make sure .dart_tool/package_config.json exists.
-pub get
+dart pub get
 
 # Upgrade packages.
 pub upgrade
@@ -28,9 +26,8 @@ pub upgrade
 echo
 echo -e "${PURPLE}=== Checking Source Code Formatting${RESET} $PWD..."
 echo
-# Overwrite files with formatted content: -w
-# Dry run: -n
-dartfmt -w $(find bin lib test -name \*.dart 2>/dev/null)
+# Overwrite files with formatted content
+dart format lib test example
 
 # Analyze dart files
 echo
@@ -39,9 +36,7 @@ echo
 
 dart analyze \
     --fatal-warnings \
-    --fatal-infos \
-    --packages="$PWD/.packages" \
-    $(find bin lib test -name \*.dart 2>/dev/null)
+    --fatal-infos
 
 # Running tests
 echo
@@ -49,7 +44,6 @@ echo -e "${CYAN}=== Testing $PWD...${RESET}"
 echo
 
 # Only run if libary has test dependency
-grep -q test pubspec.yaml && \
 dart test -r expanded --test-randomize-ordering-seed=random
 
 
