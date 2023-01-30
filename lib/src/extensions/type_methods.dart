@@ -39,7 +39,12 @@ extension TypeMethods on ConstantReader {
   /// Returns the static type of `this`.
   DartType? get dartType => objectValue.type;
 
-  /// Returns a `List` of type arguments or the empty list.
-  List<DartType> get dartTypeArgs =>
-      objectValue.type?.typeArguments ?? <DartType>[];
+  /// Returns a `List` of type arguments or an empty list.
+  List<DartType> get dartTypeArgs {
+    var dartType = objectValue.type;
+
+    return dartType is ParameterizedType
+        ? dartType.typeArguments
+        : <DartType>[];
+  }
 }
