@@ -2,7 +2,7 @@
 /// runtime constant objects from a static representation
 /// of a compile-time constant expression such as [ConstantReader]
 /// or [DartObject].
-library generic_reader;
+library;
 
 export 'src/extensions/generic_reader.dart';
 export 'src/extensions/type_methods.dart';
