@@ -22,7 +22,7 @@ Future<void> main() async {
     'example/src',
     'player.dart',
   );
-  print('Done');
+  print('Done reading player.dart');
 
   // ConstantReader representing field 'columnName'.
   final columnNameCR =
@@ -86,6 +86,7 @@ Future<void> main() async {
   GenericReader.addDecoder<Text>(textDecoder);
   GenericReader.addDecoder<Real>(realDecoder);
   GenericReader.addDecoder<SqliteType>(sqliteTypeDecoder);
+
 
   // Adding a decoder for constants of type [Column].
   GenericReader.addDecoder<Column>((cr) {
