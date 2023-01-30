@@ -23,7 +23,7 @@ class Name {
 
   @override
   String toString() {
-    return '$firstName ${middleName == '' ? '' : middleName + ' '}$lastName';
+    return '$firstName ${middleName == '' ? '' : '$middleName $lastName'}';
   }
 }
 

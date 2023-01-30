@@ -87,7 +87,6 @@ Future<void> main() async {
   GenericReader.addDecoder<Real>(realDecoder);
   GenericReader.addDecoder<SqliteType>(sqliteTypeDecoder);
 
-
   // Adding a decoder for constants of type [Column].
   GenericReader.addDecoder<Column>((cr) {
     final defaultValue = cr.read('defaultValue').get<SqliteType>();
