@@ -21,7 +21,7 @@ echo
 dart pub get
 
 # Upgrade packages.
-pub upgrade
+dart pub upgrade
 
 echo
 echo -e "${PURPLE}=== Checking Source Code Formatting${RESET} $PWD..."
