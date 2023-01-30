@@ -162,9 +162,7 @@ class _GenericReader {
   }
 
   /// Returns `true` if `T` is a Dart `enum`.
-  bool isEnum<T>() {
-    return reflectClass(T).isEnum;
-  }
+  bool isEnum<T>() => <T>[] is List<Enum>;
 
   /// Returns true if `dartType` represents the type `type`.
   bool isMatch(DartType? dartType, Type type) {
@@ -286,14 +284,14 @@ class _GenericReader {
           expectedState: 'A type argument "T" in enumValue<T>() '
               'that represents a Dart enum.');
     }
-
-    final classMirror = reflectClass(T);
-    final typeMirror = reflectType(T);
-    if (!classMirror.isEnum) {
+    if (!isEnum<T>()) {
       throw ErrorOfType<InvalidTypeArgument>(
           message: 'Could not read constant via enumValue<$T>().',
           invalidState: '$T is not a Dart enum.');
     }
+
+    final classMirror = reflectClass(T);
+    final typeMirror = reflectType(T);
     final varMirrors = <VariableMirror>[];
     for (final item in classMirror.declarations.values) {
       if (item is VariableMirror && item.type == typeMirror) {
@@ -302,18 +300,16 @@ class _GenericReader {
     }
     // Access enum field 'values'.
     final values = classMirror.getField(const Symbol('values')).reflectee;
-    for (final varMirror in varMirrors) {
-      final name = MirrorSystem.getName(varMirror.simpleName);
-      final index = constantReader.peek(name)?.intValue;
-      if (index != null) {
-        // Store resolved type
-        final dartType = constantReader.dartType;
-        if (dartType != null) {
-          _resolvedTypes[dartType] ??= T;
-        }
-        return values[index];
+    final index = constantReader.peek('index')?.intValue;
+    if (index != null) {
+      // Store resolved type
+      final dartType = constantReader.dartType;
+      if (dartType != null) {
+        _resolvedTypes[dartType] ??= T;
       }
+      return values[index];
     }
+
     throw ErrorOf<ConstantReader>(
         message: 'Could not read enum '
             'instance of type $T.');
