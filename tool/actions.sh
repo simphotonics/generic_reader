@@ -47,9 +47,9 @@ echo
 dart test -r expanded --test-randomize-ordering-seed=random
 
 
-# ==============================
-# Running examples and benchmark
-# ===============================
+# =================
+# Running examples
+# =================
 
 # Directories to be processed
 directories="example/test_types"
