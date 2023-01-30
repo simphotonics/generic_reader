@@ -1,12 +1,9 @@
 import 'package:exception_templates/exception_templates.dart';
+import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/source_gen_test.dart';
 import 'package:test/test.dart';
-
-import 'package:generic_reader/generic_reader.dart';
 import 'package:test_types/test_types.dart';
-
-import 'package:generic_reader/src/types/unknown_type.dart';
 
 /// To run this program navigate to the top directory the package
 /// [generic_reader] and use the command:
