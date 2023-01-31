@@ -10,8 +10,8 @@ Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
 class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
 
 Source code generation relies heavily on *constants* known at compile time.
-Compile-time constant expressions are represented by a [`DartObject`][DartObject] and can be accessed by using the method
-[`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
+Compile-time constant expressions are represented by a [`DartObject`][DartObject] and
+can be accessed by using the method [`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
 
 For built-in types, [`DartObject`][DartObject] has methods that allow reading the underlying constant object.
 It is a more laborious task to read constant values of user defined data-types.
