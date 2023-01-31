@@ -28,7 +28,7 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 2. Register a [Decoder][Decoder] function for each *user defined* data-type `T` that is going to be read.
 A decoder function has the signature `T Function(ConstantReader constantReader)`. It reads the constant expression
 represented by `constantReader` and returns a instance of `T`.
-Note: The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
+Note: The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol`, and Dart enums do **not** require a decoder function.
 
 
 3. Retrieve the compile-time constant values using the methods [`get<T>()`][get], [`getList<T>()`][getList],
