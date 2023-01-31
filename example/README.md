@@ -222,7 +222,7 @@ Future<void> main() async {
   // Column<Integer>(
   // )
 
-  final greek = greekCR.enumValue<Greek>();
+  final greek = greekCR.get<Greek>();
   print('');
   print(green('Retrieving an instance of the '
       'enumeration: Greek{alpha, beta}.'));
@@ -239,7 +239,7 @@ Future<void> main() async {
   // 'Retrieving a Map<String, dynamic>:'
   // {one: 1, two: 2.0}
 
-  GenericReader.addDecoder<Greek>((cr) => cr.enumValue<Greek>());
+  GenericReader.addDecoder<Greek>((cr) => cr.get<Greek>());
   final mapWithEnumEntry = mapWithEnumEntryCR.getMap<String, dynamic>();
   print('');
   print(green('Retrieving a Map<String, dynamic>:'));
@@ -375,8 +375,6 @@ Please file feature requests and bugs at the [issue tracker].
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 
 [get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
-
-[enumValue]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/enumValue.html
 
 [getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
 

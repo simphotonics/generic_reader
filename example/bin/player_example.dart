@@ -151,7 +151,7 @@ Future<void> main() async {
   // Column<Integer>(
   // )
 
-  final greek = greekCR.enumValue<Greek>();
+  final greek = greekCR.get<Greek>();
   print('');
   print(green('Retrieving an instance of the '
       'enumeration: Greek{alpha, beta}.'));
@@ -168,7 +168,7 @@ Future<void> main() async {
   // 'Retrieving a Map<String, dynamic>:'
   // {one: 1, two: 2.0}
 
-  GenericReader.addDecoder<Greek>((cr) => cr.enumValue<Greek>());
+  GenericReader.addDecoder<Greek>((cr) => cr.get<Greek>());
   final mapWithEnumEntry = mapWithEnumEntryCR.getMap<String, dynamic>();
   print('');
   print(green('Retrieving a Map<String, dynamic>:'));

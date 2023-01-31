@@ -128,7 +128,7 @@ Future<void> main() async {
     });
 
     test('holdsA<Title>()', () {
-      GenericReader.addDecoder<Title>((cr) => cr.enumValue<Title>());
+      GenericReader.addDecoder<Title>((cr) => cr.get<Title>());
       expect(titleCR.holdsA<Title>(), true);
     });
   });
@@ -187,9 +187,9 @@ Future<void> main() async {
         const {47, 91},
       );
     });
-    test('getEnum<Title>()', () {
+    test('get<Title>()', () {
       expect(
-        titleCR.enumValue<Title>(),
+        titleCR.get<Title>(),
         Title.Dr,
       );
     });
@@ -200,7 +200,7 @@ Future<void> main() async {
       );
     });
     test('getMap<String, dynamic>(), enum entry', () {
-      GenericReader.addDecoder<Title>((cr) => cr.enumValue<Title>());
+      GenericReader.addDecoder<Title>((cr) => cr.get<Title>());
       expect(
         mapWithEnumValueCR.getMap<String, dynamic>(),
         const <String, dynamic>{

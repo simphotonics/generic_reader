@@ -7,14 +7,13 @@ import 'package:analyzer/dart/element/type.dart'
 import 'package:exception_templates/exception_templates.dart';
 
 import '../decoders/decoders.dart';
-import '../error_types/invalid_type_argument.dart';
 import '../extensions/type_methods.dart';
 import '../types/decoder.dart';
 import '../types/unknown_type.dart';
 
 /// Adds the following methods to `ConstantReader`:
 /// `get<T>()`, `getList<T>()`, `getSet<T>()`, `getMap<K, V>()`,
-/// `enumValue<T>()`, `holdsA<T>()`.
+/// `holdsA<T>()`.
 extension GenericReader on ConstantReader {
   /// Caches instances of `TypeChecker`.
   static final Map<Type, TypeChecker> _checkers = {};
@@ -153,7 +152,19 @@ extension GenericReader on ConstantReader {
   T get<T>() {
     if (T == dynamic) return getDynamic();
 
-    if (isEnum<T>()) return enumValue<T>();
+    if (isEnum<T>()) {
+      final classMirror = reflectClass(T);
+      final values = classMirror.getField(Symbol('values')).reflectee;
+      final index = peek('index')?.intValue;
+
+      if (index != null && dartType != null) {
+        _resolvedTypes[dartType!] ??= T;
+        return values[index];
+      } else {
+        throw ErrorOf<ConstantReader>(
+            message: 'Could not read enum instance of type $T.');
+      }
+    }
 
     if (!holdsA<T>()) {
       throw ErrorOf<ConstantReader>(
@@ -193,47 +204,6 @@ extension GenericReader on ConstantReader {
             '<$dartType>.',
         invalidState: 'Only these types are registered: '
             '${_decoders.keys.toList()}');
-  }
-
-  /// Reads the `ConstantReader` instance and returns an instance of the
-  /// Dart enum `T`.
-  ///
-  /// Throws `ErrorOfType<InvalidTypeArgument>` if `T` is `dynamic` or
-  /// if `T` does not represent a Dart `enum`.
-  T enumValue<T>() {
-    if (T == dynamic) {
-      throw ErrorOfType<InvalidTypeArgument>(
-          message: 'Method enumValue() does not work with type: dynamic.',
-          expectedState: 'A type argument "T" in enumValue<T>() '
-              'that represents a Dart enum.');
-    }
-    if (!isEnum<T>()) {
-      throw ErrorOfType<InvalidTypeArgument>(
-          message: 'Could not read constant via enumValue<$T>().',
-          invalidState: '$T is not a Dart enum.');
-    }
-
-    final classMirror = reflectClass(T);
-    final typeMirror = reflectType(T);
-    final varMirrors = <VariableMirror>[];
-    for (final item in classMirror.declarations.values) {
-      if (item is VariableMirror && item.type == typeMirror) {
-        varMirrors.add(item);
-      }
-    }
-    // Access enum field 'values'.
-    final values = classMirror.getField(const Symbol('values')).reflectee;
-    final index = peek('index')?.intValue;
-    if (index != null) {
-      if (dartType != null) {
-        _resolvedTypes[dartType!] ??= T;
-      }
-      return values[index];
-    }
-
-    throw ErrorOf<ConstantReader>(
-        message: 'Could not read enum '
-            'instance of type $T.');
   }
 
   /// Reads the `ConstantReader` instance and returns an instance of `List<T>`.
