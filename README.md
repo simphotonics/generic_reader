@@ -17,8 +17,8 @@ For built-in types, [`DartObject`][DartObject] has methods that allow reading th
 It is a more laborious task to read constant values of user defined data-types.
 
 The package [`generic_reader`][generic_reader] includes extentions on
-[`ConstantReader`][ConstantReader] that simplify reading constants of type `List`, `Set`, `Map`
-and provides a systematic way of reading arbitrary constants of known data-type.
+[`ConstantReader`][ConstantReader] that simplify reading constants of type `List`, `Set`, `Map`,
+and Dart enum and provides a systematic way of reading arbitrary constants of *known* data-type.
 
 ## Usage
 
