@@ -20,7 +20,7 @@ User userDecoder(ConstantReader constantReader) {
   final id = constantReader.read('id').intValue;
   final age = constantReader.read('age').get<Age>();
   final name = constantReader.read('name').get<Name>();
-  final title = constantReader.read('title').enumValue<Title>();
+  final title = constantReader.read('title').get<Title>();
   return User(name: name, age: age, id: id, title: title);
 }
 
