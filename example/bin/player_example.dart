@@ -17,7 +17,7 @@ import 'package:test_types/test_types.dart';
 /// represented by a [ConstantReader].
 Future<void> main() async {
   /// Reading libraries.
-  print('Reading player.dart');
+  print('Reading player.dart ...');
   final playerLib = await initializeLibraryReaderForDirectory(
     'example/src',
     'player.dart',
@@ -49,9 +49,6 @@ Future<void> main() async {
 
   final listCR =
       ConstantReader(playerLib.classes.first.fields[9].computeConstantValue());
-
-  // // Get singleton instance of the reader.
-  // final reader = GenericReader();
 
   Integer integerDecoder(ConstantReader cr) {
     return Integer(cr.read('value').intValue);
