@@ -1,3 +1,8 @@
+## 0.3.2
+- Removed singleton subclass _GenericReader.
+- Updated dependencies.
+- This version requires Dart >=2.19.0.
+
 ## 0.2.2
 
 - Amended Dart docs.
