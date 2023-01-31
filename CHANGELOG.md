@@ -1,5 +1,5 @@
 ## 0.3.2
-- Removed singleton subclass _GenericReader.
+- Removed extension method enumValue<T>. 
 - Updated dependencies.
 - This version requires Dart >=2.19.0.
 
