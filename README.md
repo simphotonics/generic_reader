@@ -25,13 +25,11 @@ and provides a systematic way of reading arbitrary constants of known data-type.
 To use the package [`generic_reader`][generic_reader] the following steps are required:
 1. Include [`generic_reader`][generic_reader] and [`source_gen`][source_gen] as dependencies in your pubspec.yaml file.
 
-2. Register a [Decoder][Decoder] function for each *user defined* data-type that is going to be read.
-If a decoder function is  missing, an error will be thrown detailing which data-type
-needs to be registered with the extension [`GenericReader`][GenericReader].
- The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
- The file [`player_example.dart`][player_example.dart]
-     demonstrates how to read a constant of type `List<dynamic>` containing `int`, `double`,
-     and enum values.
+2. Register a [Decoder][Decoder] function for each *user defined* data-type `T` that is going to be read.
+A decoder function has the signature `T Function(ConstantReader constantReader)`. It reads the constant expression
+represented by `constantReader` and returns a instance of `T`.
+Note: The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
+
 
 3. Retrieve the compile-time constant values using the methods [`get<T>()`][get], [`getList<T>()`][getList],
    [`getSet<T>()`][getSet], [`getMap<T>()`][getMap].
@@ -52,7 +50,7 @@ typedef T Decoder<T>(ConstantReader constantReader);
 The input argument is of type [`ConstantReader`][ConstantReader], a wrapper around
 [`DartObject`][DartObject],
 and the function returns an object of type `T`.
-It is presumed that the input argument `constantReader` represents an object of type `T`.
+It is required that the input argument `constantReader` represents an object of type `T`.
 
 User defined types are often a composition of other types, as illustrated in the example below.
 <details>  <summary> Click to show source-code. </summary>
@@ -160,7 +158,7 @@ is located at [`examples/bin/user_example.dart`](https://github.com/simphotonics
 ## Limitations
 
 1) Constants retrievable with [`GenericReader`][GenericReader] must have
-   a built-in Dart type or a type made available by depending on a package.
+   a built-in Dart type, a type made available by depending on a package, or a type defined in the file being read.
    The functions matching the static type of an analyzer element with the type
    of a runtime object do **not** work with relative imports.
 
