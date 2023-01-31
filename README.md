@@ -28,17 +28,13 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 2. Register a [Decoder][Decoder] function for each *user defined* data-type that is going to be read.
 If a decoder function is  missing, an error will be thrown detailing which data-type
 needs to be registered with the extension [`GenericReader`][GenericReader].
-
-   - The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
-
-   - There is no need to define decoder functions for **Dart enums** as long as they are read using the method [`enumValue<T>()`][enumValue].
-
-     The file [`player_example.dart`][player_example.dart]
+ The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol` do **not** require a decoder function.
+ The file [`player_example.dart`][player_example.dart]
      demonstrates how to read a constant of type `List<dynamic>` containing `int`, `double`,
      and enum values.
 
 3. Retrieve the compile-time constant values using the methods [`get<T>()`][get], [`getList<T>()`][getList],
-   [`getSet<T>()`][getSet], [`getMap<T>()`][getMap], [`enumValue<T>()`][enumValue].
+   [`getSet<T>()`][getSet], [`getMap<T>()`][getMap].
 
 4. Process the retrieved compile-time constants and generate the required source code.
 
@@ -142,7 +138,7 @@ User userDecoder(ConstantReader constantReader){
   final id = constantReader.read('id').intValue;
   final age = constantReader.read('age').get<Age>();
   final name = constantReader.read('name').get<Name>();
-  final tile = constantReader.read('title').enumValue<Title>();
+  final tile = constantReader.read('title').get<Title>();
   return User(name: name, age: age, id: id, title: title);
 };
 
