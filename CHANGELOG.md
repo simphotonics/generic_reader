@@ -1,10 +1,9 @@
 ## 0.3.2
-- Removed extension method enumValue<T>. 
+- Removed extension method `enumValue<T>()` use `get<T>()` instead.
 - Updated dependencies.
 - This version requires Dart >=2.19.0.
 
 ## 0.2.2
-
 - Amended Dart docs.
 - Made the method
 [`isEnum<T>()`](https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/isEnum.html) static.
