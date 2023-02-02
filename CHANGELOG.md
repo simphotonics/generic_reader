@@ -1,5 +1,5 @@
 ## 0.3.2
-- Removed extension method `enumValue<T>()` use `get<T>()` instead.
+- Removed extension method `enumValue<T>()`, use `get<T>()` instead.
 - Updated dependencies.
 - This version requires Dart >=2.19.0.
 
