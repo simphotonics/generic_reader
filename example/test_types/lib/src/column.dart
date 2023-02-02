@@ -1,7 +1,6 @@
-import 'sqlite_type.dart';
 
 /// TEST CLASS
-class Column<T extends SqliteType> {
+class Column<T extends Object> {
   const Column({
     required this.defaultValue,
     required this.name,

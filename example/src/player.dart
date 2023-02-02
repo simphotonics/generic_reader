@@ -8,11 +8,11 @@ class Player {
   final columnName = 'Player';
 
   /// Column storing player id.
-  final id = const Column<Integer>(defaultValue: Integer(1), name: 'id');
+  final id = const Column<int>(defaultValue: 1, name: 'id');
 
   /// Column storing first name of player.
-  final firstName = const Column<Text>(
-    defaultValue: Text('Thomas'),
+  final firstName = const Column<String>(
+    defaultValue: 'Thomas',
     name: 'FirstName',
   );
 

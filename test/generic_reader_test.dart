@@ -16,7 +16,7 @@ Future<void> main() async {
   final lib =
       await initializeLibraryReaderForDirectory('test/src', 'researcher.dart');
 
-  final idCR =
+  final columnCR =
       ConstantReader(lib.classes.first.fields[0].computeConstantValue());
 
   final namesCR =
@@ -31,78 +31,43 @@ Future<void> main() async {
   final roleCR =
       ConstantReader(lib.classes.first.fields[4].computeConstantValue());
 
-  final realCR =
+  final titleCR =
       ConstantReader(lib.classes.first.fields[5].computeConstantValue());
 
-  final titleCR =
+  final mapCR =
       ConstantReader(lib.classes.first.fields[6].computeConstantValue());
 
-  final mapCR =
+  final mapWithEnumValueCR =
       ConstantReader(lib.classes.first.fields[7].computeConstantValue());
 
-  final mapWithEnumValueCR =
+  final notRegisteredCR =
       ConstantReader(lib.classes.first.fields[8].computeConstantValue());
 
-  final notRegisteredCR =
-      ConstantReader(lib.classes.first.fields[9].computeConstantValue());
-
-  Integer integerDecoder(ConstantReader cr) {
-    return Integer(cr.read('value').intValue);
-  }
-
-  Real realDecoder(ConstantReader cr) {
-    return Real(cr.read('value').doubleValue);
-  }
-
-  Boolean booleanDecoder(ConstantReader cr) {
-    return Boolean(cr.read('value').boolValue);
-  }
-
-  Text textDecoder(ConstantReader cr) {
-    return Text(cr.read('value').stringValue);
-  }
-
   // Adding a decoder for constants of type [Column].
-  Column columnDecoder(ConstantReader cr) {
-    final defaultValue = cr.read('defaultValue').get<SqliteType>();
+  GenericReader.addDecoder<Column>((cr) {
     final name = cr.read('name').get<String>();
 
-    Column<T> columnFactory<T extends SqliteType>() {
-      return Column<T>(
-        defaultValue: defaultValue as T,
-        name: name,
-      );
+    if (cr.holdsA<Column<int>>()) {
+      final defaultValue = cr.read('defaultValue').get<int>();
+      return Column<int>(defaultValue: defaultValue, name: name);
     }
-
-    if (cr.holdsA<Column<Text>>()) {
-      return columnFactory<Text>();
+    if (cr.holdsA<Column<bool>>()) {
+      final defaultValue = cr.read('defaultValue').get<bool>();
+      return Column<bool>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column<Real>>()) {
-      return columnFactory<Real>();
+    if (cr.holdsA<Column<String>>()) {
+      final defaultValue = cr.read('defaultValue').get<String>();
+      return Column<String>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column<Integer>>()) {
-      return columnFactory<Integer>();
+    if (cr.holdsA<Column<double>>()) {
+      final defaultValue = cr.read('defaultValue').get<double>();
+      return Column<double>(defaultValue: defaultValue, name: name);
     }
-    return columnFactory<Boolean>();
-  }
-
-  SqliteType sqliteTypeDecoder(ConstantReader cr) {
-    if (cr.holdsA<Integer>()) return cr.get<Integer>();
-    if (cr.holdsA<Text>()) return cr.get<Text>();
-    if (cr.holdsA<Real>()) return cr.get<Real>();
-    if (cr.holdsA<Boolean>()) return cr.get<Boolean>();
-    throw ErrorOf<Decoder<SqliteType>>(
-        message: 'Could not reader const value of type `SqliteType`',
-        invalidState: 'ConstantReader holds a const value of type '
-            '`${cr.objectValue.type}`.');
-  }
-
-  GenericReader.addDecoder(columnDecoder);
-  GenericReader.addDecoder(realDecoder);
-  GenericReader.addDecoder(sqliteTypeDecoder);
-  GenericReader.addDecoder(textDecoder);
-  GenericReader.addDecoder(booleanDecoder);
-  GenericReader.addDecoder(integerDecoder);
+    throw ErrorOf<Decoder<Column>>(
+        message: 'Error reading constant expression.',
+        expectedState: 'An instance of ConstantReader holding a '
+            'constant of type `Column`.');
+  });
 
   group('Type functions:', () {
     test('holdsA<String>()', () {
@@ -112,7 +77,7 @@ Future<void> main() async {
       expect(notRegisteredCR.holdsA<UnknownType>(), true);
     });
     test('holdsA<Column>()', () {
-      expect(idCR.holdsA<Column>(), true);
+      expect(columnCR.holdsA<Column>(), true);
     });
     test('holdsA<Set>()', () {
       expect(integersCR.holdsA<Set>(), false);
@@ -166,10 +131,7 @@ Future<void> main() async {
   });
 
   group('Reading Constants:', () {
-    test('get<SqliteType>()', () {
-      expect(realCR.get<SqliteType>(), Real(39.5));
-    });
-    test('getList<String>()', () {
+     test('getList<String>()', () {
       expect(
         namesCR.getList<String>(),
         const ['Thomas', 'Mayor'],
@@ -177,8 +139,8 @@ Future<void> main() async {
     });
     test('get<Column>()', () {
       expect(
-        idCR.get<Column>(),
-        const Column<Integer>(defaultValue: Integer(3), name: 'id'),
+        columnCR.get<Column>(),
+        const Column<int>(defaultValue: 3, name: 'id'),
       );
     });
     test('getSet<int>()', () {
@@ -222,7 +184,7 @@ Future<void> main() async {
     });
     test('ErrorOf<ConstantReader>: Wrong type', () {
       try {
-        realCR.get<String>();
+         columnCR.get<String>();
       } on ErrorOf catch (e) {
         expect(e, isA<ErrorOf<ConstantReader>>());
         expect(

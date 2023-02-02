@@ -5,8 +5,8 @@ import 'package:test_types/test_types.dart';
 class Researcher {
   const Researcher();
 
-  final Column<Integer> id =
-      const Column<Integer>(defaultValue: Integer(3), name: 'id');
+  final Column<int> id =
+      const Column<int>(defaultValue: 3, name: 'id');
 
   final List<String> names = const ['Thomas', 'Mayor'];
 
@@ -15,8 +15,6 @@ class Researcher {
   final num number = 19;
 
   final String role = 'Researcher';
-
-  final Real real = const Real(39.5);
 
   final Title title = Title.Dr;
 

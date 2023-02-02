@@ -23,11 +23,11 @@ class Player {
   final columnName = 'Player';
 
   /// Column storing player id.
-  final id = const Column<Integer>(defaultValue: Integer(1), name: 'id');
+  final id = const Column<int>(defaultValue: 1, name: 'id');
 
   /// Column storing first name of player.
-  final firstName = const Column<Text>(
-    defaultValue: Text('Thomas'),
+  final firstName = const Column<String>(
+    defaultValue: 'Thomas',
     name: 'FirstName',
   );
 
@@ -55,6 +55,12 @@ class Player {
     'two': 2.0,
     'enum': Greek.alpha
   };
+
+  /// Test list
+  final list = const <List<int>>[
+    [0, 1],
+    [10, 11]
+  ];
 }
 
 ```
@@ -89,12 +95,12 @@ import 'package:test_types/test_types.dart';
 /// represented by a [ConstantReader].
 Future<void> main() async {
   /// Reading libraries.
-  print('Reading player.dart');
+  print('Reading player.dart ...');
   final playerLib = await initializeLibraryReaderForDirectory(
     'example/src',
     'player.dart',
   );
-  print('Done');
+  print('Done reading player.dart');
 
   // ConstantReader representing field 'columnName'.
   final columnNameCR =
@@ -119,65 +125,33 @@ Future<void> main() async {
   final mapWithEnumEntryCR =
       ConstantReader(playerLib.classes.first.fields[8].computeConstantValue());
 
-  // // Get singleton instance of the reader.
-  // final reader = GenericReader();
-
-  Integer integerDecoder(ConstantReader cr) {
-    return Integer(cr.peek('value')?.intValue ?? double.nan.toInt());
-  }
-
-  Real realDecoder(ConstantReader cr) {
-    return Real(cr.peek('value')?.doubleValue ?? double.nan);
-  }
-
-  Boolean booleanDecoder(ConstantReader cr) {
-    return Boolean(cr.read('value').boolValue);
-  }
-
-  Text textDecoder(ConstantReader cr) {
-    return Text(cr.read('value').stringValue);
-  }
-
-  SqliteType sqliteTypeDecoder(ConstantReader cr) {
-    if (cr.holdsA<Integer>()) return cr.get<Integer>();
-    if (cr.holdsA<Text>()) return cr.get<Text>();
-    if (cr.holdsA<Real>()) return cr.get<Real>();
-    if (cr.holdsA<Boolean>()) return cr.get<Boolean>();
-    throw ErrorOf<Decoder<SqliteType>>(
-        message: 'Could not reader const value of type `SqliteType`',
-        invalidState: 'ConstantReader holds a const value of type '
-            '`${cr.objectValue.type}`.');
-  }
-
-  // Registering decoders.
-  GenericReader.addDecoder<Integer>(integerDecoder);
-  GenericReader.addDecoder<Boolean>(booleanDecoder);
-  GenericReader.addDecoder<Text>(textDecoder);
-  GenericReader.addDecoder<Real>(realDecoder);
-  GenericReader.addDecoder<SqliteType>(sqliteTypeDecoder);
+  final listCR =
+      ConstantReader(playerLib.classes.first.fields[9].computeConstantValue());
 
   // Adding a decoder for constants of type [Column].
   GenericReader.addDecoder<Column>((cr) {
-    final defaultValue = cr.read('defaultValue').get<SqliteType>();
     final name = cr.read('name').get<String>();
 
-    Column<T> columnFactory<T extends SqliteType>() {
-      return Column<T>(
-        defaultValue: defaultValue as T,
-        name: name,
-      );
+    if (cr.holdsA<Column<int>>()) {
+      final defaultValue = cr.read('defaultValue').get<int>();
+      return Column<int>(defaultValue: defaultValue, name: name);
     }
-
-    if (cr.holdsA<Column>([Text])) {
-      return columnFactory<Text>();
+    if (cr.holdsA<Column<bool>>()) {
+      final defaultValue = cr.read('defaultValue').get<bool>();
+      return Column<bool>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column>([Real])) {
-      return columnFactory<Real>();
+    if (cr.holdsA<Column<String>>()) {
+      final defaultValue = cr.read('defaultValue').get<String>();
+      return Column<String>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column>([Integer])) {
-      return columnFactory<Integer>();
+    if (cr.holdsA<Column<double>>()) {
+      final defaultValue = cr.read('defaultValue').get<double>();
+      return Column<double>(defaultValue: defaultValue, name: name);
     }
-    return columnFactory<Boolean>();
+    throw ErrorOf<Decoder<Column>>(
+        message: 'Error reading constant expression.',
+        expectedState: 'An instance of ConstantReader holding a '
+            'constant of type `Column`.');
   });
 
   final green = AnsiPen()..green(bold: true);
@@ -202,7 +176,8 @@ Future<void> main() async {
   // )
 
   // Adding a decoder function for type [Sponsor].
-  GenericReader.addDecoder<Sponsor>((cr) => Sponsor(cr.read('name').stringValue));
+  GenericReader.addDecoder<Sponsor>(
+      (cr) => Sponsor(cr.read('name').stringValue));
 
   final sponsors = sponsorsCR.getList<Sponsor>();
 
@@ -247,6 +222,14 @@ Future<void> main() async {
   // Prints:
   // 'Retrieving a Map<String, dynamic>:'
   // {one: 1, two: 2.0, enum: Greek.alpha}
+
+  // Retrieving a nested list.
+  // Add a specific decoder for the inner type.
+  GenericReader.addDecoder<List<int>>((cr) => cr.getList<int>());
+
+  final list = listCR.getList<List<int>>();
+  print(green('\nRetrieving a List<List<int>>'));
+  print(list);
 }
 
 ```

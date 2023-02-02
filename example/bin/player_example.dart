@@ -50,62 +50,30 @@ Future<void> main() async {
   final listCR =
       ConstantReader(playerLib.classes.first.fields[9].computeConstantValue());
 
-  Integer integerDecoder(ConstantReader cr) {
-    return Integer(cr.read('value').intValue);
-  }
-
-  Real realDecoder(ConstantReader cr) {
-    return Real(cr.read('value').doubleValue);
-  }
-
-  Boolean booleanDecoder(ConstantReader cr) {
-    return Boolean(cr.read('value').boolValue);
-  }
-
-  Text textDecoder(ConstantReader cr) {
-    return Text(cr.read('value').stringValue);
-  }
-
-  SqliteType sqliteTypeDecoder(ConstantReader cr) {
-    if (cr.holdsA<Integer>()) return cr.get<Integer>();
-    if (cr.holdsA<Text>()) return cr.get<Text>();
-    if (cr.holdsA<Real>()) return cr.get<Real>();
-    if (cr.holdsA<Boolean>()) return cr.get<Boolean>();
-    throw ErrorOf<Decoder<SqliteType>>(
-        message: 'Could not reader const value of type `SqliteType`',
-        invalidState: 'ConstantReader holds a const value of type '
-            '`${cr.objectValue.type}`.');
-  }
-
-  // Registering decoders.
-  GenericReader.addDecoder<Integer>(integerDecoder);
-  GenericReader.addDecoder<Boolean>(booleanDecoder);
-  GenericReader.addDecoder<Text>(textDecoder);
-  GenericReader.addDecoder<Real>(realDecoder);
-  GenericReader.addDecoder<SqliteType>(sqliteTypeDecoder);
-
   // Adding a decoder for constants of type [Column].
   GenericReader.addDecoder<Column>((cr) {
-    final defaultValue = cr.read('defaultValue').get<SqliteType>();
     final name = cr.read('name').get<String>();
 
-    Column<T> columnFactory<T extends SqliteType>() {
-      return Column<T>(
-        defaultValue: defaultValue as T,
-        name: name,
-      );
+    if (cr.holdsA<Column<int>>()) {
+      final defaultValue = cr.read('defaultValue').get<int>();
+      return Column<int>(defaultValue: defaultValue, name: name);
     }
-
-    if (cr.holdsA<Column<Text>>()) {
-      return columnFactory<Text>();
+    if (cr.holdsA<Column<bool>>()) {
+      final defaultValue = cr.read('defaultValue').get<bool>();
+      return Column<bool>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column<Real>>()) {
-      return columnFactory<Real>();
+    if (cr.holdsA<Column<String>>()) {
+      final defaultValue = cr.read('defaultValue').get<String>();
+      return Column<String>(defaultValue: defaultValue, name: name);
     }
-    if (cr.holdsA<Column<Integer>>()) {
-      return columnFactory<Integer>();
+    if (cr.holdsA<Column<double>>()) {
+      final defaultValue = cr.read('defaultValue').get<double>();
+      return Column<double>(defaultValue: defaultValue, name: name);
     }
-    return columnFactory<Boolean>();
+    throw ErrorOf<Decoder<Column>>(
+        message: 'Error reading constant expression.',
+        expectedState: 'An instance of ConstantReader holding a '
+            'constant of type `Column`.');
   });
 
   final green = AnsiPen()..green(bold: true);
