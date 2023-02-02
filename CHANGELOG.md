@@ -1,3 +1,6 @@
+## 0.3.1
+- Amended description.
+
 ## 0.3.0
 - Removed extension method `enumValue<T>()`, use `get<T>()` instead.
 - Updated dependencies.
