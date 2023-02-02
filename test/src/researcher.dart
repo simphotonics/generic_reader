@@ -5,8 +5,7 @@ import 'package:test_types/test_types.dart';
 class Researcher {
   const Researcher();
 
-  final Column<int> id =
-      const Column<int>(defaultValue: 3, name: 'id');
+  final Column<int> id = const Column<int>(defaultValue: 3, name: 'id');
 
   final List<String> names = const ['Thomas', 'Mayor'];
 

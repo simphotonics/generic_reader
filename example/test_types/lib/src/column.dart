@@ -1,4 +1,3 @@
-
 /// TEST CLASS
 class Column<T extends Object> {
   const Column({

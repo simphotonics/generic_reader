@@ -13,5 +13,4 @@ enum SqliteType<T> {
 
   /// Dart type associated with the Sqlite type.
   Type get type => T;
-
 }

@@ -131,7 +131,7 @@ Future<void> main() async {
   });
 
   group('Reading Constants:', () {
-     test('getList<String>()', () {
+    test('getList<String>()', () {
       expect(
         namesCR.getList<String>(),
         const ['Thomas', 'Mayor'],
@@ -184,7 +184,7 @@ Future<void> main() async {
     });
     test('ErrorOf<ConstantReader>: Wrong type', () {
       try {
-         columnCR.get<String>();
+        columnCR.get<String>();
       } on ErrorOf catch (e) {
         expect(e, isA<ErrorOf<ConstantReader>>());
         expect(
