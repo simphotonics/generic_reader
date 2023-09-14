@@ -3,7 +3,7 @@ name: generic_reader
 description: Extension providing methods for the systematic reading of
   enums, constant lists, maps, sets, and generic compile-time constant expressions.
 
-version: 0.3.1
+version: 0.3.2
 
 homepage: https://github.com/simphotonics/generic_reader
 
