@@ -1,7 +1,7 @@
-## 0.3.2
-- Allow Dart 3 in constraints.
-- Allow usage of `analyzer` `^5.0.0` and `^6.0.0`.
-- Removed constraints from `source_gen`.
+## 0.4.0
+- Require Dart 3,
+- `analyzer` version `^6.0.0`,
+- Removed dependency on ansicolor and meta.
 
 ## 0.3.1
 - Amended description.

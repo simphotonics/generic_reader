@@ -1,4 +1,4 @@
-import 'package:ansicolor/ansicolor.dart';
+import 'package:ansi_modifier/ansi_modifier.dart';
 import 'package:exception_templates/exception_templates.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
@@ -76,11 +76,9 @@ Future<void> main() async {
             'constant of type `Column`.');
   });
 
-  final green = AnsiPen()..green(bold: true);
-
   // Retrieve an instance of [String].
   final columnName = columnNameCR.get<String>();
-  print(green('Retrieving a String:'));
+  print('Retrieving a String:'.style(Ansi.green));
   print('columnName = \'$columnName\'');
   print('');
   // Prints:
@@ -89,7 +87,7 @@ Future<void> main() async {
 
   // Retrieve an instance of [Column<Text>].
   final columnFirstName = firstNameCR.get<Column>();
-  print(green('Retrieving a Column<Text>:'));
+  print('Retrieving a Column<Text>:'.style(Ansi.green));
   print(columnFirstName);
   // Prints:
   // Retrieving a [Column<Text>]:
@@ -104,7 +102,7 @@ Future<void> main() async {
   final sponsors = sponsorsCR.getList<Sponsor>();
 
   print('');
-  print(green('Retrieving a List<Sponsor>:'));
+  print('Retrieving a List<Sponsor>:'.style(Ansi.green));
   print(sponsors);
   // Prints:
   // Retrieving a [List<Sponsor>]:
@@ -112,7 +110,7 @@ Future<void> main() async {
 
   final id = idCR.get<Column>();
   print('');
-  print(green('Retrieving a Column<Integer>:'));
+  print('Retrieving a Column<Integer>:'.style(Ansi.green));
   print(id);
   // Prints:
   // Retrieving a [Column<Integer>]:
@@ -121,8 +119,9 @@ Future<void> main() async {
 
   final greek = greekCR.get<Greek>();
   print('');
-  print(green('Retrieving an instance of the '
-      'enumeration: Greek{alpha, beta}.'));
+  print('Retrieving an instance of the '
+          'enumeration: Greek{alpha, beta}.'
+      .style(Ansi.green));
   print(greek);
   // Prints:
   // 'Retrieving an instance of the enumeration: Greek{alpha, beta}.'
@@ -130,7 +129,7 @@ Future<void> main() async {
 
   final map = mapCR.getMap<String, dynamic>();
   print('');
-  print(green('Retrieving a Map<String, dynamic>:'));
+  print('Retrieving a Map<String, dynamic>:'.style(Ansi.green));
   print(map);
   // Prints:
   // 'Retrieving a Map<String, dynamic>:'
@@ -139,7 +138,7 @@ Future<void> main() async {
   GenericReader.addDecoder<Greek>((cr) => cr.get<Greek>());
   final mapWithEnumEntry = mapWithEnumEntryCR.getMap<String, dynamic>();
   print('');
-  print(green('Retrieving a Map<String, dynamic>:'));
+  print('Retrieving a Map<String, dynamic>:'.style(Ansi.green));
   print(mapWithEnumEntry);
   // Prints:
   // 'Retrieving a Map<String, dynamic>:'
@@ -150,6 +149,6 @@ Future<void> main() async {
   GenericReader.addDecoder<List<int>>((cr) => cr.getList<int>());
 
   final list = listCR.getList<List<int>>();
-  print(green('\nRetrieving a List<List<int>>'));
+  print('\nRetrieving a List<List<int>>'.style(Ansi.green));
   print(list);
 }

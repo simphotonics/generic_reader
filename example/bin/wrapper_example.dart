@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:ansicolor/ansicolor.dart';
+import 'package:ansi_modifier/ansi_modifier.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart'; // show ConstantReader;
 import 'package:source_gen_test/src/init_library_reader.dart';
@@ -33,7 +33,7 @@ Future<void> main() async {
     }
   }
 
-  final green = AnsiPen()..green(bold: true);
+  final green = Ansi.bold + Ansi.green;
 
   // Adding a decoder function for type [Wrapper].
   GenericReader.addDecoder<Wrapper>((ConstantReader cr) {
@@ -41,7 +41,7 @@ Future<void> main() async {
   });
 
   print('');
-  print(green('Retrieving a Wrapper<dynamic>:'));
+  print('Retrieving a Wrapper<dynamic>:'.style(green));
   if (wrapperCR == null) {
     print('Could not read constant of type Wrapper<dynamic>');
     return;

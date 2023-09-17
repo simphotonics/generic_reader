@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:ansicolor/ansicolor.dart';
+import 'package:ansi_modifier/ansi_modifier.dart';
 import 'package:generic_reader/generic_reader.dart';
 import 'package:source_gen/source_gen.dart' show ConstantReader;
 import 'package:source_gen_test/source_gen_test.dart';
@@ -35,7 +35,7 @@ User userDecoder(ConstantReader constantReader) {
 /// of a compile-time constant expression
 /// represented by a [ConstantReader].
 Future<void> main() async {
-  final green = AnsiPen()..green(bold: true);
+  final green = Ansi.green + Ansi.bold;
 
   /// Reading libraries.
   print('Reading example/src/user_instance.dart ...');
@@ -60,7 +60,7 @@ Future<void> main() async {
   GenericReader.addDecoder<Name>(nameDecoder);
   GenericReader.addDecoder<User>(userDecoder);
 
-  print(green('Retrieving a constant of type <User>:'));
+  print('Retrieving a constant of type <User>:'.style(green));
   if (userCR != null) {
     print(userCR.get<User>());
   }

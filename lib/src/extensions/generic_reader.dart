@@ -3,7 +3,7 @@ import 'dart:mirrors';
 import 'package:source_gen/source_gen.dart' show ConstantReader, TypeChecker;
 
 import 'package:analyzer/dart/element/type.dart'
-    show DartType, ParameterizedType;
+    show DartType, DynamicType, ParameterizedType;
 import 'package:exception_templates/exception_templates.dart';
 
 import '../decoders/decoders.dart';
@@ -61,7 +61,7 @@ extension GenericReader on ConstantReader {
     if (dartType.isDartCoreInt) return int;
     if (dartType.isDartCoreDouble) return double;
     if (dartType.isDartCoreNum) return num;
-    if (dartType.isDynamic) return dynamic;
+    if (dartType is DynamicType) return dynamic;
     if (dartType.isDartCoreNull) return Null;
     if (dartType.isDartCoreSymbol) return Symbol;
     return _resolvedTypes[dartType] ?? UnknownType;
@@ -118,7 +118,7 @@ extension GenericReader on ConstantReader {
     if (dartType == null) return false;
     if (resolveType(dartType) == type) return true;
     if (type == dynamic) {
-      return dartType.isDynamic ? true : false;
+      return dartType is DynamicType ? true : false;
     }
     // Dart:mirrors must not be used with type `dynamic`.
     final checker = _checkers[type] ?? TypeChecker.fromRuntime(type);
