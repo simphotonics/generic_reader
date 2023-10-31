@@ -1,3 +1,6 @@
+## 0.4.1
+- Updated dependencies.
+
 ## 0.4.0
 - Require Dart 3,
 - `analyzer` version `^6.0.0`,

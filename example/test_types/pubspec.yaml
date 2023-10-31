@@ -2,7 +2,7 @@ name: test_types
 
 description: Sample test types.
 
-version: 0.0.2
+version: 0.0.3
 
 publish_to: none
 
@@ -10,6 +10,6 @@ environment:
   sdk: '^3.0.0'
 
 dependencies:
-  
+
 dev_dependencies:
-  lints: ^2.1.1
+  lints: ^3.0.0
