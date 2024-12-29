@@ -134,7 +134,9 @@ extension GenericReader on ConstantReader {
         if (!isMatch(
           dartTypeArgs[i],
           typeArgs[i].reflectedType,
-        )) return false;
+        )) {
+          return false;
+        }
       }
       // Store fully resolved types.
       _resolvedTypes[dartType] = type;

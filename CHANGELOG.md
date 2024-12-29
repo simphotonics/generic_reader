@@ -1,5 +1,5 @@
 ## 0.4.1
-- Updated dependencies.
+- Updated dependencies (analyser `^7.0.0`).
 
 ## 0.4.0
 - Require Dart 3,
