@@ -47,19 +47,6 @@ echo
 dart test -r expanded --test-randomize-ordering-seed=random
 
 
-# =================
-# Running examples
-# =================
-
-# Directories to be processed
-directories="example/test_types"
-
-for directory in $directories; do
-  cd $directory
-  ./tool/actions.sh
-  cd ..
-  cd ..
-done
 
 # ================
 # Running examples
@@ -70,8 +57,5 @@ echo
 echo -e "${GREEN}=== Running Examples $PWD...${RESET}"
 echo
 
-
-dart example/bin/player_example.dart
-dart example/bin/wrapper_example.dart
-
+dart example/bin/decoder_example.dart
 echo

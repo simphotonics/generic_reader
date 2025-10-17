@@ -1,9 +1,8 @@
 name: generic_reader
 
-description: Extension providing methods for the systematic reading of enums,
-  constant lists, maps, sets, and generic compile-time constant expressions.
+description: Methods for the systematic reading of compile-time constant expressions.
 
-version: 0.4.1
+version: 0.5.0
 
 homepage: https://github.com/simphotonics/generic_reader
 
@@ -11,19 +10,17 @@ topics:
   - analyzer
   - build
   - constant-expression
+  - source-generation
 
 environment:
-  sdk: '^3.0.0'
+  sdk: '^3.9.0'
 
 dependencies:
-  analyzer: ^7.0.0
-  exception_templates: ^0.3.1
-  source_gen: ^2.0.0
+  analyzer: ^8.4.0
+  exception_templates: ^0.3.2
 
 dev_dependencies:
-  ansi_modifier: ^0.1.4
-  lints: ^5.1.1
-  source_gen_test: ^1.1.1
-  test: ^1.25.14
-  test_types:
-    path: example/test_types
+  ansi_modifier: ^0.1.5
+  build_test: ^3.4.1
+  lints: ^6.0.0
+  test: ^1.26.3
