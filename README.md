@@ -85,8 +85,8 @@ Read.addDecoder(const AnnotationDecoder());
 
 The example below show how to register a decoder for a Dart `Enum` and read
 an instance of the enumeration. In this case, instead of creating a custom
-class we just register and instance of the already defined generic class
-`EnumDecoder<E extends Enum>`:
+decoder class we just register an instance of the already defined generic class
+[`EnumDecoder`][EnumDecoder]:
 
 <details>  <summary> Click to show source-code. </summary>
 
@@ -222,9 +222,15 @@ listObj.readList<List<String>>(): [[a], [b]]
 ## Limitations
 
 1) Constants retrievable with [`Reader`][Reader] must have
-   a built-in Dart type, a type made available by depending on a package, or a type defined in the file being read.
+   a built-in Dart type, a type made available by depending on
+   a package, or a type defined in the file being read.
 
-2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
+2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*.
+In practice, however, generic classes are often designed in such a manner
+that only few type parameters are valid or likely to be useful.
+Constants that need to be retrieved during the source-generation
+process are most likely *annotations* and *simple data-types* that
+convey information to source code generators.
 
 ## Examples
 
@@ -244,6 +250,8 @@ Please file feature requests and bugs at the [issue tracker].
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
+
+[EnumDecoder]: https://pub.dev/packages/generic_reader/EnumDecoder.html
 
 [example]: https://github.com/simphotonics/generic_reader/tree/main/example
 

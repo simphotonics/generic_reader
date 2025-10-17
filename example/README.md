@@ -14,4 +14,6 @@ Please file feature requests and bugs at the [issue tracker].
 
 [issue tracker]: https://github.com/simphotonics/generic_reader/issues
 
+[DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
+
 [Reader]: https://pub.dev/packages/generic_reader/Reader.html
