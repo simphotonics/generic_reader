@@ -5,171 +5,230 @@
 ## Introduction
 
 The premise of *source code generation* is that we can specify
-(hopefully few) details and flesh out the rest of the classes, and methods during the build process.
-Dart's static [`analyzer`][analyzer] provides access to libraries, classes,
-class fields, class methods, functions, variables, etc in the form of [`Elements`][Elements].
+(hopefully few) details and create libraries, classes, variables,
+and methods during the build process.
 
-Source code generation relies heavily on *constants* known at compile time.
-Compile-time constant expressions are represented by a [`DartObject`][DartObject] and
-can be accessed by using the method [`computeConstantValue()`][computeConstantValue()] (available for elements representing a variable).
+Source code generation relies heavily on *constants* known at compile time,
+represented by a [`DartObject`][DartObject].
+For built-in types, [`DartObject`][DartObject] has methods that
+allow reading the underlying constant object to obtain a runtime object.
 
-For built-in types, [`DartObject`][DartObject] has methods that allow reading the underlying constant object.
-It is a more laborious task to read constant values of user defined data-types.
+The package [`generic_reader`][generic_reader] includes an extention on
+[`DartObject`][DartObject] that *simplifies* reading constants of
+type `bool`, `double`,`int`,`num`,`String`,`Symbol`,`Type` ,
+`List`, `Set`, `Map`,`Iterabel`, `Enum`
+and provides a systematic way of reading *arbitrary* constants of *known*
+data-type.
 
-The package [`generic_reader`][generic_reader] includes extentions on
-[`ConstantReader`][ConstantReader] that simplify reading constants of type `List`, `Set`, `Map`, `Enum`
- and provides a systematic way of reading arbitrary constants of *known* data-type.
 
 ## Usage
 
 To use the package [`generic_reader`][generic_reader] the following steps are required:
-1. Include [`generic_reader`][generic_reader] and [`source_gen`][source_gen] as dependencies in your pubspec.yaml file.
+1. Include [`generic_reader`][generic_reader] as a dependencies in
+your pubspec.yaml file.
 
-2. Register a [Decoder][Decoder] function for each *user defined* data-type `T` that is going to be read.
-A decoder function has the signature `T Function(ConstantReader constantReader)`. It reads the constant expression
-represented by `constantReader` and returns a instance of `T`.
-Note: The built-in types `bool`, `double`, `int`, `String`, `Type`, `Symbol`, and Dart enums do **not** require a decoder function.
+2. Register a [Decoder][Decoder] object for each *user defined*
+data-type `T` that is going to be read.
+Note: The built-in types `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`
+do **not** require a decoder.
+
+3. Use Dart's static [`analyzer`][analyzer] to read a library, get
+the relevant [`VariableElement`][VariableElement], and calculate the constant
+expression represented by a [`DartObject`][DartObject] using the method [`computeConstantValue()`][computeConstantValue()].
+
+4. Read the compile-time constant values using the extension methods [`read<T>`][read],
+[`readList<T>`][readList], [`readIterator<T>`][readIterator]
+   [`readSet<T>`][readSet], [`readMap<T>`][readMap].
+
+5. Use the constant values to generate the source-code and complete the building
+process.
+
+## Decoder
+
+The extension [`Reader`][Reader] provides a systematic method of
+retrieving constants of
+arbitrary data-types by allowing users to register `Decoder` objects.
 
 
-3. Retrieve the compile-time constant values using the methods [`get<T>()`][get], [`getList<T>()`][getList],
-   [`getSet<T>()`][getSet], [`getMap<T>()`][getMap].
-
-4. Process the retrieved compile-time constants and generate the required source code.
-
-## Decoder Functions
-
-The extension [`GenericReader`][GenericReader] provides a systematic method of retrieving constants of
-arbitrary data-types by allowing users to register `Decoder` functions (for lack of a better a name).
-Decoder functions can make use of other registered decoder functions enabling the retrieval of
-complex generic data-structures.
-
-Decoders functions know how to **decode** a specific data-type and have the following signature:
-```Dart
-typedef T Decoder<T>(ConstantReader constantReader);
-```
-The input argument is of type [`ConstantReader`][ConstantReader], a wrapper around
-[`DartObject`][DartObject],
-and the function returns an object of type `T`.
-It is required that the input argument `constantReader` represents an object of type `T`.
-
-User defined types are often a composition of other types, as illustrated in the example below.
-<details>  <summary> Click to show source-code. </summary>
-
- ```Dart
- enum Title{Mr, Mrs, Dr}
-
- class Age {
-   const Age(this.age);
-   final int age;
-   bool get isAdult => age > 21;
-
-   @override
-   String toString() {
-     return 'age: $age';
-   }
- }
-
- class Name {
-   const Name({
-     required this.firstName,
-     required this.lastName,
-     this.middleName = '',
-   });
-   final String firstName;
-   final String lastName;
-   final String middleName;
-
-   @override
-   String toString() {
-     return '$firstName ${middleName == '' ? '' : middleName + ' ' }$lastName';
-   }
- }
-
- class User {
-   const User({
-     required this.name,
-     required this.id,
-     required this.age,
-     required this.title,
-   });
-   final Name name;
-   final Age age;
-   final int id;
-   final Title title;
-
-   @override
-   String toString() {
-     return 'user: $name\n'
-         '  title: ${title}\n'
-         '  id: $id\n'
-         '  $age\n';
-   }
- }
-
- ```
-</details>
-
-In order to retrieve a constant value of type `User` one has
-to retrieve the constructor parameters of type  `int`, `Name`, `Title`, and `Age` first.
-
-The following shows how to define decoder functions for the types `Age`, `Name`, and `User`.
-Note that each decoder knows the constructor *parameter-names* and *parameter-types*
-of the class it handles. For example, the decoder for `User` knows that `age` has type `Age` and that the field-name is *age*.
+`Decoder<T>` is an abstract
+parameterized class with a method `T read<T>(DartObject obj)`
+that attempt to read a variable of type `T` from `obj` and return the result.
+The example below demonstrates how to create a custom decode for the
+sample class `Annotation` and register an instance of the decoder with
+the extension [`Reader`][Reader].
 
 ```Dart
 import 'package:generic_reader/generic_reader.dart';
-import 'package:source_gen/source_gen.dart' show ConstantReader;
 
-import 'package:test_types/test_types.dart';
+class Annotation {
+  const A({required this.id, required this.names,);
+  final int id;
+  final Set<String> names;
 
-/// Defining decoder functions.
-Age ageDecoder(ConstantReader constantReader) => Age(constantReader.read('age').intValue);
+  @override
+  String toString() => 'A(id: $id, names: $names)';
+}
 
-Name nameDecoder(ConstantReader constantReader) {
-  final firstName = constantReader.read('firstName').stringValue;
-  final lastName = constantReader.read('lastName').stringValue;
-  final middleName = constantReader.read('middleName').stringValue;
-  return Name(firstName: firstName, lastName: lastName, middleName: middleName);
-};
+class AnnotationDecoder extends Decoder<Annotation> {
+  const AnnotationDecoder();
 
-User userDecoder(ConstantReader constantReader){
-  final id = constantReader.read('id').intValue;
-  final age = constantReader.read('age').get<Age>();
-  final name = constantReader.read('name').get<Name>();
-  final tile = constantReader.read('title').get<Title>();
-  return User(name: name, age: age, id: id, title: title);
-};
+  @override
+  Annotation read(DartObject obj) {
+    final id = obj.read<int>(fieldName: 'id');
+    final names = obj.readSet<String>(fieldName: 'names');
+    return A(id: id, names: names);
+  }
+}
 
-// Registering decoders.
-GenericReader.addDecoder<Age>(ageDecoder)
-GenericReader.addDecoder<Name>(nameDecoder)
-GenericReader.addDecoder<User>(userDecoder);
-
-// Reading the library where an object of type User is defined.
-// Retrieving the ConstantReader object representing an instance of User:
-// constantReaderOfUser.
-
-// Retrieving a constant value of type User:
-final User user = reader.get<User>(constantReaderOfUser);
+Read.addDecoder(const AnnotationDecoder());
 ```
-A short program demonstrating how to retrieve a constant of type `User`
-is located at [`examples/bin/user_example.dart`](https://github.com/simphotonics/generic_reader/tree/master/example/bin/user_example.dart).
+
+The example below show how to register a decoder for a Dart `Enum` and read
+an instance of the enumeration. In this case, instead of creating a custom
+class we just register and instance of the already defined generic class
+`EnumDecoder<E extends Enum>`:
+
+<details>  <summary> Click to show source-code. </summary>
+
+```Dart
+import 'package:ansi_modifier/ansi_modifier.dart';
+import 'package:build_test/build_test.dart' show resolveSource;
+import 'package:generic_reader/generic_reader.dart';
+
+/// Demonstrates how to use [Reader] to read an enum.
+enum Order { asc, desc }
+
+Future<void> main() async {
+  print('\nReading library: example\n');
+
+  // Read the dart library
+  final lib = await resolveSource(
+    r'''
+    library example;
+
+    enum Order { asc, desc }
+
+    class A {
+      const A();
+      final Order order = Order.asc;
+    }
+    ''',
+    (resolver) => resolver.findLibraryByName('example'),
+    readAllSourcesFromFilesystem: false,
+  );
+
+  if (lib == null) return;
+
+  /// Add a decoder for the enum:
+  Reader.addDecoder(const EnumDecoder<Order>(Order.values));
+
+  /// Compute the compile-time constant value
+  final enumObj = lib.classes[0].fields[0].computeConstantValue();
+
+  /// Read the compile-time constant value to obtain a runtime instance of the
+  /// enumeration.
+  final enum0 = enumObj?.read<Order>();
+
+  print(
+    '\nReading an enum of type ${'Order'.style(Ansi.green)}: '
+    '$enum0\n',
+  );
+}
+
+```
+</details>
+
+The program listed below show how to read a constant of type
+`List<List<String>>`:
+
+<details>  <summary> Click to show source-code. </summary>
+
+```Dart
+import 'package:ansi_modifier/ansi_modifier.dart';
+import 'package:build_test/build_test.dart' show resolveSource;
+import 'package:generic_reader/generic_reader.dart';
+
+/// Demonstrates how to use [Reader] to read a nested list.
+Future<void> main() async {
+  print('\nReading library: example\n');
+
+  final lib = await resolveSource(
+    r'''
+    library example;
+
+    class A {
+      const A();
+      final nestedList = List<List<String>> [['a'], ['b']];
+    }
+    ''',
+    (resolver) => resolver.findLibraryByName('example'),
+    readAllSourcesFromFilesystem: false,
+  );
+
+  if (lib == null) return;
+
+  final listOfString = 'List<String>'.style(Ansi.green);
+  final listOfListOfString = 'List<List<String>>'.style(Ansi.green);
+
+  print('\nAdding decoder for $listOfString and $listOfListOfString\n');
+  Reader.addDecoder(const ListDecoder<String>());
+  Reader.addDecoder(const ListDecoder<List<String>>());
+
+  print(Reader.info);
+
+  final listObj = lib.classes[0].fields[0].computeConstantValue();
+  final list1 = listObj?.read<List<List<String>>>();
+  final list2 = listObj?.read();
+  final list3 = listObj?.readList<List<String>>();
+
+  print('\nlistObj.read<$listOfListOfString>: $list1');
+
+  print('\nlistObj.read(): $list2');
+
+  print('\nlistObj.readList<$listOfString>(): $list3\n');
+}
+```
+</details>
+
+The program above produces the following terminal output:
+
+<details>  <summary> Click to show terminal output. </summary>
+
+```
+$ dart example/bin/list_example.dart
+
+Reading library: example
+
+  0s _ResolveSourceBuilder<LibraryElement?> on 5 inputs; $package$
+  1s _ResolveSourceBuilder<LibraryElement?> on 5 inputs: 5 no-op
+  Built with build_runner in 1s; wrote 0 outputs.
+
+Adding decoder for List<String> and List<List<String>>
+
+Reader:
+  Registered types: (bool, double, int, num,
+    String, Symbol, Type, List<String>, List<List<String>>)
+  Mapped types    : {}
+
+listObj.read<List<List<String>>>: [[a], [b]]
+
+listObj.read(): [[a], [b]]
+
+listObj.readList<List<String>>(): [[a], [b]]
+
+```
+</details>
 
 ## Limitations
 
-1) Constants retrievable with [`GenericReader`][GenericReader] must have
+1) Constants retrievable with [`Reader`][Reader] must have
    a built-in Dart type, a type made available by depending on a package, or a type defined in the file being read.
-   The functions matching the static type of an analyzer element with the type
-   of a runtime object do **not** work with relative imports.
 
-   E.g. the demos in folder [`example/bin`](https://github.com/simphotonics/generic_reader/tree/master/example/bin) read types that are provided
-   by the package `test_types` located in the subfolder with the same name.
-
-2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators. A demonstration on how to retrieve constant values with generic type is presented in [example].
+2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*. In practice, however, generic classes are often designed in such a manner that only few type parameters are valid or likely to be useful. Constants that need to be retrieved during the source-generation process are most likely *annotations* and *simple data-types* that convey information to source code generators.
 
 ## Examples
 
-For further information on how to use [GenericReader] to retrieve constants of
+For further information on how to use [Reader] to retrieve constants of
 arbitrary type see [example].
 
 ## Features and bugs
@@ -180,36 +239,26 @@ Please file feature requests and bugs at the [issue tracker].
 
 [analyzer]: https://pub.dev/packages/analyzer
 
-[Elements]: https://pub.dev/documentation/analyzer/latest/dart_element_element/dart_element_element-library.html
-
 [computeConstantValue()]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement/computeConstantValue.html
-
-[ConstantReader]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader-class.html
 
 [Decoder]: https://github.com/simphotonics/generic_reader#decoder-functions
 
 [DartObject]: https://pub.dev/documentation/analyzer/latest/dart_constant_value/DartObject-class.html
 
-[example]: https://github.com/simphotonics/generic_reader/tree/master/example
+[example]: https://github.com/simphotonics/generic_reader/tree/main/example
 
-[GenericReader]: https://pub.dev/packages/generic_reader
+[Reader]: https://pub.dev/packages/generic_reader/Reader.html
 
 [generic_reader]: https://pub.dev/packages/generic_reader
 
-[get]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/get.html
+[read]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/read.html
 
-[getList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getList.html
+[readIterator]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readIterator.html
 
-[getMap]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getMap.html
+[readList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readList.html
 
-[getSet]: https://pub.dev/documentation/generic_reader/latest/generic_reader/GenericReader/getSet.html
+[readMap]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readMap.html
 
-[peek]: https://pub.dev/documentation/source_gen/latest/source_gen/ConstantReader/peek.html
+[readSet]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readSet.html
 
-[player_example.dart]: https://github.com/simphotonics/generic_reader/blob/master/example/bin/player_example.dart
-
-[source_gen]: https://pub.dev/packages/source_gen
-
-[source_gen_test]: https://pub.dev/packages/source_gen_test
-
-[TypeMethods]: https://pub.dev/documentation/generic_reader/latest/generic_reader/TypeMethods.html
+[VariableElement]: https://pub.dev/documentation/analyzer/latest/dart_element_element/VariableElement-class.html

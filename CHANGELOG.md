@@ -1,3 +1,19 @@
+## 0.5.0
+- Breaking changes:
+  * The extension `GenericReader` was renamed `Reader`
+  * `Decoder<T>` is now an abstract class and user defined decoders
+    must extend it.
+  * The extension methods `get...` were renamed `read...`,
+    for example: `obj.get<int>` becomes `obj.read<int>()`.
+  * Enums are now read using the extension method `.read<EnumType>()` and
+    it is required to add a decoder for `EnumType`:
+    ```Dart
+    Reader.addDecoder(EnumDecoder<EnumType>(values: EnumType.values));
+    ```
+- Package does no longer depend on `source_gen` and `dart:mirrors`.
+- Requires analyzer ^8.4.0.
+
+
 ## 0.4.1
 - Updated dependencies (analyser `^7.0.0`).
 
