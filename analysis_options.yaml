@@ -3,3 +3,6 @@ include: package:lints/recommended.yaml
 # analyzer:
 #   enable-experiment:
 #     - sealed-class
+linter:
+  rules:
+    - prefer_relative_imports
