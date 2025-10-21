@@ -1,3 +1,17 @@
+## 0.5.1
+- Added the following built-in types that are supported without the
+  need to register a decoder:
+  * `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
+  * `List<bool>`, `List<double>`, `List<int>`, `List<num>`,
+    `List<String>`,`List<Symbol>`,`List<Type>`,
+  * `Set<bool>`, `Set<double>`, `Set<int>`, `Set<num>`, `Set<String>`, `Set<Symbol>`,
+    `Set<Type>`,
+  * `Iterable<bool>`,`Iterable<double>`,`Iterable<int>`,`Iterable<num>`,`Iterable<String>`,
+    `Iterable<Symbol>`,`Iterable<Type>`.
+ - Added `EnumDecoder`.
+ - Added `RecoderDecoder`.
+
+
 ## 0.5.0
 - Breaking changes:
   * The extension `GenericReader` was renamed `Reader`

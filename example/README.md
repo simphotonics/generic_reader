@@ -5,6 +5,7 @@
 The files located in the folder *bin* contain short programs that demonstrate how
 to:
 * read a [DartObject][DartObject] representing an enum,
+* read a compile-time constant representig a record, 
 * read a nested list,
 * create a decoder for a user defined class.
 
