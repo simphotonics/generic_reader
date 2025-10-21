@@ -1,4 +1,7 @@
+// ignore_for_file: type_literal_in_constant_pattern
+
 import 'package:analyzer/dart/constant/value.dart' show DartObject;
+import 'package:analyzer/dart/element/element.dart' show EnumElement;
 import 'package:analyzer/dart/element/type.dart'
     show DynamicType, DartType, ParameterizedType;
 
@@ -18,7 +21,8 @@ extension TypeMethods on DartObject {
 
   // Returns `true` if `this` represents a constant expression
   /// with type [Enum].
-  bool get isEnum => type?.isDartCoreEnum ?? false;
+  // enum.computeConstantValue()?.type?.element is EnumElement.
+  bool get isEnum => type?.element is EnumElement;
 
   // Returns `true` if `this` represents a constant expression
   /// with type [int].
@@ -112,4 +116,85 @@ extension TypeMethods on DartObject {
         ? dartType.typeArguments
         : <DartType>[];
   }
+}
+
+typedef ListOfBool = List<bool>;
+typedef ListOfDouble = List<double>;
+typedef ListOfDynamic = List<dynamic>;
+typedef ListOfInt = List<int>;
+typedef ListOfNum = List<num>;
+typedef ListOfString = List<String>;
+typedef ListOfSymbol = List<Symbol>;
+typedef ListOfType = List<Type>;
+
+extension GenericTypeMethods on DartType {
+  /// Returns a list with elements of type [DartType]
+  /// containing the type arguments if
+  /// `this` is a [ParameterizedType] and and empty list else.
+  List<DartType> get typeArgs {
+    return (this is ParameterizedType)
+        ? (this as ParameterizedType).typeArguments
+        : <DartType>[];
+  }
+
+  bool isCoreType<T>() => switch (T) {
+    (bool) when isDartCoreBool => true,
+    (double) when isDartCoreDouble => true,
+    (int) when isDartCoreInt => true,
+    (num) when isDartCoreNum => true,
+    (String) when isDartCoreString => true,
+    (Symbol) when isDartCoreSymbol => true,
+    (Type) when isDartCoreType => true,
+    (dynamic) when this is DynamicType => true,
+
+    (ListOfBool)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreBool =>
+      true,
+
+    (ListOfDouble)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreDouble =>
+      true,
+
+    (ListOfDynamic)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first is DynamicType =>
+      true,
+
+    (ListOfInt)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreInt =>
+      true,
+
+    (ListOfNum)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreNum =>
+      true,
+
+    (ListOfString)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreString =>
+      true,
+
+    (ListOfSymbol)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreSymbol =>
+      true,
+
+    (ListOfType)
+        when isDartCoreList &&
+            typeArgs.isNotEmpty &&
+            typeArgs.first.isDartCoreType =>
+      true,
+
+    _ => false,
+  };
 }
