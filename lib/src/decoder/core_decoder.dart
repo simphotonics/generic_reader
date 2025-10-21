@@ -1,4 +1,6 @@
 import 'package:analyzer/dart/constant/value.dart' show DartObject;
+import 'package:analyzer/dart/element/type.dart';
+import 'package:exception_templates/exception_templates.dart' show ErrorOf;
 
 import '../extension/type_methods.dart';
 import 'decoder.dart';
@@ -11,8 +13,6 @@ class BoolDecoder extends Decoder<bool> {
     _ => throw readError(obj),
   };
 }
-
-const boolDecoder = BoolDecoder();
 
 class IntDecoder extends Decoder<int> {
   const IntDecoder();
@@ -50,8 +50,6 @@ class NumDecoder extends Decoder<num> {
   }
 }
 
-const numDecoder = NumDecoder();
-
 class StringDecoder extends Decoder<String> {
   const StringDecoder();
   @override
@@ -60,8 +58,6 @@ class StringDecoder extends Decoder<String> {
     _ => throw readError(obj),
   };
 }
-
-const stringDecoder = StringDecoder();
 
 class SymbolDecoder extends Decoder<Symbol> {
   const SymbolDecoder();
@@ -72,8 +68,6 @@ class SymbolDecoder extends Decoder<Symbol> {
   };
 }
 
-const symbolDecoder = SymbolDecoder();
-
 class TypeDecoder extends Decoder<Type> {
   const TypeDecoder();
   @override
@@ -83,7 +77,20 @@ class TypeDecoder extends Decoder<Type> {
   };
 }
 
-const typeDecoder = TypeDecoder();
+/// A [Decoder] that can be registered to read a const object with no
+/// substructure like a simple annotation. It returns the [value] provided as
+/// constructor parameter.
+class ValueDecoder<T> extends Decoder<T> {
+  const ValueDecoder(this.value);
+
+  /// The object returned by the method [read].
+  final T value;
+
+  @override
+  /// Returns the constant value of type [T]
+  /// that is provided as constructor parameter.
+  T read(DartObject obj) => value;
+}
 
 /// A generic enum decoder
 class EnumDecoder<E extends Enum> extends Decoder<E> {
@@ -97,4 +104,46 @@ class EnumDecoder<E extends Enum> extends Decoder<E> {
     int index when index < values.length => values[index],
     _ => throw readError(obj),
   };
+}
+
+/// A callback which returns a [Record] given the [positional] and [named]
+/// record fields.
+typedef RecordFactory<T extends Record> =
+    T Function({
+      required List<DartObject> positional,
+      required Map<String, DartObject> named,
+    });
+
+class RecordDecoder<T extends Record> extends Decoder<T> {
+  const RecordDecoder(this.recordFactory);
+
+  /// A callback which returns a [Record] given the positional and named
+  /// record fields.
+  final RecordFactory<T> recordFactory;
+
+  @override
+  /// Override this method and return a [Record] with shape [T]. <br/>
+  /// Tip: Use the
+  /// helper methods [positionalFields] and [namedFields].
+  T read(DartObject obj) {
+    if (obj.type is RecordType) {
+      final recordObject = obj.toRecordValue();
+      return recordFactory(
+        positional: recordObject?.positional ?? [],
+        named: recordObject?.named ?? {},
+      );
+    } else {
+      throw readError(obj);
+    }
+  }
+
+  static ErrorOf<RecordDecoder<T>> readRecordError<T extends Record>() =>
+      ErrorOf<RecordDecoder<T>>(
+        message: 'Could not read a record of type $T.',
+        invalidState:
+            'The constant does seem to not represent a record with shape $T.',
+        expectedState:
+            'The positional and named fields of the record and '
+            'their type must match $T. ',
+      );
 }
