@@ -1,8 +1,11 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:analyzer/dart/constant/value.dart' show DartObject;
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build_test/build_test.dart' show resolveSource;
 import 'package:exception_templates/exception_templates.dart';
 import 'package:generic_reader/generic_reader.dart';
+import 'package:generic_reader/src/type/invalid_field_name.dart';
 
 import 'package:test/test.dart';
 
@@ -81,13 +84,18 @@ Future<void> main() async {
   group('Decoders:', () {
     // Block the removal of decoders for built-in types.
     test('clearDecoder<String>()', () {
-      Reader.removeDecoderFor<String>();
-      expect(Reader.findDecoder<String>(), stringDecoder);
+      expect(Reader.removeDecoderFor<String>(), null);
     });
     test('addDecoder<String>()', () {
-      expect(Reader.addDecoder(stringDecoder), false);
+      expect(Reader.addDecoder(StringDecoder()), false);
     });
-    test('addDecoder<List>()', () {});
+    test('addDecoder<List>()', () {
+      expect(Reader.addDecoder<List>(const ListDecoder<int>()), false);
+    });
+    test('addDecoder<List<dynamic>>', () {
+      expect(Reader.addDecoder<List<dynamic>>(ListDecoder<dynamic>()), false);
+      expect(Reader.hasDecoder<List<dynamic>>(), false);
+    });
   });
 
   group('Reading Constants:', () {
@@ -120,37 +128,37 @@ Future<void> main() async {
       expect(isValidObj, isNotNull);
 
       expect(
-        isValidObj!.read<Runes>,
+        isValidObj!.read<A>,
         throwsA(
-          isA<ErrorOfType<DecoderNotFound>>().having(
+          isA<ErrorOfType<InvalidFieldName>>().having(
             (e) => e.message,
             'message',
-            'Decoder not found.',
+            'Could not read a field with name: id.',
           ),
         ),
       );
     });
-    test('ErrorOf<ConstantReader>: Wrong type', () {
-      try {
-        aObj?.read<String>();
-      } on ErrorOf catch (e) {
-        expect(e, isA<ErrorOf<Decoder>>());
-        expect(e.message, 'Error reading const <String> value.');
-      }
+    test('ErrorOf<Reader>: Wrong type', () {
+      expect(
+        aObj!.read<String>,
+        throwsA(
+          isA<ErrorOf<Decoder>>().having(
+            (e) => e.message,
+            'message',
+            'Error reading const <String> value.',
+          ),
+        ),
+      );
     });
   });
   group('findDecoder:', () {
     test('bool', () {
-      expect(Reader.findDecoder<bool>(), boolDecoder);
+      final isValid = isValidObj?.read<bool>();
+      expect(Reader.findDecoder<bool>(), const BoolDecoder());
     });
     test('int', () {
-      expect(Reader.findDecoder<int>(), intDecoder);
-    });
-    test('double', () {
-      expect(Reader.findDecoder<double>(), doubleDecoder);
-    });
-    test('num', () {
-      expect(Reader.findDecoder<num>(), numDecoder);
+      final id = idObj?.read<int>();
+      expect(Reader.findDecoder<int>(), const IntDecoder());
     });
   });
 }

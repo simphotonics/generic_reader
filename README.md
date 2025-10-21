@@ -10,8 +10,8 @@ and methods during the build process.
 
 Source code generation relies heavily on *constants* known at compile time,
 represented by a [`DartObject`][DartObject].
-For built-in types, [`DartObject`][DartObject] has methods that
-allow reading the underlying constant object to obtain a runtime object.
+For core types, [`DartObject`][DartObject] has methods that
+allow reading the underlying constant object to create a runtime object.
 
 The package [`generic_reader`][generic_reader] includes an extention on
 [`DartObject`][DartObject] that *simplifies* reading constants of
@@ -29,16 +29,33 @@ your pubspec.yaml file.
 
 2. Register a [Decoder][Decoder] object for each *user defined*
 data-type `T` that is going to be read.
-Note: The built-in types `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`
-do **not** require a decoder.
+Note: The following type are supported out-of-the-box and do *not* require a decoder:
+* `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
+* `List<bool>`, `List<double>`, `List<int>`, `List<num>`,
+`List<String>`,`List<Symbol`,`List<Type`,
+* `Set<bool`, `Set<double`, `Set<int`, `Set<num`, `Set<String`, `Set<Symbol`,
+`Set<Type`,
+*   `Iterable<bool`,`Iterable<double`,`Iterable<int`,`Iterable<num`,`Iterable<String`,
+`Iterable<Symbol`,`Iterable<Type`.
 
 3. Use Dart's static [`analyzer`][analyzer] to read a library, get
 the relevant [`VariableElement`][VariableElement], and calculate the constant
 expression represented by a [`DartObject`][DartObject] using the method [`computeConstantValue()`][computeConstantValue()].
 
-4. Read the compile-time constant values using the extension methods [`read<T>`][read],
-[`readList<T>`][readList], [`readIterator<T>`][readIterator]
-   [`readSet<T>`][readSet], [`readMap<T>`][readMap].
+4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
+
+   To read constant of a user-defined type `U`, add a suitable `Decoder<U>`:
+   ```Dart
+   Reader.addDecoder<U>(decoder);
+
+   ```
+
+   To read a constant representing a *collection* of a *user-defined* type `U`
+   use the convenience methods [`readList<U>`][readList],
+   [`readSet<U>`][readSet], [`readMap<K,U>`][readMap], and [`readIterator<U>`][readIterator].
+   On first use, these methods register a decoder making the types:
+   `List<U>`, `Set<U>`, `Map<K,U>`, `Iterable<U>` readable with [`read<U>`][read].
+
 
 5. Use the constant values to generate the source-code and complete the building
 process.
@@ -48,7 +65,6 @@ process.
 The extension [`Reader`][Reader] provides a systematic method of
 retrieving constants of
 arbitrary data-types by allowing users to register `Decoder` objects.
-
 
 `Decoder<T>` is an abstract
 parameterized class with a method `T read<T>(DartObject obj)`
@@ -85,7 +101,7 @@ Read.addDecoder(const AnnotationDecoder());
 
 The example below show how to register a decoder for a Dart `Enum` and read
 an instance of the enumeration. In this case, instead of creating a custom
-decoder class we just register an instance of the already defined generic class
+decoder class we register an instance of the already defined generic class
 [`EnumDecoder`][EnumDecoder]:
 
 <details>  <summary> Click to show source-code. </summary>
@@ -138,6 +154,9 @@ Future<void> main() async {
 ```
 </details>
 
+
+<br/>
+
 The program listed below show how to read a constant of type
 `List<List<String>>`:
 
@@ -188,13 +207,19 @@ Future<void> main() async {
   print('\nlistObj.readList<$listOfString>(): $list3\n');
 }
 ```
+
 </details>
+
+
+<br/>
 
 The program above produces the following terminal output:
 
+
 <details>  <summary> Click to show terminal output. </summary>
 
-```
+
+```Term
 $ dart example/bin/list_example.dart
 
 Reading library: example
@@ -205,10 +230,12 @@ Reading library: example
 
 Adding decoder for List<String> and List<List<String>>
 
+
 Reader:
-  Registered types: (bool, double, int, num,
-    String, Symbol, Type, List<String>, List<List<String>>)
-  Mapped types    : {}
+  Decodable types: [bool, double, int, num, String, Symbol, Type,
+    List<bool>, ..., Iterable<Type>, List<List<String>>]
+  Resolved types: {}
+
 
 listObj.read<List<List<String>>>: [[a], [b]]
 
