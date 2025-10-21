@@ -60,11 +60,12 @@ process.
 
 The extension [`Reader`][Reader] provides a systematic method of
 retrieving constants of
-arbitrary data-types by allowing users to register `Decoder` objects.
+arbitrary data-types by allowing users to register [`Decoder`][Decoder] objects.
+To create custom decoder extend [`Decoder<T>`][Decoder] and override the
+the method `T read<T>(DartObject obj)`. This method
+attempts to read a variable of type `T` from the compile-time constant
+`obj` and returns the result.
 
-`Decoder<T>` is an abstract
-parameterized class with a method `T read<T>(DartObject obj)`
-that attempt to read a variable of type `T` from `obj` and return the result.
 The example below demonstrates how to create a custom decoder for the
 sample class `Annotation` and register an instance of the decoder with
 the extension [`Reader`][Reader].
