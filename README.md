@@ -46,7 +46,6 @@ using the method [`computeConstantValue()`][computeConstantValue()]. An exmple
 is shown in section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
-
    To read a constant representing a *collection* of a *user-defined* type `U`
    use the convenience methods [`readList<U>`][readList],
    [`readSet<U>`][readSet], [`readMap<K,U>`][readMap], and [`readIterator<U>`][readIterator].
