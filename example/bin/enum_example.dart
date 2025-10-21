@@ -12,7 +12,8 @@ import 'package:generic_reader/generic_reader.dart';
 enum Order { asc, desc }
 
 Future<void> main() async {
-  print('\nReading library: example\n');
+  print('Done importing libaries\n');
+  print('Reading library: example\n');
 
   final library = await resolveSource(
     r'''

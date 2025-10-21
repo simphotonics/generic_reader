@@ -29,8 +29,8 @@ class DecoderForClassA extends Decoder<A> {
   @override
   A read(DartObject obj) {
     final id = obj.read<int>(fieldName: 'id');
-    final names = obj.readSet<String>(fieldName: 'names');
-    final numbers = obj.readList<num>(fieldName: 'numbers');
+    final names = obj.read<Set<String>>(fieldName: 'names');
+    final numbers = obj.read<List<num>>(fieldName: 'numbers');
     return A(id: id, names: names, numbers: numbers);
   }
 }
@@ -38,7 +38,8 @@ class DecoderForClassA extends Decoder<A> {
 const decoderForA = DecoderForClassA();
 
 Future<void> main() async {
-  final library = await resolveSource(
+  print('\nReading library <example>\n');
+  final lib = await resolveSource(
     r'''
     library example;
 
@@ -54,8 +55,9 @@ Future<void> main() async {
       final int id = 124;
       final Map<String, int> score = {'Adam': 4, 'Moira': 7};
       final isValid = true;
-
+      final List<num> numbers = [7, 77.7];
       final a = const A(id: 42, names: {'Andy', 'Eva'}, numbers: [42, 3.14]);
+      final num number = 3;
     }
 
     ''',
@@ -64,9 +66,13 @@ Future<void> main() async {
   );
 
   /// Reading libraries.
-  print('\nReading library <example>\n');
 
-  final lib = library!;
+  if (lib == null) {
+    print('Could not read library!');
+    return;
+  }
+
+  print(Reader.info);
 
   final idObj = lib.classes[1].fields[0].computeConstantValue();
   final id = idObj?.read<int>();
@@ -85,11 +91,25 @@ Future<void> main() async {
     'Reading a ${'bool'.style(Ansi.green)}: $isValid ${isValid.runtimeType}\n',
   );
 
+  final numbersObj = lib.classes[1].fields[3].computeConstantValue();
+  final numbers = numbersObj?.read<List<num>>();
+  print(
+    'Reading a ${'List<num>'.style(Ansi.green)}: $numbers ${numbers.runtimeType}\n',
+  );
+
   /// Adding a decoder:
   Reader.addDecoder(decoderForA);
 
-  final aObj = lib.classes[1].fields[3].computeConstantValue();
+  final aObj = lib.classes[1].fields[4].computeConstantValue();
   final a = aObj?.read<A>();
 
-  print('Reading a constant with type ${'A'.style(Ansi.green)}: $a');
+  print('Reading a constant with type ${'A'.style(Ansi.green)}: $a\n');
+
+  final numberObj = lib.classes[1].fields[5].computeConstantValue();
+  final number = numberObj?.read();
+
+  print('Reading a constant with type ${'num'.style(Ansi.green)}: $number\n');
+
+  print(Reader.info);
+  return;
 }
