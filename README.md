@@ -28,7 +28,8 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 your pubspec.yaml file.
 
 2. Register a [Decoder][Decoder] object for each *user defined*
-data-type `T` that is going to be read. <br/>
+data-type `U` that is going to be read
+   (see section [Custom Decoders](#custom-decoders)). </br>
 Note: The following type are supported out-of-the-box and do *not* require a decoder:
 * `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
 * `List<bool>`, `List<double>`, `List<int>`, `List<num>`,
@@ -41,12 +42,10 @@ Note: The following type are supported out-of-the-box and do *not* require a dec
 3. Use Dart's static [`analyzer`][analyzer] to read a library, get
 the relevant [`VariableElement`][VariableElement], and calculate the constant
 expression represented by a [`DartObject`][DartObject]
-using the method [`computeConstantValue()`][computeConstantValue()].
+using the method [`computeConstantValue()`][computeConstantValue()]. An exmple
+is shown in section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
-
-   To read a constant of a user-defined type `U`, add a suitable `Decoder<U`
-   (see section [Custom Decoders](#custom-decoders));
 
    To read a constant representing a *collection* of a *user-defined* type `U`
    use the convenience methods [`readList<U>`][readList],
@@ -232,10 +231,11 @@ listObj.readList<List<String>>(): [[a], [b]]
 
 1) When using the type `dynamic` the static type of the [DartObject][DartObject]
 is used to determine the correct type of the runtime object. If a suitable
-decoder is registered with the [Reader][Reader] on can omit the type parameter
-when using e.g. [`read`][read]. For example, the variable `list2` in section
-[Reading a Nested List](#reading-a-nested-list) is calculated using
-[read][read].
+decoder is registered with the [Reader][Reader] it is possible
+(but not recommended) to omit the type parameter.
+For example, the variable `list2` in section
+[Reading a Nested List](#reading-a-nested-list) is calculated using the extension
+method [read][read] without specifying the type parameter.
 
 2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*.
 In practice, however, generic classes are often designed in such a manner
