@@ -1,17 +1,11 @@
-import 'package:analyzer/dart/constant/value.dart' show DartObject;
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:exception_templates/exception_templates.dart' show ErrorOf;
-
-import '../type/type_utils.dart';
 
 abstract class Decoder<T> {
   const Decoder();
 
-  /// Returns `true` if this decoder can read instances of
-  /// [DartObject] representing type [S], and `false` otherwise.
-  bool canDecode<S>() => isSubType<S, T>();
-
   /// Attempts to create an instance of [T] with information read from
-  /// [obj].
+  /// the constant [obj].
   ///
   /// Should throw [ErrorOf] with type argument [Decoder] with type argument
   /// [T] if an instance of [T] cannot be read from [obj].
@@ -20,7 +14,10 @@ abstract class Decoder<T> {
   /// Returns the generic type of the decoder.
   Type get type => T;
 
-  /// Error thrown if [obj] does not hold a variable of type [T].
+  /// Returns an instance of [ErrorOf] with type argument [Decoder]
+  /// with type argument [T].
+  /// Classes extending [Decoder] of [T] may throw the result of [readError]
+  /// if [obj] does not hold a variable of type [T].
   ErrorOf<Decoder<T>> readError(DartObject obj) {
     return ErrorOf<Decoder<T>>(
       message: 'Error reading const <$T> value.',
@@ -32,4 +29,7 @@ abstract class Decoder<T> {
           'constant with type <$T>.',
     );
   }
+
+  @override
+  String toString() => '$runtimeType()';
 }
