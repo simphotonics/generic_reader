@@ -37,7 +37,7 @@ Future<void> main() async {
   final enum0 = enumObj?.read<Order>();
 
   print(
-    '\n mroe Reading an enum of type ${'Order'.style(Ansi.green)}: '
+    '\n Reading an enum with type ${'Order'.style(Ansi.green)}: '
     '$enum0\n',
   );
 }

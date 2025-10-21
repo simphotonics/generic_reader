@@ -30,8 +30,7 @@ Future<void> main() async {
   final listOfString = 'List<String>'.style(Ansi.green);
   final listOfListOfString = 'List<List<String>>'.style(Ansi.green);
 
-  print('\nAdding decoder for $listOfString and $listOfListOfString\n');
-  Reader.addDecoder(const ListDecoder<String>());
+  print('\nAdding decoder for $listOfListOfString\n');
   Reader.addDecoder(const ListDecoder<List<String>>());
 
   print(Reader.info);

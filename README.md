@@ -28,27 +28,25 @@ To use the package [`generic_reader`][generic_reader] the following steps are re
 your pubspec.yaml file.
 
 2. Register a [Decoder][Decoder] object for each *user defined*
-data-type `T` that is going to be read.
+data-type `T` that is going to be read. <br/>
 Note: The following type are supported out-of-the-box and do *not* require a decoder:
 * `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
 * `List<bool>`, `List<double>`, `List<int>`, `List<num>`,
-`List<String>`,`List<Symbol`,`List<Type`,
-* `Set<bool`, `Set<double`, `Set<int`, `Set<num`, `Set<String`, `Set<Symbol`,
-`Set<Type`,
-*   `Iterable<bool`,`Iterable<double`,`Iterable<int`,`Iterable<num`,`Iterable<String`,
-`Iterable<Symbol`,`Iterable<Type`.
+`List<String>`,`List<Symbol>`,`List<Type>`,
+* `Set<bool>`, `Set<double>`, `Set<int>`, `Set<num>`, `Set<String>`, `Set<Symbol>`,
+`Set<Type>`,
+*   `Iterable<bool>`,`Iterable<double>`,`Iterable<int>`,`Iterable<num>`,`Iterable<String>`,
+`Iterable<Symbol>`,`Iterable<Type>`.
 
 3. Use Dart's static [`analyzer`][analyzer] to read a library, get
 the relevant [`VariableElement`][VariableElement], and calculate the constant
-expression represented by a [`DartObject`][DartObject] using the method [`computeConstantValue()`][computeConstantValue()].
+expression represented by a [`DartObject`][DartObject]
+using the method [`computeConstantValue()`][computeConstantValue()].
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
 
-   To read constant of a user-defined type `U`, add a suitable `Decoder<U>`:
-   ```Dart
-   Reader.addDecoder<U>(decoder);
-
-   ```
+   To read a constant of a user-defined type `U`, add a suitable `Decoder<U`
+   (see section [Custom Decoders](#custom-decoders));
 
    To read a constant representing a *collection* of a *user-defined* type `U`
    use the convenience methods [`readList<U>`][readList],
@@ -60,7 +58,7 @@ expression represented by a [`DartObject`][DartObject] using the method [`comput
 5. Use the constant values to generate the source-code and complete the building
 process.
 
-## Decoder
+## Custom Decoders
 
 The extension [`Reader`][Reader] provides a systematic method of
 retrieving constants of
@@ -69,13 +67,13 @@ arbitrary data-types by allowing users to register `Decoder` objects.
 `Decoder<T>` is an abstract
 parameterized class with a method `T read<T>(DartObject obj)`
 that attempt to read a variable of type `T` from `obj` and return the result.
-The example below demonstrates how to create a custom decode for the
+The example below demonstrates how to create a custom decoder for the
 sample class `Annotation` and register an instance of the decoder with
 the extension [`Reader`][Reader].
 
 ```Dart
 import 'package:generic_reader/generic_reader.dart';
-
+// An annotation with a const constructor
 class Annotation {
   const A({required this.id, required this.names,);
   final int id;
@@ -91,16 +89,18 @@ class AnnotationDecoder extends Decoder<Annotation> {
   @override
   Annotation read(DartObject obj) {
     final id = obj.read<int>(fieldName: 'id');
-    final names = obj.readSet<String>(fieldName: 'names');
+    final names = obj.read<Set<String>>(fieldName: 'names');
     return A(id: id, names: names);
   }
 }
-
-Read.addDecoder(const AnnotationDecoder());
+// Registering the decoder with the reader
+Reader.addDecoder(const AnnotationDecoder());
 ```
 
-The example below show how to register a decoder for a Dart `Enum` and read
-an instance of the enumeration. In this case, instead of creating a custom
+## Reading an Enumeration
+
+The example below show how to register and read an instance of an enumeration.
+In this case, instead of creating a custom
 decoder class we register an instance of the already defined generic class
 [`EnumDecoder`][EnumDecoder]:
 
@@ -155,12 +155,11 @@ Future<void> main() async {
 </details>
 
 
-<br/>
+## Reading a Nested List
 
-The program listed below show how to read a constant of type
+The program listed below is available in the folder [example][example] and
+shows how to read a constant of type
 `List<List<String>>`:
-
-<details>  <summary> Click to show source-code. </summary>
 
 ```Dart
 import 'package:ansi_modifier/ansi_modifier.dart';
@@ -168,32 +167,27 @@ import 'package:build_test/build_test.dart' show resolveSource;
 import 'package:generic_reader/generic_reader.dart';
 
 /// Demonstrates how to use [Reader] to read a nested list.
-Future<void> main() async {
-  print('\nReading library: example\n');
-
-  final lib = await resolveSource(
-    r'''
+final libraryString = r'''
     library example;
 
     class A {
       const A();
       final nestedList = List<List<String>> [['a'], ['b']];
     }
-    ''',
+    '''
+
+Future<void> main() async {
+  print('\nReading library: example\n');
+
+  final lib = await resolveSource(libraryString,
     (resolver) => resolver.findLibraryByName('example'),
     readAllSourcesFromFilesystem: false,
   );
 
   if (lib == null) return;
 
-  final listOfString = 'List<String>'.style(Ansi.green);
-  final listOfListOfString = 'List<List<String>>'.style(Ansi.green);
-
-  print('\nAdding decoder for $listOfString and $listOfListOfString\n');
-  Reader.addDecoder(const ListDecoder<String>());
+  print('\nAdding decoder for List<List<String>>\n');
   Reader.addDecoder(const ListDecoder<List<String>>());
-
-  print(Reader.info);
 
   final listObj = lib.classes[0].fields[0].computeConstantValue();
   final list1 = listObj?.read<List<List<String>>>();
@@ -207,12 +201,6 @@ Future<void> main() async {
   print('\nlistObj.readList<$listOfString>(): $list3\n');
 }
 ```
-
-</details>
-
-
-<br/>
-
 The program above produces the following terminal output:
 
 
@@ -228,14 +216,7 @@ Reading library: example
   1s _ResolveSourceBuilder<LibraryElement?> on 5 inputs: 5 no-op
   Built with build_runner in 1s; wrote 0 outputs.
 
-Adding decoder for List<String> and List<List<String>>
-
-
-Reader:
-  Decodable types: [bool, double, int, num, String, Symbol, Type,
-    List<bool>, ..., Iterable<Type>, List<List<String>>]
-  Resolved types: {}
-
+Adding decoder for List<List<String>>
 
 listObj.read<List<List<String>>>: [[a], [b]]
 
@@ -246,11 +227,15 @@ listObj.readList<List<String>>(): [[a], [b]]
 ```
 </details>
 
+
 ## Limitations
 
-1) Constants retrievable with [`Reader`][Reader] must have
-   a built-in Dart type, a type made available by depending on
-   a package, or a type defined in the file being read.
+1) When using the type `dynamic` the static type of the [DartObject][DartObject]
+is used to determine the correct type of the runtime object. If a suitable
+decoder is registered with the [Reader][Reader] on can omit the type parameter
+when using e.g. [`read`][read]. For example, the variable `list2` in section
+[Reading a Nested List](#reading-a-nested-list) is calculated using
+[read][read].
 
 2) Defining decoder functions for each data-type has its obvious limitiations when it comes to *generic types*.
 In practice, however, generic classes are often designed in such a manner
