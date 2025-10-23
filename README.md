@@ -63,7 +63,8 @@ process.
 
 ## Custom Decoders
 
-The extension [`Reader`][Reader] provides a systematic method of
+The extension [`Reader`][Reader] on [`DartObject`][DartObject]
+provides a systematic method of
 retrieving constants of
 arbitrary data-types by allowing users to register [`Decoder`][Decoder] objects.
 
