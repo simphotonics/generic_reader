@@ -68,11 +68,12 @@ The extension [`Reader`][Reader] provides a systematic method of
 retrieving constants of
 arbitrary data-types by allowing users to register [`Decoder`][Decoder] objects.
 
+To create a custom decoder:
+1. Extend [`Decoder<T>`][Decoder].
+2. Override the method [`T read(DartObject obj)`][Decoder.read].
 
-To create a custom decoder extend [`Decoder<T>`][Decoder] and override the
-the method [`T read(DartObject obj)`][Decoder.read]. 
 The example below demonstrates how to create a custom decoder for the
-sample class `Annotation` and register an instance of the decoder with
+sample class `Annotation` and how to register an instance of the decoder with
 the extension [`Reader`][Reader].
 
 ```Dart
