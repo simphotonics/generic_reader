@@ -23,7 +23,6 @@ data-type.
 
 ## Usage
 
-To use the package [`generic_reader`][generic_reader] the following steps are required:
 1. Include [`generic_reader`][generic_reader] as a dependencies in
 your pubspec.yaml file.
 
