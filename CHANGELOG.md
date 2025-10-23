@@ -1,3 +1,7 @@
+## 0.5.2
+- Removed libraries `test_methods.dart` and `test_utils.dart`.
+- Amended documentation.
+
 ## 0.5.1
 - Added the following built-in types that are supported without the
   need to register a decoder:

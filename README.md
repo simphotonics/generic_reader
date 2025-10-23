@@ -30,7 +30,7 @@ your pubspec.yaml file.
 2. Register a [Decoder][Decoder] object for each *user defined*
 data-type `U` that is going to be read
    (see section [Custom Decoders](#custom-decoders)). </br>
-Note: The following type are supported out-of-the-box and do *not* require a decoder:
+Note: The following types are supported out-of-the-box and do *not* require a decoder:
 * `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
 * `List<bool>`, `List<double>`, `List<int>`, `List<num>`,
 `List<String>`,`List<Symbol>`,`List<Type>`,
@@ -46,12 +46,18 @@ using the method [`computeConstantValue()`][computeConstantValue()]. An exmple
 is shown in section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
-   To read a constant representing a *collection* of a *user-defined* type `U`
+
+   * To read a constant representing a *collection* of a *user-defined* type `U`
    use the convenience methods [`readList<U>`][readList],
    [`readSet<U>`][readSet], [`readMap<K,U>`][readMap], and [`readIterator<U>`][readIterator].
-   On first use, these methods register a decoder making the types:
-   `List<U>`, `Set<U>`, `Map<K,U>`, `Iterable<U>` readable with [`read<U>`][read].
+   These methods register a suitable decoder and call [`read`][read].
+   For example calling [`readList<U>(obj)`][readList], registers the decoder
+   `ListDecoder<U>()` and calls `read<List<U>>(obj)`.
 
+   * If the compile-time constant represents a class which defines instance
+   variables, one may read a specific instance variable  by specifying
+   the parameter `fieldName`. For more info see section
+   [Custom Decoders](#custom-decoders).
 
 5. Use the constant values to generate the source-code and complete the building
 process.
@@ -61,11 +67,10 @@ process.
 The extension [`Reader`][Reader] provides a systematic method of
 retrieving constants of
 arbitrary data-types by allowing users to register [`Decoder`][Decoder] objects.
-To create a custom decoder extend [`Decoder<T>`][Decoder] and override the
-the method `T read<T>(DartObject obj)`. This method
-attempts to read a variable of type `T` from the compile-time constant
-`obj` and returns the result.
 
+
+To create a custom decoder extend [`Decoder<T>`][Decoder] and override the
+the method [`T read(DartObject obj)`][Decoder.read]. 
 The example below demonstrates how to create a custom decoder for the
 sample class `Annotation` and register an instance of the decoder with
 the extension [`Reader`][Reader].
@@ -87,7 +92,10 @@ class AnnotationDecoder extends Decoder<Annotation> {
 
   @override
   Annotation read(DartObject obj) {
+    // Read instance variable 'id'.
     final id = obj.read<int>(fieldName: 'id');
+
+    // Read instance variable 'names'.
     final names = obj.read<Set<String>>(fieldName: 'names');
     return A(id: id, names: names);
   }
@@ -272,6 +280,8 @@ Please file feature requests and bugs at the [issue tracker].
 [generic_reader]: https://pub.dev/packages/generic_reader
 
 [read]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/read.html
+
+[Decoder.read]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Decoder/read.html
 
 [readIterator]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readIterator.html
 
