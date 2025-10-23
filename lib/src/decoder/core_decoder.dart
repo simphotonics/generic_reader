@@ -1,8 +1,6 @@
 import 'package:analyzer/dart/constant/value.dart' show DartObject;
-import 'package:analyzer/dart/element/type.dart';
 import 'package:exception_templates/exception_templates.dart' show ErrorOf;
 
-import '../extension/type_methods.dart';
 import 'decoder.dart';
 
 class BoolDecoder extends Decoder<bool> {
@@ -40,9 +38,9 @@ class NumDecoder extends Decoder<num> {
   const NumDecoder();
   @override
   num read(DartObject obj) {
-    if (obj.isInt) {
+    if (obj.type?.isDartCoreInt ?? false) {
       return intDecoder.read(obj);
-    } else if (obj.isDouble) {
+    } else if (obj.type?.isDartCoreDouble ?? false) {
       return doubleDecoder.read(obj);
     } else {
       throw readError(obj);
@@ -106,35 +104,42 @@ class EnumDecoder<E extends Enum> extends Decoder<E> {
   };
 }
 
-/// A callback which returns a [Record] given the [positional] and [named]
-/// record fields.
-typedef RecordFactory<T extends Record> =
-    T Function({
+/// A callback which returns a [Record] of shape/type [R]
+/// given the [positional] and [named]
+/// record fields as [DartObject]s.
+typedef RecordFactory<R extends Record> =
+    R Function({
       required List<DartObject> positional,
       required Map<String, DartObject> named,
     });
 
-class RecordDecoder<T extends Record> extends Decoder<T> {
+/// Typedef representing the [Record] shape returned by
+/// the method [DartObject.toRecordValue].
+typedef RecordObj = ({
+  Map<String, DartObject> named,
+  List<DartObject> positional,
+});
+
+/// A decoder that can decode a record of shape/type [R].
+class RecordDecoder<R extends Record> extends Decoder<R> {
   const RecordDecoder(this.recordFactory);
 
   /// A callback which returns a [Record] given the positional and named
   /// record fields.
-  final RecordFactory<T> recordFactory;
+  final RecordFactory<R> recordFactory;
 
   @override
-  /// Override this method and return a [Record] with shape [T]. <br/>
+  /// Override this method and return a [Record] with shape [R]. <br/>
   /// Tip: Use the
   /// helper methods [positionalFields] and [namedFields].
-  T read(DartObject obj) {
-    if (obj.type is RecordType) {
-      final recordObject = obj.toRecordValue();
-      return recordFactory(
-        positional: recordObject?.positional ?? [],
-        named: recordObject?.named ?? {},
-      );
-    } else {
-      throw readError(obj);
-    }
+  R read(DartObject obj) {
+    return switch (obj.toRecordValue()) {
+      RecordObj recordObj => recordFactory(
+        positional: recordObj.positional,
+        named: recordObj.named,
+      ),
+      _ => throw readError(obj),
+    };
   }
 
   static ErrorOf<RecordDecoder<T>> readRecordError<T extends Record>() =>

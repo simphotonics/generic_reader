@@ -8,7 +8,7 @@ import 'decoder/core_decoder.dart';
 import 'decoder/decoder.dart';
 import 'type/decoder_not_found.dart';
 import 'type/invalid_field_name.dart';
-import 'type/invalid_type_argument.dart' show InvalidTypeArgument;
+import 'type/invalid_type_argument.dart';
 
 part 'decoder/collection_decoder.dart';
 
@@ -262,12 +262,12 @@ extension Reader on DartObject {
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
   /// not exist.
   /// * Throws [ErrorOf] with type argument [Decoder] with type argument
-  /// [List] with type argument [T] if a list can not be constructed.
-  List<T> readList<T>({String fieldName = ''}) {
-    if (isNotCoreType<List<T>>()) {
-      addDecoder<List<T>>(ListDecoder<T>());
+  /// [List] with type argument [E] if a list can not be constructed.
+  List<E> readList<E>({String fieldName = ''}) {
+    if (isNotCoreType<List<E>>()) {
+      addDecoder<List<E>>(ListDecoder<E>());
     }
-    return read<List<T>>(fieldName: fieldName);
+    return read<List<E>>(fieldName: fieldName);
   }
 
   /// Reads the [DartObject] instance and returns an instance of `List<T>`.
@@ -276,12 +276,12 @@ extension Reader on DartObject {
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
   /// not exist.
   /// * Throws [ErrorOf] with type argument [Decoder] with type argument
-  /// [Iterable] with type argument [T] if an iterable can not be constructed.
-  Iterable<T> readIterable<T>({String fieldName = ''}) {
-    if (isNotCoreType<Iterable<T>>()) {
-      addDecoder<Iterable<T>>(IterableDecoder<T>());
+  /// [Iterable] with type argument [E] if an iterable can not be constructed.
+  Iterable<E> readIterable<E>({String fieldName = ''}) {
+    if (isNotCoreType<Iterable<E>>()) {
+      addDecoder<Iterable<E>>(IterableDecoder<E>());
     }
-    return read<Iterable<T>>(fieldName: fieldName);
+    return read<Iterable<E>>(fieldName: fieldName);
   }
 
   /// Reads the `dartObject` instance and returns an object of type `Set<T>`.
@@ -290,12 +290,12 @@ extension Reader on DartObject {
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
   /// not exist.
   /// * Throws [ErrorOf] with type argument [Decoder] with type argument
-  /// [Iterable] with type argument [T] if an iterable can not be constructed.
-  Set<T> readSet<T>({String fieldName = ''}) {
-    if (isNotCoreType<Set<T>>()) {
-      addDecoder<Set<T>>(SetDecoder<T>());
+  /// [Iterable] with type argument [E] if an iterable can not be constructed.
+  Set<E> readSet<E>({String fieldName = ''}) {
+    if (isNotCoreType<Set<E>>()) {
+      addDecoder<Set<E>>(SetDecoder<E>());
     }
-    return read<Set<T>>(fieldName: fieldName);
+    return read<Set<E>>(fieldName: fieldName);
   }
 
   /// Reads the [DartObject] and returns an object of type `Map<K, V>`.

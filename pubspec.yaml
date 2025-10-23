@@ -3,7 +3,7 @@ name: generic_reader
 description: Methods for the systematic reading of
              compile-time constant expressions.
 
-version: 0.5.1
+version: 0.5.2
 
 homepage: https://github.com/simphotonics/generic_reader
 
