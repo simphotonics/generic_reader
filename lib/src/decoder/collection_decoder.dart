@@ -1,8 +1,6 @@
 part of '../reader.dart';
 
-class ListDecoder<E> extends Decoder<List<E>> {
-  const ListDecoder();
-
+class const ListDecoder<E>() extends Decoder<List<E>> {
   @override
   List<E> read(DartObject obj) =>
       switch (obj.toListValue()?.map((item) => item.read<E>())) {
@@ -11,9 +9,7 @@ class ListDecoder<E> extends Decoder<List<E>> {
       };
 }
 
-class SetDecoder<T> extends Decoder<Set<T>> {
-  const SetDecoder();
-
+class const SetDecoder<T>() extends Decoder<Set<T>> {
   @override
   Set<T> read(DartObject obj) =>
       switch (obj.toSetValue()?.map((item) => item.read<T>())) {
@@ -22,9 +18,7 @@ class SetDecoder<T> extends Decoder<Set<T>> {
       };
 }
 
-class IterableDecoder<T> extends Decoder<Iterable<T>> {
-  const IterableDecoder();
-
+class const IterableDecoder<T>() extends Decoder<Iterable<T>> {
   @override
   Set<T> read(DartObject obj) =>
       switch (obj.toSetValue()?.map((item) => item.read<T>())) {
@@ -33,8 +27,7 @@ class IterableDecoder<T> extends Decoder<Iterable<T>> {
       };
 }
 
-class MapDecoder<K, V> extends Decoder<Map<K, V>> {
-  const MapDecoder();
+class const MapDecoder<K, V>() extends Decoder<Map<K, V>> {
   @override
   Map<K, V> read(DartObject obj) {
     final result = <K, V>{};
@@ -48,7 +41,7 @@ class MapDecoder<K, V> extends Decoder<Map<K, V>> {
         final value = valueObj?.read<V>();
 
         if (key is K && value is V) {
-          //TODO will this test ever fail? Should this method throw?
+          // Will this test ever fail? Should this method throw?
           result[key] = value;
         }
       });

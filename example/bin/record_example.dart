@@ -14,8 +14,7 @@ import 'package:generic_reader/generic_reader.dart';
 /// A record with one positional and one named entry.
 typedef Info = (int age, {String firstName});
 
-class A {
-  const A();
+class const A() {
   final Info info = const (32, firstName: 'Alana');
 }
 

@@ -3,8 +3,7 @@ import 'package:exception_templates/exception_templates.dart' show ErrorOf;
 
 import 'decoder.dart';
 
-class BoolDecoder extends Decoder<bool> {
-  const BoolDecoder();
+class const BoolDecoder() extends Decoder<bool> {
   @override
   bool read(DartObject obj) => switch (obj.toBoolValue()) {
     bool value => value,
@@ -12,8 +11,7 @@ class BoolDecoder extends Decoder<bool> {
   };
 }
 
-class IntDecoder extends Decoder<int> {
-  const IntDecoder();
+class const IntDecoder() extends Decoder<int> {
   @override
   int read(DartObject obj) => switch (obj.toIntValue()) {
     int value => value,
@@ -23,8 +21,7 @@ class IntDecoder extends Decoder<int> {
 
 const intDecoder = IntDecoder();
 
-class DoubleDecoder extends Decoder<double> {
-  const DoubleDecoder();
+class const DoubleDecoder() extends Decoder<double> {
   @override
   double read(DartObject obj) => switch (obj.toDoubleValue()) {
     double value => value,
@@ -34,8 +31,7 @@ class DoubleDecoder extends Decoder<double> {
 
 const doubleDecoder = DoubleDecoder();
 
-class NumDecoder extends Decoder<num> {
-  const NumDecoder();
+class const NumDecoder() extends Decoder<num> {
   @override
   num read(DartObject obj) {
     if (obj.type?.isDartCoreInt ?? false) {
@@ -48,8 +44,7 @@ class NumDecoder extends Decoder<num> {
   }
 }
 
-class StringDecoder extends Decoder<String> {
-  const StringDecoder();
+class const StringDecoder() extends Decoder<String> {
   @override
   String read(DartObject obj) => switch (obj.toStringValue()) {
     String value => value,
@@ -57,8 +52,7 @@ class StringDecoder extends Decoder<String> {
   };
 }
 
-class SymbolDecoder extends Decoder<Symbol> {
-  const SymbolDecoder();
+class const SymbolDecoder() extends Decoder<Symbol> {
   @override
   Symbol read(DartObject obj) => switch (obj.toSymbolValue()) {
     String value => Symbol(value),
@@ -66,8 +60,7 @@ class SymbolDecoder extends Decoder<Symbol> {
   };
 }
 
-class TypeDecoder extends Decoder<Type> {
-  const TypeDecoder();
+class const TypeDecoder() extends Decoder<Type> {
   @override
   Type read(DartObject obj) => switch (obj.toTypeValue()) {
     Type type => type,
@@ -78,11 +71,11 @@ class TypeDecoder extends Decoder<Type> {
 /// A [Decoder] that can be registered to read a const object with no
 /// substructure like a simple annotation. It returns the [value] provided as
 /// constructor parameter.
-class ValueDecoder<T> extends Decoder<T> {
-  const ValueDecoder(this.value);
-
+class const ValueDecoder<T>(
   /// The object returned by the method [read].
-  final T value;
+  final T value,
+) extends Decoder<T> {
+  /// The object returned by the method [read].
 
   @override
   /// Returns the constant value of type [T]
@@ -91,12 +84,10 @@ class ValueDecoder<T> extends Decoder<T> {
 }
 
 /// A generic enum decoder
-class EnumDecoder<E extends Enum> extends Decoder<E> {
-  const EnumDecoder(this.values);
-
+class const EnumDecoder<E extends Enum>(
   /// Use the static enum getter to obtain the values.
-  final List<E> values;
-
+  final List<E> values,
+) extends Decoder<E> {
   @override
   E read(DartObject obj) => switch (obj.getField('index')?.toIntValue()) {
     int index when index < values.length => values[index],
@@ -107,11 +98,10 @@ class EnumDecoder<E extends Enum> extends Decoder<E> {
 /// A callback which returns a [Record] of shape/type [R]
 /// given the [positional] and [named]
 /// record fields as [DartObject]s.
-typedef RecordFactory<R extends Record> =
-    R Function({
-      required List<DartObject> positional,
-      required Map<String, DartObject> named,
-    });
+typedef RecordFactory<R extends Record> = R Function({
+  required List<DartObject> positional,
+  required Map<String, DartObject> named,
+});
 
 /// Typedef representing the [Record] shape returned by
 /// the method [DartObject.toRecordValue].
@@ -121,13 +111,11 @@ typedef RecordObj = ({
 });
 
 /// A decoder that can decode a record of shape/type [R].
-class RecordDecoder<R extends Record> extends Decoder<R> {
-  const RecordDecoder(this.recordFactory);
-
+class const RecordDecoder<R extends Record>(
   /// A callback which returns a [Record] given the positional and named
   /// record fields.
-  final RecordFactory<R> recordFactory;
-
+  final RecordFactory<R> recordFactory,
+) extends Decoder<R> {
   @override
   /// Override this method and return a [Record] with shape [R]. <br/>
   /// Tip: Use the

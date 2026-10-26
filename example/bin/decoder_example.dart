@@ -10,12 +10,11 @@ import 'package:generic_reader/generic_reader.dart';
 /// # dart example/bin/decoder_example.dart
 
 /// Demonstrates how to use [Reader] to read constants.
-class A {
-  const A({required this.id, required this.names, required this.numbers});
-  final int id;
-  final Set<String> names;
-  final List<num> numbers;
-
+class const A({
+  required final int id,
+  required final Set<String> names,
+  required final List<num> numbers,
+}) {
   @override
   String toString() =>
       'A(id: $id, names: $names, '
@@ -24,8 +23,7 @@ class A {
 
 final a = const A(id: 42, names: {'Andy', 'Eva'}, numbers: [42, 3.14]);
 
-class DecoderForClassA extends Decoder<A> {
-  const DecoderForClassA();
+class const DecoderForClassA() extends Decoder<A> {
   @override
   A read(DartObject obj) {
     final id = obj.read<int>(fieldName: 'id');

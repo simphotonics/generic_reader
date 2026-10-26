@@ -1,9 +1,7 @@
 import 'package:analyzer/dart/constant/value.dart' show DartObject;
 import 'package:exception_templates/exception_templates.dart' show ErrorOf;
 
-abstract class Decoder<T> {
-  const Decoder();
-
+abstract class const Decoder<T>() {
   /// Attempts to create an instance of [T] with information read from
   /// the constant [obj].
   ///
