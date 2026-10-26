@@ -41,17 +41,17 @@ Note: The following types are supported out-of-the-box and do *not* require a de
 3. Use Dart's static [`analyzer`][analyzer] to read a library, get
 the relevant [`VariableElement`][VariableElement], and calculate the constant
 expression represented by a [`DartObject`][DartObject]
-using the method [`computeConstantValue()`][computeConstantValue()]. An exmple
-is shown in section [Reading an Enumeration](#reading-an-enumeration).
+using the method [`computeConstantValue()`][computeConstantValue()]. An example
+is shown in the section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
 
-   * To read a constant representing a *collection* of a *user-defined* type `U`
-   use the convenience methods [`readList<U>`][readList],
-   [`readSet<U>`][readSet], [`readMap<K,U>`][readMap], and [`readIterator<U>`][readIterator].
+   * To read a constant representing a *collection* of a *user-defined* type `E`
+   use the convenience methods [`readList<E>`][readList],
+   [`readSet<E>`][readSet], [`readMap<K,V>`][readMap], and [`readIterator<E>`][readIterator].
    These methods register a suitable decoder and call [`read`][read].
-   For example calling [`readList<U>(obj)`][readList], registers the decoder
-   `ListDecoder<U>()` and calls `read<List<U>>(obj)`.
+   For example calling [`readList<E>(obj)`][readList], registers the decoder
+   `ListDecoder<E>()` and calls `read<List<E>>(obj)`.
 
    * If the compile-time constant represents a class which defines instance
    variables, one may read a specific instance variable  by specifying
