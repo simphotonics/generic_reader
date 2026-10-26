@@ -3,7 +3,7 @@ name: generic_reader
 description: Methods for the systematic reading of
              compile-time constant expressions.
 
-version: 0.5.2
+version: 1.0.0
 
 homepage: https://github.com/simphotonics/generic_reader
 
@@ -14,14 +14,14 @@ topics:
   - source-generation
 
 environment:
-  sdk: '^3.9.0'
+  sdk: '^3.13.0'
 
 dependencies:
-  analyzer: ^8.4.0
-  exception_templates: ^0.3.2
+  analyzer: ^14.6.0
+  exception_templates: ^1.1.0
 
 dev_dependencies:
-  ansi_modifier: ^0.1.5
-  build_test: ^3.5.0
-  lints: ^6.0.0
-  test: ^1.26.3
+  ansi_modifier: ^1.1.1
+  build_test: ^3.5.23
+  lints: ^6.1.0
+  test: ^1.33.0
