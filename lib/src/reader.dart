@@ -256,7 +256,7 @@ extension Reader on DartObject {
     throw decoderNotFoundError<dynamic>();
   }
 
-  /// Reads the `dartObject` instance and returns an instance of `List<T>`.
+  /// Reads the `dartObject` instance and returns an instance of `List<E>`.
   /// * If the argument [fieldName] is not empty,
   /// it reads the field of the object instead and throws
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
@@ -270,7 +270,7 @@ extension Reader on DartObject {
     return read<List<E>>(fieldName: fieldName);
   }
 
-  /// Reads the [DartObject] instance and returns an instance of `List<T>`.
+  /// Reads the [DartObject] instance and returns an instance of `Iterable<E>`.
   /// * If the argument [fieldName] is not empty,
   /// it reads the object field instead and throws
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
@@ -284,7 +284,7 @@ extension Reader on DartObject {
     return read<Iterable<E>>(fieldName: fieldName);
   }
 
-  /// Reads the `dartObject` instance and returns an object of type `Set<T>`.
+  /// Reads the `dartObject` instance and returns an object of type `Set<E>`.
   /// * If the argument [fieldName] is not empty,
   /// it reads the field of the object instead and throws
   /// [ErrorOfType] with type argument [InvalidFieldName] if the field does
@@ -344,10 +344,6 @@ extension Reader on DartObject {
     }
 
     return b0.toString() + b1.toString();
-
-    // return 'Reader:\n'
-    //     '  Decodable types: ${_decoders.keys.toList()}\n'
-    //     '  Resolved types: $_resolvedTypes';
   }
 
   ErrorOfType<InvalidTypeArgument> invalidArgumentTypeError<T>() =>
