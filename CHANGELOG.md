@@ -1,3 +1,8 @@
+## 1.0.0
+- Require Dart SDK 3.13.0
+- Uses analyzer: ^14.6.0
+- Using primary constructor syntax.
+
 ## 0.5.2
 - Removed libraries `test_methods.dart` and `test_utils.dart`.
 - Amended documentation.
