@@ -46,7 +46,7 @@ is shown in the section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
 
-   * To read a constant representing a *collection* of a *user-defined* type `E`
+   * To read a constant representing a *collection* 
    use the convenience methods [`readList<E>`][readList],
    [`readSet<E>`][readSet], [`readMap<K,V>`][readMap], and [`readIterator<E>`][readIterator].
    These methods register a suitable decoder and call [`read`][read].
