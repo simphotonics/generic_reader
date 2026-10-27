@@ -27,7 +27,7 @@ data-type.
 your pubspec.yaml file.
 
 2. Register a [Decoder][Decoder] object for each *user defined*
-data-type `U` that is going to be read
+that is going to be read
    (see section [Custom Decoders](#custom-decoders)). </br>
 Note: The following types are supported out-of-the-box and do *not* require a decoder:
 * `bool`, `double`, `int`, `num`,`String`, `Type`, `Symbol`,
@@ -38,8 +38,8 @@ Note: The following types are supported out-of-the-box and do *not* require a de
 *   `Iterable<bool>`,`Iterable<double>`,`Iterable<int>`,`Iterable<num>`,`Iterable<String>`,
 `Iterable<Symbol>`,`Iterable<Type>`.
 
-3. Use Dart's static [`analyzer`][analyzer] to read a library, get
-the relevant [`VariableElement`][VariableElement], and calculate the constant
+3. Use Dart's static [`analyzer`][analyzer] to read a source code library.
+Access the relevant [`VariableElement`][VariableElement] and calculate the constant
 expression represented by a [`DartObject`][DartObject]
 using the method [`computeConstantValue()`][computeConstantValue()]. An example
 is shown in the section [Reading an Enumeration](#reading-an-enumeration).
@@ -108,10 +108,9 @@ Reader.addDecoder(const AnnotationDecoder());
 
 ## Reading an Enumeration
 
-The example below show how to register and read an instance of an enumeration.
-In this case, instead of creating a custom
-decoder class we register an instance of the already defined generic class
-[`EnumDecoder`][EnumDecoder]:
+The example below show how to register an instance of
+[`EnumDecoder<Order>`][EnumDecoder] and revived the enum instance from
+a `DartObject`.
 
 <details>  <summary> Click to show source-code. </summary>
 
@@ -130,7 +129,6 @@ Future<void> main() async {
   final lib = await resolveSource(
     r'''
     library example;
-
     enum Order { asc, desc }
 
     class A {
@@ -144,19 +142,20 @@ Future<void> main() async {
 
   if (lib == null) return;
 
-  /// Add a decoder for the enum:
+  // Add a decoder for the enum. Note we pass the enum value to the
+  // constructor.
   Reader.addDecoder(const EnumDecoder<Order>(Order.values));
 
   /// Compute the compile-time constant value
-  final enumObj = lib.classes[0].fields[0].computeConstantValue();
+  final enumDartObject = lib.classes[0].fields[0].computeConstantValue();
 
   /// Read the compile-time constant value to obtain a runtime instance of the
   /// enumeration.
-  final enum0 = enumObj?.read<Order>();
+  final order = enumDartObject?.read<Order>();
 
   print(
     '\nReading an enum of type ${'Order'.style(Ansi.green)}: '
-    '$enum0\n',
+    '$order\n',
   );
 }
 

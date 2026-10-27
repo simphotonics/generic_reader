@@ -34,10 +34,10 @@ Future<void> main() async {
   Reader.addDecoder(const EnumDecoder<Order>(Order.values));
 
   final enumDartObject = lib.classes[0].fields[0].computeConstantValue();
-  final enum0 = enumDartObject?.read<Order>();
+  final order = enumDartObject?.read<Order>();
 
   print(
     '\n Reading an enum with type ${'Order'.style(Ansi.green)}: '
-    '$enum0\n',
+    '$order\n',
   );
 }
