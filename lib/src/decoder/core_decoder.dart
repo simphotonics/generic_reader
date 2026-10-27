@@ -5,17 +5,17 @@ import 'decoder.dart';
 
 class const BoolDecoder() extends Decoder<bool> {
   @override
-  bool read(DartObject obj) => switch (obj.toBoolValue()) {
+  bool read(DartObject dartObject) => switch (dartObject.toBoolValue()) {
     bool value => value,
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
 class const IntDecoder() extends Decoder<int> {
   @override
-  int read(DartObject obj) => switch (obj.toIntValue()) {
+  int read(DartObject dartObject) => switch (dartObject.toIntValue()) {
     int value => value,
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
@@ -23,9 +23,9 @@ const intDecoder = IntDecoder();
 
 class const DoubleDecoder() extends Decoder<double> {
   @override
-  double read(DartObject obj) => switch (obj.toDoubleValue()) {
+  double read(DartObject dartObject) => switch (dartObject.toDoubleValue()) {
     double value => value,
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
@@ -33,38 +33,38 @@ const doubleDecoder = DoubleDecoder();
 
 class const NumDecoder() extends Decoder<num> {
   @override
-  num read(DartObject obj) {
-    if (obj.type?.isDartCoreInt ?? false) {
-      return intDecoder.read(obj);
-    } else if (obj.type?.isDartCoreDouble ?? false) {
-      return doubleDecoder.read(obj);
+  num read(DartObject dartObject) {
+    if (dartObject.type?.isDartCoreInt ?? false) {
+      return intDecoder.read(dartObject);
+    } else if (dartObject.type?.isDartCoreDouble ?? false) {
+      return doubleDecoder.read(dartObject);
     } else {
-      throw readError(obj);
+      throw readError(dartObject);
     }
   }
 }
 
 class const StringDecoder() extends Decoder<String> {
   @override
-  String read(DartObject obj) => switch (obj.toStringValue()) {
+  String read(DartObject dartObject) => switch (dartObject.toStringValue()) {
     String value => value,
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
 class const SymbolDecoder() extends Decoder<Symbol> {
   @override
-  Symbol read(DartObject obj) => switch (obj.toSymbolValue()) {
+  Symbol read(DartObject dartObject) => switch (dartObject.toSymbolValue()) {
     String value => Symbol(value),
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
 class const TypeDecoder() extends Decoder<Type> {
   @override
-  Type read(DartObject obj) => switch (obj.toTypeValue()) {
+  Type read(DartObject dartObject) => switch (dartObject.toTypeValue()) {
     Type type => type,
-    _ => throw readError(obj),
+    _ => throw readError(dartObject),
   };
 }
 
@@ -75,24 +75,29 @@ class const ValueDecoder<T>(
   /// The object returned by the method [read].
   final T value,
 ) extends Decoder<T> {
-  /// The object returned by the method [read].
-
   @override
   /// Returns the constant value of type [T]
   /// that is provided as constructor parameter.
-  T read(DartObject obj) => value;
+  T read(DartObject dartObject) => value;
 }
 
 /// A generic enum decoder
 class const EnumDecoder<E extends Enum>(
-  /// Use the static enum getter to obtain the values.
+  /// Use the static getter `E.values` to obtain the enum values, where `E` is
+  /// replaced which the actual enum class name.
   final List<E> values,
 ) extends Decoder<E> {
   @override
-  E read(DartObject obj) => switch (obj.getField('index')?.toIntValue()) {
-    int index when index < values.length => values[index],
-    _ => throw readError(obj),
-  };
+  E read(DartObject dartObject) =>
+      switch (dartObject.getField('index')?.toIntValue()) {
+        int index when index < values.length => values[index],
+        _ => throw readError(dartObject),
+      };
+
+  @override
+  String toString() {
+    return '$runtimeType(), values: $values';
+  }
 }
 
 /// A callback which returns a [Record] of shape/type [R]
@@ -117,16 +122,18 @@ class const RecordDecoder<R extends Record>(
   final RecordFactory<R> recordFactory,
 ) extends Decoder<R> {
   @override
-  /// Override this method and return a [Record] with shape [R]. <br/>
-  /// Tip: Use the
-  /// helper methods [positionalFields] and [namedFields].
-  R read(DartObject obj) {
-    return switch (obj.toRecordValue()) {
+  /// Attempts to create an instance of [R] with information read from
+  /// the constant [dartObject].
+  ///
+  /// Should throw [ErrorOf] with type argument [Decoder] with type argument
+  /// [R] if an instance of [R] cannot be read from [dartObject].
+  R read(DartObject dartObject) {
+    return switch (dartObject.toRecordValue()) {
       RecordObj recordObj => recordFactory(
         positional: recordObj.positional,
         named: recordObj.named,
       ),
-      _ => throw readError(obj),
+      _ => throw readError(dartObject),
     };
   }
 

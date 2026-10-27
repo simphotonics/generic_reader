@@ -17,7 +17,7 @@ The content of these files is accessed via a [LibraryReader].
 
 The tests may be run in a terminal by navigating to the base folder of a local copy of the library and using the command:
 ```Shell
-$ pub run test -r expanded --test-randomize-ordering-seed=random
+$ dart test -r expanded --test-randomize-ordering-seed=random
 ```
 
 ## Features and bugs

@@ -46,12 +46,13 @@ is shown in the section [Reading an Enumeration](#reading-an-enumeration).
 
 4. Read the compile-time constant values using the extension method: [`read<T>`][read]. <br/>
 
-   * To read a constant representing a *collection* 
+   * To read a constant representing a *collection*
    use the convenience methods [`readList<E>`][readList],
-   [`readSet<E>`][readSet], [`readMap<K,V>`][readMap], and [`readIterator<E>`][readIterator].
+   [`readSet<E>`][readSet], [`readMap<K,V>`][readMap], and
+   [`readIterable<E>`][readIterable].
    These methods register a suitable decoder and call [`read`][read].
-   For example calling [`readList<E>(obj)`][readList], registers the decoder
-   `ListDecoder<E>()` and calls `read<List<E>>(obj)`.
+   For example calling [`readList<E>(dartObject)`][readList], registers the decoder
+   `ListDecoder<E>()` and calls `read<List<E>>(dartObject)`.
 
    * If the compile-time constant represents a class which defines instance
    variables, one may read a specific instance variable  by specifying
@@ -70,7 +71,7 @@ arbitrary data-types by allowing users to register [`Decoder`][Decoder] objects.
 
 To create a custom decoder:
 1. Extend [`Decoder<T>`][Decoder].
-2. Override the method [`T read(DartObject obj)`][Decoder.read].
+2. Override the method [`T read(DartObject dartObject)`][Decoder.read].
 
 The example below demonstrates how to create a custom decoder for the
 sample class `Annotation` and how to register an instance of the decoder with
@@ -92,12 +93,12 @@ class AnnotationDecoder extends Decoder<Annotation> {
   const AnnotationDecoder();
 
   @override
-  Annotation read(DartObject obj) {
+  Annotation read(DartObject dartObject) {
     // Read instance variable 'id'.
-    final id = obj.read<int>(fieldName: 'id');
+    final id = dartObject.read<int>(fieldName: 'id');
 
     // Read instance variable 'names'.
-    final names = obj.read<Set<String>>(fieldName: 'names');
+    final names = dartObject.read<Set<String>>(fieldName: 'names');
     return A(id: id, names: names);
   }
 }
@@ -284,7 +285,7 @@ Please file feature requests and bugs at the [issue tracker].
 
 [Decoder.read]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Decoder/read.html
 
-[readIterator]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readIterator.html
+[readIterable]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readIterable.html
 
 [readList]: https://pub.dev/documentation/generic_reader/latest/generic_reader/Reader/readList.html
 

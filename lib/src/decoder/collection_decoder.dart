@@ -2,39 +2,39 @@ part of '../reader.dart';
 
 class const ListDecoder<E>() extends Decoder<List<E>> {
   @override
-  List<E> read(DartObject obj) =>
-      switch (obj.toListValue()?.map((item) => item.read<E>())) {
+  List<E> read(DartObject dartObject) =>
+      switch (dartObject.toListValue()?.map((item) => item.read<E>())) {
         Iterable<E> iterable => iterable.toList(),
-        _ => throw readError(obj),
+        _ => throw readError(dartObject),
       };
 }
 
 class const SetDecoder<T>() extends Decoder<Set<T>> {
   @override
-  Set<T> read(DartObject obj) =>
-      switch (obj.toSetValue()?.map((item) => item.read<T>())) {
+  Set<T> read(DartObject dartObject) =>
+      switch (dartObject.toSetValue()?.map((item) => item.read<T>())) {
         Iterable<T> iterable => iterable.toSet(),
-        _ => throw readError(obj),
+        _ => throw readError(dartObject),
       };
 }
 
 class const IterableDecoder<T>() extends Decoder<Iterable<T>> {
   @override
-  Set<T> read(DartObject obj) =>
-      switch (obj.toSetValue()?.map((item) => item.read<T>())) {
+  Set<T> read(DartObject dartObject) =>
+      switch (dartObject.toSetValue()?.map((item) => item.read<T>())) {
         Iterable<T> iterable => iterable.toSet(),
-        _ => throw readError(obj),
+        _ => throw readError(dartObject),
       };
 }
 
 class const MapDecoder<K, V>() extends Decoder<Map<K, V>> {
   @override
-  Map<K, V> read(DartObject obj) {
+  Map<K, V> read(DartObject dartObject) {
     final result = <K, V>{};
 
-    final mapObj = obj.toMapValue();
+    final mapObj = dartObject.toMapValue();
     if (mapObj == null) {
-      throw readError(obj);
+      throw readError(dartObject);
     } else {
       mapObj.forEach((keyObj, valueObj) {
         final key = keyObj?.read<K>();
