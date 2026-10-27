@@ -33,8 +33,8 @@ Future<void> main() async {
   final lib = library!;
   Reader.addDecoder(const EnumDecoder<Order>(Order.values));
 
-  final enumObj = lib.classes[0].fields[0].computeConstantValue();
-  final enum0 = enumObj?.read<Order>();
+  final enumDartObject = lib.classes[0].fields[0].computeConstantValue();
+  final enum0 = enumDartObject?.read<Order>();
 
   print(
     '\n Reading an enum with type ${'Order'.style(Ansi.green)}: '

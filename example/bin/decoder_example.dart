@@ -25,10 +25,10 @@ final a = const A(id: 42, names: {'Andy', 'Eva'}, numbers: [42, 3.14]);
 
 class const DecoderForClassA() extends Decoder<A> {
   @override
-  A read(DartObject obj) {
-    final id = obj.read<int>(fieldName: 'id');
-    final names = obj.read<Set<String>>(fieldName: 'names');
-    final numbers = obj.read<List<num>>(fieldName: 'numbers');
+  A read(DartObject dartObject) {
+    final id = dartObject.read<int>(fieldName: 'id');
+    final names = dartObject.read<Set<String>>(fieldName: 'names');
+    final numbers = dartObject.read<List<num>>(fieldName: 'numbers');
     return A(id: id, names: names, numbers: numbers);
   }
 }
@@ -72,25 +72,25 @@ Future<void> main() async {
 
   print(Reader.info);
 
-  final idObj = lib.classes[1].fields[0].computeConstantValue();
-  final id = idObj?.read<int>();
+  final idDartObject = lib.classes[1].fields[0].computeConstantValue();
+  final id = idDartObject?.read<int>();
   print('Reading an ${'int:'.style(Ansi.green)} $id\n');
 
-  final scoreObj = lib.classes[1].fields[1].computeConstantValue();
-  final score = scoreObj?.readMap<String, int>();
+  final scoreDartObject = lib.classes[1].fields[1].computeConstantValue();
+  final score = scoreDartObject?.readMap<String, int>();
   print(
     'Reading a ${'Map<String, int>'.style(Ansi.green)}: '
     '$score ${score.runtimeType}\n',
   );
 
-  final isValidObj = lib.classes[1].fields[2].computeConstantValue();
-  final isValid = isValidObj?.read<bool>();
+  final isValidDartObject = lib.classes[1].fields[2].computeConstantValue();
+  final isValid = isValidDartObject?.read<bool>();
   print(
     'Reading a ${'bool'.style(Ansi.green)}: $isValid ${isValid.runtimeType}\n',
   );
 
-  final numbersObj = lib.classes[1].fields[3].computeConstantValue();
-  final numbers = numbersObj?.read<List<num>>();
+  final numbersDartObject = lib.classes[1].fields[3].computeConstantValue();
+  final numbers = numbersDartObject?.read<List<num>>();
   print(
     'Reading a ${'List<num>'.style(Ansi.green)}: $numbers ${numbers.runtimeType}\n',
   );
@@ -98,13 +98,13 @@ Future<void> main() async {
   /// Adding a decoder:
   Reader.addDecoder(decoderForA);
 
-  final aObj = lib.classes[1].fields[4].computeConstantValue();
-  final a = aObj?.read<A>();
+  final aDartObject = lib.classes[1].fields[4].computeConstantValue();
+  final a = aDartObject?.read<A>();
 
   print('Reading a constant with type ${'A'.style(Ansi.green)}: $a\n');
 
-  final numberObj = lib.classes[1].fields[5].computeConstantValue();
-  final number = numberObj?.read();
+  final numberDartObject = lib.classes[1].fields[5].computeConstantValue();
+  final number = numberDartObject?.read();
 
   print('Reading a constant with type ${'num'.style(Ansi.green)}: $number\n');
 

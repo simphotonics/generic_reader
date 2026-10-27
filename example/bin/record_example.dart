@@ -55,9 +55,9 @@ Future<void> main() async {
   // Add Record Decoder
   Reader.addDecoder<Info>(RecordDecoder<Info>(infoFactory));
 
-  final recordObj = lib.classes[0].fields[0].computeConstantValue();
+  final recordDartObject = lib.classes[0].fields[0].computeConstantValue();
 
-  final info = recordObj?.read<Info>();
+  final info = recordDartObject?.read<Info>();
 
   print(
     '\n Reading a record of type ${'$Info'.style(Ansi.green)}: '

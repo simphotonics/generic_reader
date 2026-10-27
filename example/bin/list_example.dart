@@ -35,14 +35,14 @@ Future<void> main() async {
 
   print(Reader.info);
 
-  final listObj = lib.classes[0].fields[0].computeConstantValue();
-  final list1 = listObj?.read<List<List<String>>>();
-  final list2 = listObj?.read();
-  final list3 = listObj?.readList<List<String>>();
+  final listDartObject = lib.classes[0].fields[0].computeConstantValue();
+  final list1 = listDartObject?.read<List<List<String>>>();
+  final list2 = listDartObject?.read();
+  final list3 = listDartObject?.readList<List<String>>();
 
-  print('\nlistObj.read<$listOfListOfString>: $list1');
+  print('\nlistDartObject.read<$listOfListOfString>: $list1');
 
-  print('\nlistObj.read(): $list2');
+  print('\nlistDartObject.read(): $list2');
 
-  print('\nlistObj.readList<$listOfString>(): $list3\n');
+  print('\nlistDartObject.readList<$listOfString>(): $list3\n');
 }

@@ -49,10 +49,10 @@ final a = const A(id: 42, names: {'Andy', 'Eva'}, numbers: [42, 3.14]);
 
 class const DecoderForClassA() extends Decoder<A> {
   @override
-  A read(DartObject obj) {
-    final id = obj.read<int>(fieldName: 'id');
-    final names = obj.readSet<String>(fieldName: 'names');
-    final numbers = obj.readList<num>(fieldName: 'numbers');
+  A read(DartObject dartObject) {
+    final id = dartObject.read<int>(fieldName: 'id');
+    final names = dartObject.readSet<String>(fieldName: 'names');
+    final numbers = dartObject.readList<num>(fieldName: 'numbers');
     return A(id: id, names: names, numbers: numbers);
   }
 }
@@ -71,10 +71,10 @@ Future<void> main() async {
 
   if (lib == null) throw TestFailure('Could not read test library');
 
-  final idObj = lib.classes[1].fields[0].computeConstantValue();
-  final scoreObj = lib.classes[1].fields[1].computeConstantValue();
-  final isValidObj = lib.classes[1].fields[2].computeConstantValue();
-  final aObj = lib.classes[1].fields[3].computeConstantValue();
+  final idDartObject = lib.classes[1].fields[0].computeConstantValue();
+  final scoreDartObject = lib.classes[1].fields[1].computeConstantValue();
+  final isValidDartObject = lib.classes[1].fields[2].computeConstantValue();
+  final aDartObject = lib.classes[1].fields[3].computeConstantValue();
 
   /// Adding a decoder:
   Reader.addDecoder(decoderForA);
@@ -98,17 +98,20 @@ Future<void> main() async {
 
   group('Reading Constants:', () {
     test('read<int>', () {
-      expect(idObj, isNotNull);
-      expect(idObj?.read<int>(), 124);
+      expect(idDartObject, isNotNull);
+      expect(idDartObject?.read<int>(), 124);
     });
     test('readMap<String, int>', () {
-      expect(scoreObj, isNotNull);
-      expect(scoreObj!.readMap<String, int>(), const {'Adam': 4, 'Moira': 7});
+      expect(scoreDartObject, isNotNull);
+      expect(scoreDartObject!.readMap<String, int>(), const {
+        'Adam': 4,
+        'Moira': 7,
+      });
     });
     test('read<A>()', () {
-      expect(aObj, isNotNull);
+      expect(aDartObject, isNotNull);
       expect(
-        aObj!.read<A>(),
+        aDartObject!.read<A>(),
         isA<A>()
             .having((a) => a.id, 'id', 42)
             .having((a) => a.names, 'names', {'Andy', 'Eva'})
@@ -116,17 +119,17 @@ Future<void> main() async {
       );
     });
     test('read<bool>()', () {
-      expect(isValidObj, isNotNull);
-      expect(isValidObj!.read<bool>(), true);
+      expect(isValidDartObject, isNotNull);
+      expect(isValidDartObject!.read<bool>(), true);
     });
   });
 
   group('Errors:', () {
     test('ErrorOfType<DecoderNotFound>', () {
-      expect(isValidObj, isNotNull);
+      expect(isValidDartObject, isNotNull);
 
       expect(
-        isValidObj!.read<A>,
+        isValidDartObject!.read<A>,
         throwsA(
           isA<ErrorOfType<InvalidFieldName>>().having(
             (e) => e.message,
@@ -138,7 +141,7 @@ Future<void> main() async {
     });
     test('ErrorOf<Reader>: Wrong type', () {
       expect(
-        aObj!.read<String>,
+        aDartObject!.read<String>,
         throwsA(
           isA<ErrorOf<Decoder>>().having(
             (e) => e.message,
@@ -151,11 +154,11 @@ Future<void> main() async {
   });
   group('findDecoder:', () {
     test('bool', () {
-      final isValid = isValidObj?.read<bool>();
+      final isValid = isValidDartObject?.read<bool>();
       expect(Reader.findDecoder<bool>(), const BoolDecoder());
     });
     test('int', () {
-      final id = idObj?.read<int>();
+      final id = idDartObject?.read<int>();
       expect(Reader.findDecoder<int>(), const IntDecoder());
     });
   });
